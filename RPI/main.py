@@ -1,0 +1,93 @@
+import threading
+import time
+import os
+from pcComm import *
+from picamera import PiCamera
+
+
+# from picamera.array import PiRGBArray
+
+class RPI(threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+        # Creating subsystem objects
+        self.pcObject = PcComm()
+
+        # Establish connection with other subsystems
+        self.pcObject.connect()
+
+        self.imgCount = 0
+        self.camera = None
+        self.SEPARATOR = "@.@"
+
+    def startThread(self):
+        # pc send thread created
+        #sendToPcThread = threading.Thread(target=self.sendToPc, args=(), name="send_Pc_Thread")
+
+        # pc read thread created
+        receiveFromPcThread = threading.Thread(target=self.receiveFromPc, args=(), name="read_Pc_Thread")
+
+        # Makes Threads run in the background
+        #sendToPcThread.daemon = True
+        receiveFromPcThread.daemon = True
+
+        receiveFromPcThread.start()
+
+    def sendToPc(self, msgToPc):
+        if msgToPc:
+            self.pcObject.sendMsg(msgToPc)
+            print("Message is sent to PC: " + str(msgToPc))
+
+    def receiveFromPc(self):
+        while True:
+            self.pcObject.receiveMsg()
+            print("Message received from PC: " + str(self.pcObject.msgQueue))
+            while len(self.pcObject.msgQueue):
+                command = self.pcObject.dequeue()
+                print("Current command: " + command)
+                if command != "":
+                    if command.upper() == "P":
+                        self.snapPic()
+                        self.imgCount += 1
+                        print("Image taken!")
+                    if command.upper() == "S":
+                        #for i in range(1, 11):
+                        #fileName = "image" + "{:02d}".format(i) + ".jpg"
+                        fileName = "image01.jpg"
+                        fileSize = os.path.getsize(fileName)
+                        print("filename: " + str(fileName) +"\n, file size: "+ str(fileSize))
+                        #self.pcObject.serverSocket.send(f"{fileName}{self.SEPARATOR}{fileSize}".encode())
+
+                        time.sleep(1)
+                        print("after sleep")
+                        sendToPcThread = threading.Thread(target=self.pcObject.sendImage, args=(fileName, fileSize), name="send_Pc_Thread")
+                        sendToPcThread.daemon = True
+                        sendToPcThread.start()
+
+            break
+
+    def snapPic(self):
+        try:
+            self.camera.start_preview()
+            for i, filename in enumerate(self.camera.capture_continuous('image{counter:02d}.jpg')):
+                print(filename)
+                time.sleep(1)
+                if i == 1:
+                    break
+        except Exception as e:
+            print("Error in taking picture...")
+
+    def closeAll(self):
+        self.pcObject.disconnect()
+
+
+if __name__ == "__main__":
+    rpi = RPI()
+    try:
+        rpi.camera = PiCamera()
+        rpi.camera.resolution = (640, 480)
+        rpi.startThread()
+        while True:
+            pass
+    except KeyboardInterrupt:
+        rpi.closeAll()

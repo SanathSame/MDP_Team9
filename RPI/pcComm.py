@@ -1,6 +1,6 @@
 import socket
 import time
-import tqdm
+#import tqdm
 
 class PcComm():
     def __init__(self):
@@ -88,7 +88,7 @@ class PcComm():
 
     def sendImage(self, fileName, fileSize):
         # start sending the file
-        progress = tqdm.tqdm(range(fileSize), f"Sending {fileName}", unit="B", unit_scale=True, unit_divisor=1024)
+        #progress = tqdm.tqdm(range(fileSize), f"Sending {fileName}", unit="B", unit_scale=True, unit_divisor=1024)
         with open(fileName, "rb") as f:
             while True:
                 # read the bytes from the file
@@ -98,6 +98,6 @@ class PcComm():
                     break
                 self.serverSocket.sendall(bytes_read)
                 # update the progress bar
-                progress.update(len(bytes_read))
+                #progress.update(len(bytes_read))
 
 

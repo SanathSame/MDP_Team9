@@ -2,6 +2,7 @@ from pcComm import *
 import socket
 import os
 import tqdm
+from android import *
 
 BUFFER_SIZE = 1024
 SEPARATOR = "@.@"
@@ -45,6 +46,23 @@ def TestTCP():
 
     sock.close()
 
+def TestBluetooth():
+    btObj = Android()
+    btObj.connect()
+
+    msg = input("Enter message: ")
+    btObj.sendMsg(msg)
+
+    msg1 = btObj.receiveMsg()
+    print("Message 1: " + str(msg1))
+
+    msg2 = btObj.receiveMsg()
+    print("Message 2: " + str(msg2))
+
+    msg3 = btObj.receiveMsg()
+    print("Message 3: " + str(msg3))
+
+    btObj.disconnect()
 
 if __name__ == "__main__":
-    TestTCP()
+    TestBluetooth()

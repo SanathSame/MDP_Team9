@@ -15,15 +15,17 @@ class Android():
             self.serverSock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
             print("Bluetooth socket created!")
 
-            self.serverSock.bind(("", self.rfCommChannel))
+            self.serverSock.bind(("", self.rfCommChannel)) #bluetooth.PORT_ANY))
             print("Bluetooth binding completed!")
+
+            port = self.serverSock.getsockname()[1]
 
             self.serverSock.listen(1)
 
             bluetooth.advertise_service(self.serverSock, "MDPGrp9", service_id = self.uuid,
                               service_classes = [self.uuid, bluetooth.SERIAL_PORT_CLASS],
                               profiles = [bluetooth.SERIAL_PORT_PROFILE])
-            print("Waiting for connection at channel " + str(self.rfCommChannel))
+            print("Waiting for connection at RFCOMM channel " + str(self.rfCommChannel))
 
             self.clientSock, self.clientSockAddr = self.serverSock.accept()
             print("Client accepted: " + str(self.client))

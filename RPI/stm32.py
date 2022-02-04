@@ -3,7 +3,7 @@ import time
 
 
 class STM():
-    def __inti__(self):
+    def __init__(self):
         self.BAUD_RATE = 115200
         self.SERIAL_PORT = "/dev/ttyUSB0"
         self.service = None
@@ -34,7 +34,7 @@ class STM():
             if len(msg) > 0:
                 return msg.decode('utf-8')
         except Exception as e:
-            print('Error met in reading ' + str(e))
+            print('Error receiving message: ' + str(e))
 
     def disconnect(self):
         try:

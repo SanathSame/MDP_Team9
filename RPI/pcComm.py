@@ -47,7 +47,7 @@ class PcComm():
 
             if self.client:
                 self.client.close()
-                print("Client closed...")
+                print("Client socket closed...")
                 self.isConnected = False
 
         except Exception as e:

@@ -17,7 +17,7 @@ class RPI(threading.Thread):
         self.stm = STM()
 
         # Establish connection with other subsystems
-        #self.pcObject.connect()
+        self.pcObject.connect()
         self.androidObject.connect()
         self.stm.connect()
         print("Connecting to other devices...")
@@ -31,6 +31,7 @@ class RPI(threading.Thread):
     def startThread(self):
         # pc send thread created
         #sendToPcThread = threading.Thread(target=self.sendToPc, args=(), name="send_Pc_Thread")
+        #sendToSTMThread = threading.Thread(target=self.sendToSTM, args=(), name="send_STM_Thread")
 
         # pc read thread created
         receiveFromPcThread = threading.Thread(target=self.receiveFromPc, args=(), name="read_Pc_Thread")
@@ -39,6 +40,7 @@ class RPI(threading.Thread):
 
         # Makes Threads run in the background
         #sendToPcThread.daemon = True
+        #sendToSTMThread.daemon = True
         receiveFromPcThread.daemon = True
         receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
@@ -86,19 +88,35 @@ class RPI(threading.Thread):
             print("Message send to Android is " + msgToAndroid)
 
     def receiveFromAndroid(self):
+        # Enclose in while loop
         androidMsg = str(self.androidObject.receiveMsg())
         print("Message from android: " + androidMsg)
         if androidMsg.upper() == "W":
             print("Move forward")
 
+    '''
+    w s - control motor: drive rear wheel, value from 1000 to 3500 (speed)
+    a d - servo(front) : left 60, right 86, center is 73
+    
+    letter(CAPS)|value 
+    '''
     def sendToSTM(self, msgToSTM):
         if (msgToSTM):
-            self.arduino_obj.send(msgToSTM)
+            self.stm.sendMsg(msgToSTM)
             print("Message send to Arduino is " + msgToSTM)
 
     def receiveFromSTM(self):
-        stmMsg = str(self.stm.receiveMsg())
-        print("Message from STM: " + stmMsg)
+        # Enclose in while loop
+        while True:
+            stmMsg = str(self.stm.receiveMsg())
+            print("Message from STM: " + stmMsg)
+            time.sleep(2)
+            msg = str(input("Message for STM: "))
+            if len(msg) < 6 :
+                msg += " " * (6 - len(msg))
+            sendToSTMThread = threading.Thread(target=self.sendToSTM(msg), args=(), name="send_STM_Thread")
+            sendToSTMThread.daemon =True
+            sendToSTMThread.start()
 
     def snapPic(self):
         try:
@@ -115,6 +133,7 @@ class RPI(threading.Thread):
         self.pcObject.disconnect()
         self.androidObject.disconnect()
         self.stm.disconnect()
+        self.camera.close()
 
 
 if __name__ == "__main__":

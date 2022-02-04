@@ -1,4 +1,5 @@
 import bluetooth
+import os
 
 class Android():
     def __init__(self):
@@ -8,7 +9,7 @@ class Android():
         self.uuid = "00001101-0000-1000-8000-00805F9B34FB" #"00001101-0000-1000-8000-00805F9B34FB"
         self.clientSockAddr = None
         self.BUFFER_SIZE = 2048
-
+        os.system("sudo hciconfig hci0 piscan")
 
     def connect(self):
         try:

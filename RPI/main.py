@@ -5,6 +5,7 @@ from pcComm import *
 from android import *
 from stm32 import *
 from picamera import PiCamera
+from ultrasonic import *
 # from picamera.array import PiRGBArray
 
 class RPI(threading.Thread):
@@ -128,6 +129,20 @@ class RPI(threading.Thread):
                     break
         except Exception as e:
             print("Error in taking picture...")
+    
+    def readUltra(self):
+        ultrasonic = Ultrasonic()
+        values = [] 
+        while True:
+            try:
+                dist = ultrasonic.distance()
+                print(dist)
+                values.append(dist)
+                time.sleep(1)
+            except KeyboardInterrupt:
+                ultrasonic.cleanup()
+            except Exception as e:
+                print("Error with Ultra: %s" %str(e))
 
     def closeAll(self):
         self.pcObject.disconnect()

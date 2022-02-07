@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MDP Android</string>
+    <string name="app_name">MDP Team 9 Android</string>
     <string name="mdp_team_9">MDP Team 9</string>
     <string name="start">Start</string>
     <string name="bluetooth">Bluetooth</string>
@@ -9,6 +9,5 @@
     <string name="sent_text">Sent Text:</string>
     <string name="received_text">Received Text:</string>
     <string name="receivedtext">Receivedtext</string>
-    <string name="discoverable">Discoverable</string>
     <string name="paired_devices">Paired devices</string>
 </resources>

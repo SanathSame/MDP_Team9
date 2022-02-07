@@ -1,6 +1,5 @@
 package com.example.mdpandroid;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -23,14 +22,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
 
 //need to change name here !!
-import com.example.mdpandroid.BluetoothConnectionService;
-import com.example.mdpandroid.BluetoothPopUp;
-import com.example.mdpandroid.CommsFragment;
-import com.example.mdpandroid.GridMap;
-import com.example.mdpandroid.MapInformation;
-import com.example.mdpandroid.MapTabFragment;
-import com.example.mdpandroid.ReconfigureFragment;
-import com.example.mdpandroid.SectionsPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
@@ -39,8 +30,6 @@ import org.json.JSONObject;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.TimerTask;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,11 +46,6 @@ public class MainActivity extends AppCompatActivity {
     static Button f1, f2;
     ImageView errorimage;
     private static int counter=0;
-    Button reconfigure;
-    ReconfigureFragment reconfigureFragment = new ReconfigureFragment();
-
-    BluetoothConnectionService mBluetoothConnection;
-    BluetoothDevice mBTDevice;
     private static UUID myUUID;
     ProgressDialog myDialog;
 
@@ -91,25 +75,6 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
 
         final ImageView errorimage = findViewById(R.id.errorimage);
-
-        Button printMDFStringButton = (Button) findViewById(R.id.printMDFString);
-        printMDFStringButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //errorimage.setVisibility(View.VISIBLE);
-                //GridMap.findMDF();
-                String message = "Explored : " + GridMap.getPublicMDFExploration();
-                editor = sharedPreferences.edit();
-                editor.putString("message", CommsFragment.getMessageReceivedTextView().getText() + "\n" + message);
-                editor.commit();
-                refreshMessageReceived();
-                message = "Obstacle : " + GridMap.getPublicMDFObstacle() + "0";
-                editor.putString("message", CommsFragment.getMessageReceivedTextView().getText() + "\n" + message);
-                editor.commit();
-                refreshMessageReceived();
-            }
-        });
-
         // Toolbar @ the top right hand corner
         //the blue one
         Button bluetoothButton = (Button) findViewById(R.id.bluetoothButton);
@@ -152,11 +117,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
-        f1 = (Button) findViewById(R.id.f1ActionButton);
-        f2 = (Button) findViewById(R.id.f2ActionButton);
-        reconfigure = (Button) findViewById(R.id.configureButton);
-
         if (sharedPreferences.contains("F1")) {
             f1.setContentDescription(sharedPreferences.getString("F1", ""));
             showLog("setText for f1Btn: " + f1.getContentDescription().toString());
@@ -185,15 +145,6 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.printMessage(f2.getContentDescription().toString());
                 showLog("f2Btn value: " + f2.getContentDescription().toString());
                 showLog("Exiting f2Btn");
-            }
-        });
-
-        reconfigure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showLog("Clicked reconfigureBtn");
-                reconfigureFragment.show(getFragmentManager(), "Reconfigure Fragment");
-                showLog("Exiting reconfigureBtn");
             }
         });
     }
@@ -425,15 +376,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode){
-            case 1:
-                if(resultCode == Activity.RESULT_OK){
-                    mBTDevice = (BluetoothDevice) data.getExtras().getParcelable("mBTDevice");
-                    myUUID = (UUID) data.getSerializableExtra("myUUID");
-                }
         }
-    }
 
     @Override
     protected void onDestroy(){

@@ -9,6 +9,8 @@ def predict():
     port = 9999          
     s.connect((host, port))
 
+    # signal to rpi that we want an image
+
     with open("to_predict.jpeg", "wb") as f:
         while True:
             data = s.recv(1024)

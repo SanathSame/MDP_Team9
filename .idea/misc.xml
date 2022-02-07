@@ -5,6 +5,12 @@
       <map>
         <entry key="..\:/Users/YL/AndroidStudioProjects/MDPAndroid/app/src/main/res/layout/activity_bluetoothconnection.xml" value="0.2" />
         <entry key="..\:/Users/YL/AndroidStudioProjects/MDPAndroid/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/Users/YL/Documents/GitHub/MDP_Team9(YL)/app/src/main/res/layout/activity_bluetoothconnection.xml" value="0.2" />
+        <entry key="..\:/Users/YL/Documents/GitHub/MDP_Team9(YL)/app/src/main/res/layout/activity_main.xml" value="0.16822916666666668" />
+        <entry key="..\:/Users/YL/Documents/GitHub/MDP_Team9(YL)/app/src/main/res/layout/bluetoothdeviceview.xml" value="0.16822916666666668" />
+        <entry key="..\:/Users/YL/Documents/GitHub/MDP_Team9(YL)/app/src/main/res/layout/device_adapter_view.xml" value="0.24010416666666667" />
+        <entry key="..\:/Users/YL/Documents/GitHub/MDP_Team9(YL)/app/src/main/res/layout/deviceadapterlist.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/YL/Documents/GitHub/MDP_Team9(YL)/app/src/main/res/layout/devicelistadapter.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

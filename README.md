@@ -1,3 +1,5 @@
+# Not the most updated. We have a separate repo for algorithm (let us know if you want access)
+
 # Simulator Set Up (JavaFX on IntelliJ)
 
 1. Download and extract [JavaFX SDK](https://gluonhq.com/products/javafx/).

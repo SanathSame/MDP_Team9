@@ -3,6 +3,10 @@ import socket
 import os
 import tqdm
 from android import *
+#from stm32 import *
+from pcComm import *
+import bluetooth
+import sys
 
 BUFFER_SIZE = 1024
 SEPARATOR = "@.@"
@@ -64,5 +68,46 @@ def TestBluetooth():
 
     btObj.disconnect()
 
+def Testtest():
+    uuid = "00001101-0000-1000-8000-00805F9B34FB" #"94f39d29-7d6d-437d-973b-fba39e49d4ee"
+    service_matches = bluetooth.find_service(uuid=uuid)
+
+    if len(service_matches) == 0:
+        print("couldn't find the SampleServer service =(")
+        sys.exit(0)
+
+    first_match = service_matches[0]
+    port = first_match["port"]
+    name = first_match["name"]
+    host = first_match["host"]
+
+    print("connecting to \"%s\" on %s" % (name, host))
+
+    # Create the client socket
+    sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+    sock.connect((host, 3))
+
+    print("connected.  type stuff")
+    while True:
+        data = input()
+        if len(data) == 0: break
+        sock.send(data)
+
+    sock.close()
+
+def TestSTM():
+    stm = STM()
+    stm.connect()
+    print("attempt connect")
+    try:
+        print("attempting")
+
+        stm.sendMsg("w50")
+    except KeyboardInterrupt:
+        print("Terminating the program now...")
+
 if __name__ == "__main__":
-    TestBluetooth()
+    TestTCP()
+    #TestBluetooth()
+    #Testtest()
+    #TestSTM()

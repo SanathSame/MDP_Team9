@@ -18,9 +18,9 @@ class RPI(threading.Thread):
         self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
+        #self.pcObject.connect()
         self.androidObject.connect()
-        self.stm.connect()
+        #self.stm.connect()
         print("Connecting to other devices...")
 
         time.sleep(3)

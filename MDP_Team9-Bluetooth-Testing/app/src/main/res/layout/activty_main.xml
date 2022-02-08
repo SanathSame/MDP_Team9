@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:context=".MainActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/mainlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_hl"
+        android:paddingStart="5dp"
+        android:paddingEnd="10dp"
+        tools:context=".MainActivity">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:layout_marginEnd="-7dp"
+            android:background="@color/black_hl"
+            android:minHeight="?android:attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_fastest"
+                android:text="Fastest"
+                android:textColor="@color/blue"
+                app:rippleColor="@color/blue_hl"
+                android:backgroundTint="@color/black_bg"
+                android:layout_gravity="start" />
+
+            <TextView
+                android:id="@+id/top_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textSize="18sp"
+                android:textColor="@color/yellow"
+                android:fontFamily="@font/open_sans_light"
+                android:paddingHorizontal="2dp"
+                android:layout_gravity="center" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_img"
+                android:text="Image"
+                android:textColor="@color/blue"
+                app:rippleColor="@color/blue_hl"
+                android:backgroundTint="@color/black_bg"
+                android:layout_gravity="right"/>
+
+        </android.support.v7.widget.Toolbar>
+
+        <com.example.mdpandroid.map.MapCanvas
+            android:id="@+id/pathGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:longClickable="true"
+            app:finalPathColor="#CBC6FF00"
+            app:wheelColor="@color/black_hl"
+            app:exploreHeadColor="@color/blue_hl"
+            app:roboColor="@color/blue"
+            app:gridColor="@color/black_bg"
+            app:exploreColor="@color/yellow"
+            app:targetColor="@color/red"
+            app:tarNumColor="@color/white"
+            android:layout_marginStart="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_top"
+            app:layout_constraintStart_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/legend"
+            android:text="PRESS + HOLD TO ADD TARGET   |   TAP TO ROTATE   |   DRAG TO MOVE   |   REMOVE - DRAG OUT OF GRID"
+            android:textSize="8sp"
+            android:textColor="@color/grey"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintEnd_toStartOf="@id/guideline3"
+            app:layout_constraintStart_toEndOf="@id/guideline3"
+            app:layout_constraintTop_toBottomOf="@id/pathGrid"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_left"
+            app:srcCompat="@drawable/ic_hud_left_states"
+            android:background="@null"
+            android:layout_marginTop="35dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/legend"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_right"
+            app:srcCompat="@drawable/ic_hud_right_states"
+            android:background="@null"
+            android:layout_marginTop="35dp"
+            app:layout_constraintStart_toEndOf="@id/btn_left"
+            app:layout_constraintTop_toBottomOf="@+id/legend"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TURN SERVO\nPRESS + HOLD"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_left"
+            app:layout_constraintEnd_toEndOf="@id/btn_right"
+            app:layout_constraintTop_toBottomOf="@id/btn_right"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_accelerate"
+            app:srcCompat="@drawable/ic_hud_accelerator_states"
+            android:longClickable="true"
+            android:background="@null"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FORWARD"
+            android:textSize="10sp"
+            android:textColor="@color/blue_hl"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_accelerate"
+            app:layout_constraintEnd_toEndOf="@id/btn_accelerate"
+            app:layout_constraintTop_toBottomOf="@id/btn_accelerate"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_reverse"
+            app:srcCompat="@drawable/ic_hud_brake_states"
+            android:longClickable="true"
+            android:background="@null"
+            android:layout_marginTop="60dp"
+            app:layout_constraintRight_toLeftOf="@id/btn_accelerate"
+            app:layout_constraintTop_toBottomOf="@+id/pathGrid"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtLbl"
+            android:text="REVERSE"
+            android:textSize="10sp"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_reverse"
+            app:layout_constraintEnd_toEndOf="@id/btn_reverse"
+            app:layout_constraintTop_toBottomOf="@id/btn_reverse"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QUICK TAP / PRESS + HOLD"
+            android:textSize="10sp"
+            android:textColor="@color/blue"
+            android:gravity="center"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="@id/btn_reverse"
+            app:layout_constraintEnd_toEndOf="@id/btn_accelerate"
+            app:layout_constraintTop_toBottomOf="@id/txtLbl"
+            />
+
+        <Button
+            android:id="@+id/btn_reset"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_light"
+            android:text="@string/reset"
+            android:textStyle="bold"
+            android:backgroundTint="@color/black_hl"
+            android:textColor="@color/grey"
+            android:layout_marginBottom="?attr/actionBarSize"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintBottom_toBottomOf="@id/mainlayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:rippleColor="#FFECB3" />
+
+
+        <Button
+            android:id="@+id/btn_target"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/open_sans_light"
+            android:text="@string/broadcast"
+            android:textSize="11sp"
+            android:textColor="@color/blue_hl"
+            android:textStyle="bold"
+            android:padding="0dp"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintEnd_toEndOf="@id/guideline3"
+            app:layout_constraintTop_toBottomOf="@id/legend"
+            app:layout_constraintBottom_toTopOf="@id/btn_right"
+            app:rippleColor="@color/blue_hl" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!-- Bottom Sheet -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/view_pager_bottom_sheet_behavior"
+        android:background="?attr/colorBackgroundFloating"
+        android:elevation="16dp"
+        android:orientation="vertical"
+        app:behavior_peekHeight="?attr/actionBarSize">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/bottom_sheet_appbar"
+            style="@style/BottomSheetAppBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/bottom_sheet_toolbar"
+                style="@style/BottomSheetToolbarStyle"
+                android:background="@color/black_bg"
+                app:titleTextColor="@color/blue"
+                android:layout_width="match_parent" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/topTabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/BottomSheetTabLayoutStyle"
+                android:background="@color/black_hl"
+                app:tabTextColor="@color/yellow"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+

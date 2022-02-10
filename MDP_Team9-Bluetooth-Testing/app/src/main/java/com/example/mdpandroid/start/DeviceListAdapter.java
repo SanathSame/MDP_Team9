@@ -2,14 +2,13 @@ package com.example.mdpandroid.start;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import com.example.mdpandroid.R;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
-import com.example.mdpandroid.R;
 
 import java.util.ArrayList;
 

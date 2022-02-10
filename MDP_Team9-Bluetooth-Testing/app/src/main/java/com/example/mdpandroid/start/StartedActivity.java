@@ -3,8 +3,8 @@ package com.example.mdpandroid.start;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.mdpandroid.MainActivity;
 import com.example.mdpandroid.R;

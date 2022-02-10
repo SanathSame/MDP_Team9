@@ -9,13 +9,13 @@
     android:background="?attr/colorBackgroundFloating"
     tools:context=".leaderboard.MapConfigDialog">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bottom_sheet_appbar"
         style="@style/BottomSheetAppBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/config_bottom_sheet_toolbar"
             style="@style/BottomSheetToolbarStyle"
             android:layout_width="match_parent"
@@ -31,11 +31,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"/>
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/black_hl">
@@ -65,6 +65,6 @@
         </ScrollView>
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

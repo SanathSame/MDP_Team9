@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.andretietz.android:gamecontroller:1.1.1@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/004991f5ab55f0d0df568f89c965c263/transformed/jetified-gamecontroller-1.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/004991f5ab55f0d0df568f89c965c263/transformed/jetified-gamecontroller-1.1.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/004991f5ab55f0d0df568f89c965c263/transformed/jetified-gamecontroller-1.1.1/res" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.andretietz.android/gamecontroller/1.1.1/828f0e48d75c487cf589d22468369a0765ae3e70/gamecontroller-1.1.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.andretietz.android/gamecontroller/1.1.1/7cb72aa2196386748fb847054077ae40c4d5ce5e/gamecontroller-1.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,74 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.mdpandroid"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="28" />
+9-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.BLUETOOTH" />
+11-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:5:5-68
+11-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:5:22-65
+12    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+12-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:6:5-74
+12-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:6:22-71
+13    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+13-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:7:5-81
+13-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:7:22-78
+14
+15    <application
+15-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:9:5-37:19
+16        android:allowBackup="true"
+16-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:10:9-35
+17        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+17-->[androidx.core:core:1.0.0] C:\Users\YL\.gradle\caches\transforms-3\ed372e77ffc4bc21fa64e1a7af96110c\transformed\core-1.0.0\AndroidManifest.xml:22:18-86
+18        android:debuggable="true"
+19        android:icon="@mipmap/ic_logo"
+19-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:11:9-39
+20        android:label="@string/app_name"
+20-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:12:9-41
+21        android:roundIcon="@mipmap/ic_logo_round"
+21-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:13:9-50
+22        android:supportsRtl="true"
+22-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:14:9-35
+23        android:testOnly="true"
+24        android:theme="@style/Theme.MDP13CTRLer" >
+24-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:15:9-49
+25        <activity
+25-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:17:9-25:20
+26            android:name="com.example.mdpandroid.start.StartedActivity"
+26-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:18:13-50
+27            android:exported="true" >
+27-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:19:13-36
+28            <intent-filter>
+28-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:20:13-24:29
+29                <action android:name="android.intent.action.MAIN" />
+29-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:21:17-69
+29-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:21:25-66
+30
+31                <category android:name="android.intent.category.LAUNCHER" />
+31-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:23:17-77
+31-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:23:27-74
+32            </intent-filter>
+33        </activity>
+34        <activity
+34-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:27:9-31:20
+35            android:name="com.example.mdpandroid.MainActivity"
+35-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:28:13-41
+36            android:windowSoftInputMode="adjustNothing" >
+36-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:29:13-56
+37        </activity>
+38        <activity
+38-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:32:9-36:20
+39            android:name="com.example.mdpandroid.start.Bluetoothconnection"
+39-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:33:13-54
+40            android:windowSoftInputMode="adjustNothing" >
+40-->C:\Users\YL\Documents\GitHub\MDP_Team9-android\MDP_Team9-android\MDP_Team9-Bluetooth-Testing\app\src\main\AndroidManifest.xml:34:13-56
+41        </activity>
+42    </application>
+43
+44</manifest>

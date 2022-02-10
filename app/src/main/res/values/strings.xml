@@ -28,5 +28,8 @@
     <!-- Map -->
     <string name="manual">MANUAL</string>
     <string name="auto">AUTO</string>
+    <string name="turnon">ON</string>
+    <string name="turnoff">OFF</string>
+    <string name="bluetooth">Bluetooth</string>
 
 </resources>

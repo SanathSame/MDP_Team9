@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +25,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -31,7 +33,7 @@ import java.util.UUID;
 public class Bluetoothconnection extends AppCompatActivity{
 
     private static final String TAG = "Bluetoothconnection";
-
+    SharedPreferences sharedPreferences;
     private static final int REQUEST_ENABLE_BT = 0;
     private static final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     public ArrayList <BluetoothDevice> bluetoothdevicelist = new ArrayList<>();
@@ -45,7 +47,7 @@ public class Bluetoothconnection extends AppCompatActivity{
     public DeviceListAdapter mPairedDevlceListAdapter;
 
     TextView msenttext, mreceivedtext, mbluestatus;
-    Button mturnonbtn, mturnoffbtn, mdiscoverbtn, connectbtn, backbtn;
+    Button mturnonbtn, mturnoffbtn, mdiscoverbtn, mconnectbtn, mbackbtn, msentbtn;
     ListView lvnewdevice, lvpairedevice;
 
     boolean retryConnection = false;
@@ -90,11 +92,12 @@ public class Bluetoothconnection extends AppCompatActivity{
         mturnonbtn = findViewById(R.id.turnonbtn);
         mturnoffbtn = findViewById(R.id.turnoffbtn);
         mdiscoverbtn = findViewById(R.id.discoverbtn);
+        mconnectbtn = findViewById(R.id.connectbtn);
+        msentbtn = findViewById(R.id.sentbtn);
+        mbackbtn = findViewById(R.id.backbtn);
         mbluestatus = findViewById(R.id.bluestatus);
         lvnewdevice = (ListView) findViewById(R.id.lvnewdevice);
         lvpairedevice = (ListView) findViewById(R.id.lvpairdevice);
-        connectbtn = findViewById(R.id.connectbtn);
-        backbtn = findViewById(R.id.backbtn);
 
         mNewBTDevices = new ArrayList<>();
         mPairedBTDevices = new ArrayList<>();
@@ -107,6 +110,8 @@ public class Bluetoothconnection extends AppCompatActivity{
 
         //Bluetooth
         mbluetoothadapter = BluetoothAdapter.getDefaultAdapter();
+
+        sharedPreferences = getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
 
         lvnewdevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -191,8 +196,29 @@ public class Bluetoothconnection extends AppCompatActivity{
             }
         });
 
+        //sent btn
+        msentbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showLog("Clicked sendTextBtn");
+                String sentText = "" + msenttext.getText().toString();
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("message", sharedPreferences.getString("message", "") + '\n' + sentText);
+                editor.commit();
+//                mreceivedtext.setText(sharedPreferences.getString("message", ""));
+//                msenttext.setText("");
+
+                if (Bluetoothservice.BluetoothConnectionStatus == true) {
+                    byte[] bytes = sentText.getBytes(Charset.defaultCharset());
+                    Bluetoothservice.write(bytes);
+                }
+                showLog("Exiting sendTextBtn");
+            }
+        });
+
         //connect btn
-        connectbtn.setOnClickListener(new View.OnClickListener() {
+        mconnectbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mBTDevice ==null)
@@ -250,7 +276,7 @@ public class Bluetoothconnection extends AppCompatActivity{
 
         });
 
-        backbtn.setOnClickListener(new View.OnClickListener() {
+        mbackbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent blueintent = new Intent(getApplicationContext(), MainActivity.class);
@@ -472,5 +498,9 @@ public class Bluetoothconnection extends AppCompatActivity{
     //Toast message function
         private void showToast(String msg){
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private static void showLog(String message) {
+        Log.d(TAG, message);
     }
 }

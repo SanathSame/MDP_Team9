@@ -23,11 +23,11 @@ class RPI(threading.Thread):
         #self.stm.connect()
         print("Connecting to other devices...")
 
-        time.sleep(3)
+        time.sleep(2)
 
         self.imgCount = 0
         self.camera = None
-        self.SEPARATOR = "@.@"
+        #self.SEPARATOR = "@.@"
 
     def startThread(self):
         # pc send thread created
@@ -35,27 +35,45 @@ class RPI(threading.Thread):
         #sendToSTMThread = threading.Thread(target=self.sendToSTM, args=(), name="send_STM_Thread")
 
         # pc read thread created
-        receiveFromPcThread = threading.Thread(target=self.receiveFromPc, args=(), name="read_Pc_Thread")
-        receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_thread")
-        receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_thread")
+        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
+        receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
+        receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
+        receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
 
         # Makes Threads run in the background
-        #sendToPcThread.daemon = True
-        #sendToSTMThread.daemon = True
-        receiveFromPcThread.daemon = True
+        receiveFromImgThread.daemon = True
+        receiveFromAlgoThread.daemon = True
         receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
 
-        receiveFromPcThread.start()
+        #receiveFromImgThread.start()
+        #receiveFromAlgoThread.start()
         receiveFromAndroidThread.start()
-        receiveFromSTMThread.start()
+        #receiveFromSTMThread.start()
 
-    def sendToPc(self, msgToPc):
-        if msgToPc:
-            self.pcObject.sendMsg(msgToPc)
-            print("Message is sent to PC: " + str(msgToPc))
+    def receiveFromImg(self):
+        while True:
+            imgMsg = self.pcObject.receiveMsgFromImg()
+            if imgMsg:
+                print("Message received from Image: " + str(imgMsg))
 
-    def receiveFromPc(self):
+    def receiveFromAlgo(self):
+        while True:
+            algoMsg = self.pcObject.receiveMsgFromAlgo()
+            if algoMsg:
+                print("Message received from Algo: " + str(algoMsg))
+
+    def sendToImg(self, msgToImg):
+        if msgToImg:
+            self.pcObject.sendMsgToImg(msgToImg)
+            print("Message is sent to PC: " + str(msgToImg))
+
+    def sendToAlgo(self, msgToAlgo):
+        if msgToAlgo:
+            self.pcObject.sendMsgToAlgo(msgToAlgo)
+            print("Message is sent to PC: " + str(msgToAlgo))
+
+    '''def receiveFromPc(self):
         while True:
             self.pcObject.receiveMsg()
             print("Message received from PC: " + str(self.pcObject.msgQueue))
@@ -81,25 +99,29 @@ class RPI(threading.Thread):
                         sendToPcThread.daemon = True
                         sendToPcThread.start()
 
-            break
+            break'''
 
     def sendToAndroid(self, msgToAndroid):
         if (msgToAndroid):
-            self.androidObject.send(msgToAndroid)
+            self.androidObject.sendMsg(msgToAndroid)
             print("Message send to Android is " + msgToAndroid)
 
     def receiveFromAndroid(self):
         # Enclose in while loop
-        androidMsg = str(self.androidObject.receiveMsg())
-        print("Message from android: " + androidMsg)
-        if androidMsg.upper() == "W":
-            print("Move forward")
+        while True:
+            androidMsg = self.androidObject.receiveMsg()
+            if androidMsg:
+                print("Message from android: " + androidMsg)
+                if androidMsg.upper() == "W":
+                    print("Move forward")
+                    tmp = input("Message please: ")
+                    self.sendToAndroid(tmp)
 
     '''
     w s - control motor: drive rear wheel, value from 1000 to 3500 (speed)
     a d - servo(front) : left 60, right 86, center is 73
     
-    letter(CAPS)|value 
+    letter(CAPS) value 
     '''
     def sendToSTM(self, msgToSTM):
         if (msgToSTM):
@@ -109,15 +131,14 @@ class RPI(threading.Thread):
     def receiveFromSTM(self):
         # Enclose in while loop
         while True:
-            stmMsg = str(self.stm.receiveMsg())
-            print("Message from STM: " + stmMsg)
-            time.sleep(2)
-            msg = str(input("Message for STM: "))
-            if len(msg) < 6 :
-                msg += " " * (6 - len(msg))
-            sendToSTMThread = threading.Thread(target=self.sendToSTM(msg), args=(), name="send_STM_Thread")
-            sendToSTMThread.daemon =True
-            sendToSTMThread.start()
+            stmMsg = self.stm.receiveMsg()
+            if stmMsg:
+                print("Message from STM: " + stmMsg)
+                time.sleep(2)
+                msg = str(input("Message for STM: "))
+                if len(msg) < 6:
+                    msg += " " * (6 - len(msg))
+                    self.sendToSTM(msg)
 
     def snapPic(self):
         try:

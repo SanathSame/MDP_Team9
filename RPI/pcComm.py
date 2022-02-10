@@ -7,8 +7,12 @@ class PcComm():
         self.IP_ADDDRESS = "192.168.9.9"
         self.serverSocket = None
         self.nPort = 1234
-        self.client = None
-        self.clientIP = None
+        self.imgClient = None
+        self.imgClientIP = None
+        self.algoClient = None
+        self.algoClientIP = None
+
+        self.numConnections = 0
         self.isConnected = False
         self.msgQueue = []
         self.BUFFER_SIZE = 1024
@@ -31,8 +35,14 @@ class PcComm():
                 self.serverSocket.listen(2)
 
                 print("RPi is listening for PC communication...")
-                self.client, self.clientIP = self.serverSocket.accept()
-                print("RPi is connected to " + str(self.client))
+                self.imgClient, self.imgClientIP = self.serverSocket.accept()
+                self.numConnections += 1
+                print("RPi is connected to " + str(self.imgClient))
+
+                self.algoClient, self.algoClientIP = self.serverSocket.accept()
+                self.numConnections += 1
+                print("RPi is connected to " + str(self.algoClient))
+                print("Number of concurrent connections: " + str(self.numConnections))
 
                 self.isConnected = True
 
@@ -45,20 +55,25 @@ class PcComm():
                 self.serverSocket.close()
                 print("RPi socket closed...")
 
-            if self.client:
-                self.client.close()
-                print("Client socket closed...")
-                self.isConnected = False
+            if self.imgClient:
+                self.imgClient.close()
+                print("Image Rec client socket closed...")
+
+            if self.algoClient:
+                self.algoClient.close()
+                print("Algo client socket closed...")
+
+            self.isConnected = False
 
         except Exception as e:
             print("Error in disconnecting from PC: " + str(e))
 
-    def sendMsg(self, msg=""):
+    def sendMsgToImg(self, msg=""):
         try:
             if msg != "":
                 if self.isConnected:
                     #msg = msg + '\n'
-                    self.client.sendall(msg.encode())
+                    self.imgClient.sendall(msg.encode())
                     print("In send(msg) function, Message has been sent to PC: " + str(msg))
                     return True
 
@@ -69,11 +84,44 @@ class PcComm():
         except Exception as e:
             print("Error in sending: " + str(e))
             self.connect()
-            self.send(msg)
+            self.sendMsgToImg(msg)
 
-    def receiveMsg(self):
+    def sendMsgToAlgo(self, msg=""):
         try:
-            msgReceived = self.client.recv(10).decode("utf-8")
+            if msg != "":
+                if self.isConnected:
+                    #msg = msg + '\n'
+                    self.algoClient.sendall(msg.encode())
+                    print("In send(msg) function, Message has been sent to PC: " + str(msg))
+                    return True
+
+                else:
+                    print("In send(msg) function, RPI is not connected properly...")
+                    self.connect()
+                    return False
+        except Exception as e:
+            print("Error in sending: " + str(e))
+            self.connect()
+            self.sendMsgToAlgo(msg)
+
+    def receiveMsgFromImg(self):
+        try:
+            msgReceived = self.imgClient.recv(10).decode("utf-8")
+            print("In send(msg) function, Message received is: " + str(msgReceived))
+            '''commands = msgReceived.split(' ')
+            for i in range(len(commands)):
+                if commands != '':
+                    self.enqueue(commands[i])'''
+            return msgReceived
+
+        except Exception as e:
+            print("Error in receiving: " + str(e))
+            self.connect()
+            self.receiveMsgFromImg()
+
+    def receiveMsgFromAlgo(self):
+        try:
+            msgReceived = self.algoClient.recv(10).decode("utf-8")
             print("In send(msg) function, Message received is: " + str(msgReceived))
             commands = msgReceived.split(' ')
             for i in range(len(commands)):
@@ -84,9 +132,9 @@ class PcComm():
         except Exception as e:
             print("Error in receiving: " + str(e))
             self.connect()
-            self.receive()
+            self.receiveMsgFromImg()
 
-    def sendImage(self, fileName, fileSize):
+    '''def sendImage(self, fileName, fileSize):
         # start sending the file
         #progress = tqdm.tqdm(range(fileSize), f"Sending {fileName}", unit="B", unit_scale=True, unit_divisor=1024)
         with open(fileName, "rb") as f:
@@ -98,6 +146,6 @@ class PcComm():
                     break
                 self.serverSocket.sendall(bytes_read)
                 # update the progress bar
-                #progress.update(len(bytes_read))
+                #progress.update(len(bytes_read))'''
 
 

@@ -2,6 +2,7 @@ package com.example.mdpandroid;
 
 import static com.example.mdpandroid.map.Robot.*;
 import com.example.mdpandroid.start.StartedActivity;
+import com.example.mdpandroid.start.Bluetoothconnection;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -96,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button backBtn = findViewById(R.id.btn_back);
         backBtn.setOnClickListener(v->{
-            Intent intent = new Intent(this, StartedActivity.class);
+            Intent intent = new Intent(this, Bluetoothconnection.class);
             startActivity(intent);
             finish();
         });

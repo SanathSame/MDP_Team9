@@ -1,19 +1,10 @@
 package com.example.mdpandroid;
 
-import static com.example.mdpandroid.map.Robot.ROBOT_MOTOR_FORWARD;
-import static com.example.mdpandroid.map.Robot.ROBOT_MOTOR_REVERSE;
-import static com.example.mdpandroid.map.Robot.ROBOT_MOTOR_STOP;
-import static com.example.mdpandroid.map.Robot.ROBOT_SERVO_CENTRE;
-import static com.example.mdpandroid.map.Robot.ROBOT_SERVO_LEFT;
-import static com.example.mdpandroid.map.Robot.ROBOT_SERVO_RIGHT;
-import static com.example.mdpandroid.map.Robot.STM_COMMAND_CENTRE;
-import static com.example.mdpandroid.map.Robot.STM_COMMAND_FORWARD;
-import static com.example.mdpandroid.map.Robot.STM_COMMAND_LEFT;
-import static com.example.mdpandroid.map.Robot.STM_COMMAND_REVERSE;
-import static com.example.mdpandroid.map.Robot.STM_COMMAND_RIGHT;
-import static com.example.mdpandroid.map.Robot.STM_COMMAND_STOP;
+import static com.example.mdpandroid.map.Robot.*;
+import com.example.mdpandroid.start.StartedActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -21,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -101,6 +93,13 @@ public class MainActivity extends AppCompatActivity {
                     MessageFragment.sendMessage("MAP -> RPI:\t\t ", message + '\n');
                     n++;
                 }}
+        });
+
+        Button backBtn = findViewById(R.id.btn_back);
+        backBtn.setOnClickListener(v->{
+            Intent intent = new Intent(this, StartedActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         btnFastest.setOnClickListener(new OnClickListener() {

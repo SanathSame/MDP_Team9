@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
         btnReverse = (ImageButton) this.findViewById(R.id.btn_reverse);
         btnLeft = (ImageButton) this.findViewById(R.id.btn_left);
         btnRight = (ImageButton) this.findViewById(R.id.btn_right);
-        btnImg = (Button) this.findViewById(R.id.btn_img);
-        btnFastest = (Button) this.findViewById(R.id.btn_fastest);
+        //btnImg = (Button) this.findViewById(R.id.btn_img);
+        //btnFastest = (Button) this.findViewById(R.id.btn_fastest);
         topToolbar = (Toolbar) this.findViewById(R.id.toolbar_top);
         bottomSheetToolbar = (Toolbar) this.findViewById(R.id.bottom_sheet_toolbar);
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
@@ -102,13 +102,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
         });
 
-        btnFastest.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "START_FASTEST");
-                showBottomSheetDialog("fastest");
-            }
-        });
+//        btnFastest.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "START_FASTEST");
+//                showBottomSheetDialog("fastest");
+//            }
+//        });
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setupImgLongClick();
+        //setupImgLongClick();
         setupControlsLongClicks(btnForward, ROBOT_MOTOR_FORWARD);
         setupControlsLongClicks(btnReverse, ROBOT_MOTOR_REVERSE);
         setupControlsLongClicks(btnLeft, ROBOT_SERVO_LEFT);
@@ -230,25 +230,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupImgLongClick() {
-
-        btnImg.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showBottomSheetDialog("config");
-                return true;
-            }
-        });
-
-        btnImg.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "DRAW_PATH");
-                showBottomSheetDialog("img");
-            }
-        });
-
-    }
+//    private void setupImgLongClick() {
+//
+//        btnImg.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                showBottomSheetDialog("config");
+//                return true;
+//            }
+//        });
+//
+//        btnImg.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "DRAW_PATH");
+//                showBottomSheetDialog("img");
+//            }
+//        });
+//
+//    }
 
     private void setupBottomSheet() {
 //        bottomSheetToolbar.setTitle(R.string.bottom_sheet_title);

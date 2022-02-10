@@ -199,6 +199,11 @@ public final class MapCanvas extends View {
         this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX() + 1, 5.0F, this.startPaintColor);
         this.colorCell(canvas, this._map.getRobo().getY() + 1, this._map.getRobo().getX(), 5.0F, this.startPaintColor);
         this.colorCell(canvas, this._map.getRobo().getY() + 1, this._map.getRobo().getX() + 1, 5.0F, this.startPaintColor);
+//        this.colorCell(canvas, this._map.getRobo().getY() + 1, this._map.getRobo().getX() + 2, 5.0F, this.startPaintColor);
+//        this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX() + 2, 5.0F, this.startPaintColor);
+//        this.colorCell(canvas, this._map.getRobo().getY()-1, this._map.getRobo().getX()+2, 5.0F, this.startPaintColor);
+//        this.colorCell(canvas, this._map.getRobo().getY()-1, this._map.getRobo().getX()+1, 5.0F, this.startPaintColor);
+//        this.colorCell(canvas, this._map.getRobo().getY()-1, this._map.getRobo().getX(), 5.0F, this.startPaintColor);
 
         this.drawWheel(canvas);
 

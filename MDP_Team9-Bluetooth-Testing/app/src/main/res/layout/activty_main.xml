@@ -28,15 +28,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_fastest"
-                android:text="Fastest"
-                android:textColor="@color/blue"
-                app:rippleColor="@color/blue_hl"
-                android:backgroundTint="@color/black_bg"
-                android:layout_gravity="start" />
+<!--            <Button-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/btn_fastest"-->
+<!--                android:text="Fastest"-->
+<!--                android:textColor="@color/blue"-->
+<!--                app:rippleColor="@color/blue_hl"-->
+<!--                android:backgroundTint="@color/black_bg"-->
+<!--                android:layout_gravity="start" />-->
 
             <TextView
                 android:id="@+id/top_title"
@@ -45,19 +45,19 @@
                 android:text="@string/app_name"
                 android:textSize="18sp"
                 android:textColor="@color/yellow"
-                android:fontFamily="@font/open_sans_light"
+                android:fontFamily="@font/sf_pro_display_light"
                 android:paddingHorizontal="2dp"
                 android:layout_gravity="center" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_img"
-                android:text="Image"
-                android:textColor="@color/blue"
-                app:rippleColor="@color/blue_hl"
-                android:backgroundTint="@color/black_bg"
-                android:layout_gravity="right"/>
+<!--            <Button-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:id="@+id/btn_img"-->
+<!--                android:text="Image"-->
+<!--                android:textColor="@color/blue"-->
+<!--                app:rippleColor="@color/blue_hl"-->
+<!--                android:backgroundTint="@color/black_bg"-->
+<!--                android:layout_gravity="right"/>-->
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -84,6 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/legend"
+            android:fontFamily="@font/sf_pro_display_light"
             android:text="PRESS + HOLD TO ADD TARGET   |   TAP TO ROTATE   |   DRAG TO MOVE   |   REMOVE - DRAG OUT OF GRID"
             android:textSize="8sp"
             android:textColor="@color/grey"
@@ -120,6 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TURN SERVO\nPRESS + HOLD"
+            android:textColor="@color/blue_hl"
             android:textSize="10sp"
             android:gravity="center"
             android:layout_marginTop="5dp"
@@ -170,8 +172,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/txtLbl"
             android:text="REVERSE"
+            android:textColor="@color/blue_hl"
             android:textSize="10sp"
-            android:textColor="@color/blue"
             android:gravity="center"
             android:layout_marginTop="5dp"
             app:layout_constraintStart_toStartOf="@id/btn_reverse"
@@ -179,25 +181,25 @@
             app:layout_constraintTop_toBottomOf="@id/btn_reverse"
             />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="QUICK TAP / PRESS + HOLD"
-            android:textSize="10sp"
-            android:textColor="@color/blue"
-            android:gravity="center"
-            android:layout_marginTop="5dp"
-            app:layout_constraintStart_toStartOf="@id/btn_reverse"
-            app:layout_constraintEnd_toEndOf="@id/btn_accelerate"
-            app:layout_constraintTop_toBottomOf="@id/txtLbl"
-            />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="QUICK TAP / PRESS + HOLD"-->
+<!--            android:textSize="10sp"-->
+<!--            android:textColor="@color/blue"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_marginTop="5dp"-->
+<!--            app:layout_constraintStart_toStartOf="@id/btn_reverse"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/btn_accelerate"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/txtLbl"-->
+<!--            />-->
 
         <Button
             android:id="@+id/btn_reset"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/open_sans_light"
+            android:fontFamily="@font/sf_pro_display_light"
             android:text="@string/reset"
             android:textStyle="bold"
             android:backgroundTint="@color/black_hl"
@@ -217,7 +219,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="?attr/actionBarSize"
             android:backgroundTint="@color/black_hl"
-            android:fontFamily="@font/open_sans_light"
+            android:fontFamily="@font/sf_pro_display_light"
             android:text="Back"
             android:textColor="@color/red"
             android:textStyle="bold"
@@ -232,7 +234,7 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/open_sans_light"
+            android:fontFamily="@font/sf_pro_display_light"
             android:text="@string/broadcast"
             android:textSize="11sp"
             android:textColor="@color/blue_hl"

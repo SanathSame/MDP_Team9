@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -99,7 +100,9 @@ public class Bluetoothconnection extends AppCompatActivity{
         mbackbtn = findViewById(R.id.backbtn);
         mbluestatus = findViewById(R.id.bluestatus);
         lvnewdevice = (ListView) findViewById(R.id.lvnewdevice);
+        lvnewdevice.setBackgroundColor(Color.parseColor("#E91E63"));
         lvpairedevice = (ListView) findViewById(R.id.lvpairdevice);
+        lvpairedevice.setBackgroundColor(Color.parseColor("#8BC34A"));
 
         mNewBTDevices = new ArrayList<>();
         mPairedBTDevices = new ArrayList<>();

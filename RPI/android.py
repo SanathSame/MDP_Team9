@@ -1,5 +1,6 @@
 import bluetooth
 import os
+import time
 
 class Android():
     def __init__(self):
@@ -11,7 +12,6 @@ class Android():
         self.BUFFER_SIZE = 2048
         os.system("sudo hciconfig hci0 piscan")
         print("Finished BT initialising")
-
 
     def connect(self):
         try:
@@ -36,6 +36,7 @@ class Android():
         except Exception as e:
             print("Error in connecting bluetooth: " + str(e))
             self.serverSock.close()
+            self.connect()
 
     def disconnect(self):
         try:

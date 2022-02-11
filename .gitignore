@@ -1,3 +1,5 @@
 RPI/predictions/**/*
 RPI/weights/*
 venv
+
+*/__pycache/*

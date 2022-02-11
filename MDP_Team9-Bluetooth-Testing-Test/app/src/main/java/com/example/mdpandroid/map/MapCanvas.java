@@ -194,7 +194,6 @@ public final class MapCanvas extends View {
 
     private void drawCar(Canvas canvas) {
         this.setPaint(this.startPaintColor, this.startColor);
-
         this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX(), 5.0F, this.startPaintColor);
         this.colorCell(canvas, this._map.getRobo().getY(), this._map.getRobo().getX() + 1, 5.0F, this.startPaintColor);
         this.colorCell(canvas, this._map.getRobo().getY() + 1, this._map.getRobo().getX(), 5.0F, this.startPaintColor);
@@ -396,7 +395,6 @@ public final class MapCanvas extends View {
         );
         this.invalidate();
     }
-    
     @SuppressLint({"ClickableViewAccessibility"})
     public boolean onTouchEvent(MotionEvent event) {
         float eventX = event.getX();

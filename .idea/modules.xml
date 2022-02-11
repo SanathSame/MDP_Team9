@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MDP_Team9-Bluetooth-Testing.iml" filepath="$PROJECT_DIR$/.idea/modules/MDP_Team9-Bluetooth-Testing.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MDP_Team9-Bluetooth-Testing.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MDP_Team9-Bluetooth-Testing.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MDP_Team9AND.iml" filepath="$PROJECT_DIR$/.idea/MDP_Team9AND.iml" />
     </modules>
   </component>
 </project>

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/black_bg"
-    tools:context=".StartedActivity">
+    android:background="@drawable/bacgkroundtheme"
+    tools:context="com.example.mdpandroid.start.StartedActivity">
 
     <TextView
         android:layout_width="wrap_content"

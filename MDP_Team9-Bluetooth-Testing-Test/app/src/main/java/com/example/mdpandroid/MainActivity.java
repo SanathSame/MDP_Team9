@@ -1,7 +1,7 @@
 package com.example.mdpandroid;
 
 import static com.example.mdpandroid.map.Robot.*;
-import com.example.mdpandroid.start.StartedActivity;
+
 import com.example.mdpandroid.start.Bluetoothconnection;
 
 import android.annotation.SuppressLint;
@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
+
+import com.example.mdpandroid.start.StartedActivity;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -62,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activty_main);
+        this.setContentView(R.layout.activity_main);
         mapCanvas = findViewById(R.id.pathGrid);
         btnReset = (Button) this.findViewById(R.id.btn_reset);
         btnTarget = (Button) this.findViewById(R.id.btn_target);
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button backBtn = findViewById(R.id.btn_back);
         backBtn.setOnClickListener(v->{
-            Intent intent = new Intent(this, Bluetoothconnection.class);
+            Intent intent = new Intent(this, StartedActivity.class);
             startActivity(intent);
             finish();
         });

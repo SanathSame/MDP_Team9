@@ -114,7 +114,6 @@ class RPI(threading.Thread):
             if androidMsg:
                 print("Message from android: " + androidMsg)
                 if androidMsg.upper() == "W":
-                    print("Move forward")
                     tmp = input("Message please: ")
                     self.sendToAndroid(tmp)
 

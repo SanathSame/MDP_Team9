@@ -46,7 +46,7 @@ class RPI(threading.Thread):
         receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
 
-        #receiveFromImgThread.start()
+        # receiveFromImgThread.start()
         #receiveFromAlgoThread.start()
         receiveFromAndroidThread.start()
         #receiveFromSTMThread.start()
@@ -63,9 +63,10 @@ class RPI(threading.Thread):
             if algoMsg:
                 print("Message received from Algo: " + str(algoMsg))
 
-    def sendToImg(self, msgToImg):
+    def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
+        print("Send to Img in main.py called")
         if msgToImg:
-            self.pcObject.sendMsgToImg(msgToImg)
+            self.pcObject.sendMsgToImg(self.camera, msgToImg)
             print("Message is sent to PC: " + str(msgToImg))
 
     def sendToAlgo(self, msgToAlgo):
@@ -176,8 +177,11 @@ if __name__ == "__main__":
     try:
         rpi.camera = PiCamera()
         rpi.camera.resolution = (640, 480)
-        rpi.startThread()
-        while True:
-            pass
+        # rpi.startThread()
+        print("Gonna sleep first")
+        
+        time.sleep(3)
+        rpi.sendToImg()
+
     except KeyboardInterrupt:
         rpi.closeAll()

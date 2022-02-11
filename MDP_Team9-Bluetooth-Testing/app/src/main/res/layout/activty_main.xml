@@ -87,7 +87,7 @@
             android:fontFamily="@font/sf_pro_display_light"
             android:text="PRESS + HOLD TO ADD TARGET   |   TAP TO ROTATE   |   DRAG TO MOVE   |   REMOVE - DRAG OUT OF GRID"
             android:textSize="8sp"
-            android:textColor="@color/grey"
+            android:textColor="@color/black_hl"
             android:gravity="center"
             android:layout_marginTop="5dp"
             app:layout_constraintEnd_toStartOf="@id/guideline3"

@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:background="@drawable/background"
+        android:background="@drawable/bacgkroundtheme"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -153,13 +153,14 @@
                     android:layout_height="fill_parent"
                     android:layout_marginLeft="50dp"
                     android:orientation="horizontal">
+
                     <Button
                         android:id="@+id/fastConnectButton"
                         android:layout_width="114dp"
-                        android:layout_marginTop="30dp"
                         android:layout_height="wrap_content"
-                        app:backgroundTint="@color/navy"
-                        android:text="Connect" />
+                        android:layout_marginTop="30dp"
+                        android:text="Connect"
+                        app:backgroundTint="@color/navy" />
 
                     <Button
                         android:id="@+id/rotate"
@@ -169,6 +170,13 @@
                         android:layout_marginTop="20dp"
                         android:text="rotate:false"
                         app:backgroundTint="@color/navy" />
+
+                    <Button
+                        android:id="@+id/backbutton"
+                        android:layout_width="130dp"
+                        android:layout_height="75dp"
+                        android:layout_weight="1"
+                        android:text="BACK" />
 
 
                 </LinearLayout>

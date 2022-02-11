@@ -30,6 +30,6 @@
     <string name="auto">AUTO</string>
     <string name="turnon">ON</string>
     <string name="turnoff">OFF</string>
-    <string name="bluetooth">Bluetooth</string>
+    <string name="bluetooth">BLUETOOTH</string>
 
 </resources>

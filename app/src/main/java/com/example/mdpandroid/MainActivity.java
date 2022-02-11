@@ -23,12 +23,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Button maze = (Button) findViewById(R.id.startbtn);
-        maze.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View view){
-                Intent i = new Intent( MainActivity.this, arena_map.class);
+        maze.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, arena_map.class);
+                startActivity(i);
+            }
+
+        });
+        Button remote = (Button)findViewById(R.id.remotebutton);
+        remote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, interactive_control.class);
                 startActivity(i);
             }
         });
+
     }
 }

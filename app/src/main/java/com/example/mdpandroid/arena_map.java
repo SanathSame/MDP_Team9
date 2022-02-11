@@ -1,6 +1,5 @@
 package com.example.mdpandroid;
 import java.util.concurrent.TimeUnit;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -83,25 +82,25 @@ public class arena_map extends AppCompatActivity {
         Button startButton = findViewById(R.id.startButton);
         Button fastConnectButton = findViewById(R.id.fastConnectButton);
         Button rotateButton = findViewById(R.id.rotate);
+        Button backbutton = findViewById(R.id.backbutton);
 
         reset_map.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 Arena tempArenaMap = arena_map.getArenaMap();
-                if (Arena.canRotate) {
-                    if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'N')
-                        tempArenaMap.setRobotDirection("W");
-                    else if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'W')
-                        tempArenaMap.setRobotDirection("S");
-                    else if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'S')
-                        tempArenaMap.setRobotDirection("E");
-                    else if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'E')
-                        tempArenaMap.setRobotDirection("N");
-                }
-                else {
+//                if (Arena.canRotate) {
+//                    if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'N')
+//                        tempArenaMap.setRobotDirection("W");
+//                    else if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'W')
+//                        tempArenaMap.setRobotDirection("S");
+//                    else if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'S')
+//                        tempArenaMap.setRobotDirection("E");
+//                    else if (tempArenaMap.getRobotDirection().toUpperCase().charAt(0) == 'E')
+//                         tempArenaMap.setRobotDirection("N");
+//                }
+//                else {
 
                     tempArenaMap.resetArena();
-                }
             }
         });
 
@@ -138,6 +137,14 @@ public class arena_map extends AppCompatActivity {
                     rotateButton.setText("rotate:true");
                 else
                     rotateButton.setText("rotate:false");
+            }
+        });
+        backbutton.setOnClickListener(new View.OnClickListener() {
+        @Override
+            public void onClick(View view)
+            {
+                Intent backintent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(backintent);
             }
         });
     }
@@ -323,7 +330,6 @@ public class arena_map extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         showLog("Entering onSaveInstanceState");

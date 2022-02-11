@@ -320,7 +320,7 @@ public class Arena extends View implements Serializable {
 
     //Draw shapes on the canvas
     @Override
-    protected  void onDraw(Canvas canvas){
+    protected void onDraw(Canvas canvas){
         super.onDraw(canvas);
 
         //Background color of the canvas
@@ -410,19 +410,6 @@ public class Arena extends View implements Serializable {
 
             //row and col is the middle of the robot
             Log.d(TAG,"drawRobot: Coordinates are= " + x + " , " + y);
-
-            //Draw Robot box
-//            canvas.drawRect(cells[x][y].startX, cells[x][y].startY, cells[x][y].endX, cells[x][y].endY, robotPaint);
-//            canvas.drawRect(cells[x][y - 1].startX, cells[x][y - 1].startY, cells[x][y - 1].endX, cells[x][y - 1].endY, robotPaint);
-//            canvas.drawRect(cells[x + 1][y].startX, cells[x + 1][y].startY, cells[x + 1][y].endX, cells[x + 1][y].endY, robotPaint);
-//            canvas.drawRect(cells[x - 1][y].startX, cells[x - 1][y].startY, cells[x - 1][y].endX, cells[x - 1][y].endY, robotPaint);
-//            canvas.drawRect(cells[x + 1][y - 1].startX, cells[x + 1][y - 1].startY, cells[x + 1][y - 1].endX, cells[x + 1][y - 1].endY, robotPaint);
-//            canvas.drawRect(cells[x - 1][y - 1].startX, cells[x - 1][y - 1].startY, cells[x - 1][y - 1].endX, cells[x - 1][y - 1].endY, robotPaint);
-//            canvas.drawRect(cells[x][y + 1].startX, cells[x][y + 1].startY, cells[x][y + 1].endX, cells[x][y + 1].endY, robotPaint);
-//            canvas.drawRect(cells[x + 1][y + 1].startX, cells[x + 1][y + 1].startY, cells[x + 1][y + 1].endX, cells[x + 1][y + 1].endY, robotPaint);
-//            canvas.drawRect(cells[x - 1][y + 1].startX, cells[x - 1][y + 1].startY, cells[x - 1][y + 1].endX, cells[x - 1][y + 1].endY, robotPaint);
-
-            //Robot direction (Arrow)
             Path path = new Path();
             Log.d(TAG,"Robot direction: " + direction);
             switch (direction){
@@ -439,13 +426,6 @@ public class Arena extends View implements Serializable {
                     path.lineTo(cells[x][y].startX + 2*halfWidth, cells[x][y].startY);
                     break;
                 case "east":
-//                    path.moveTo(cells[x+1][y].startX + (2*halfWidth), cells[x][y].startY + halfWidth); // Top
-//                    path.lineTo(cells[x][y].startX, cells[x][y].startY); // Bottom left
-//                    path.lineTo(cells[x][y+1].startX, cells[x+1][y+1].startY); // Bottom right
-//                    path.lineTo(cells[x+1][y].startX + (2*halfWidth) , cells[x][y].startY + halfWidth); // Back to Top
-//                    canvas.drawText("0", cells[x+1][y].startX, cells[x+1][y].startY , obstacleNumberPaint);
-//                    canvas.drawText("1", cells[x+1][y+1].startX, cells[x+1][y+1].startY , obstacleNumberPaint);
-//                    canvas.drawText("2",cells[x+1][y].startX + (1*halfWidth) , cells[x][y].startY + halfWidth , obstacleNumberPaint);
                     path.moveTo(cells[x][y].startX, cells[x][y].startY);
                     path.lineTo(cells[x][y].startX + 2*halfWidth,
                             cells[x][y].startY + ( (int) (2*halfWidth) >> 1));
@@ -460,8 +440,6 @@ public class Arena extends View implements Serializable {
             }
             path.close();
             canvas.drawPath(path, directionPaint);
-
-            //After drawing, set drawing to false
             setRobotPostition = false;
             arena_map.setRobotDetails(x, y, direction);
             String message = ""+"ROBOT"+","+x+","+ y+","+direction;
@@ -484,60 +462,8 @@ public class Arena extends View implements Serializable {
 
         }
         paintObsFace(canvas);
-
-//        canvas.drawLine(obstacle1.getObsX(), obstacle1.getObsY(), obstacle1.getObsX() + 31, obstacle1.getObsY() + 31, linePaint);
-
-
-//        Log.d(TAG,"--->" + obstacle1.getObsX() + ", " + obstacle1.getObsY());
-
-        //Check if it is within the arena
-        //if(setRobotPostition = true){ //LOL this let me move the robot
-//        if(obsRow != -1 && obsCol != -1) {
-//            //Redraw all obstacles and newly added obstacle
-//            for(int i = 0; i < obstacleList.size(); i++){
-//
-//                //Check if obstacle already exist
-//                x = (int) obstacleList.get(i).getObsX();
-//                y = (int) obstacleList.get(i).getObsY();
-//                obsPaint = obstacleList.get(i).getObsPaint();
-//
-//                canvas.drawRect(cells[x][y].startX, cells[x][y].startY, cells[x][y].endX, cells[x][y].endY, obsPaint);
-//                canvas.drawText(obstacleList.get(i).getTargetID(), cells[x][y].startX, cells[x][y].endY, obstacleNumberPaint);
-//
-//            }
-//        }
-//        setObstaclePosition = false;
-//        canDrawObstacle = false;
     }
 
-
-//    private void drawDigit(Canvas canvas) {
-//        String text = obstacle1.getTargetID();
-////        float textWidth = obstacleNumberPaint.measureText(text);
-//
-//        canvas.getClipBounds(r);
-//        int mHeight = r.height();
-//        int mWidth = r.width();
-//
-//        obstacleNumberPaint.getTextBounds(text, 0, text.length(), r);
-//
-//        float x = mWidth / 2f - r.width() / 2f - r.left;
-//        float y = mHeight / 2f + r.height() / 2f - r.bottom;
-//
-//        Log.d(TAG,"DRAWDIGIT: " + x +", " + y);
-//
-//        canvas.drawText(text, x, y, obstacleNumberPaint);
-//        drawTextBounds(canvas, (int)x, (int)y);
-//    }
-//
-//    private void drawTextBounds(Canvas canvas, int x, int y) {
-//        Paint rPaint = new Paint();
-//        RectF bounds = new RectF(r);
-//        rPaint.setColor(Color.TRANSPARENT);
-//        rPaint.setStyle(Paint.Style.STROKE);
-//        r.offset(x, y);
-//        canvas.drawRect(r, rPaint);
-//    }
 
     //Draw numbers
     private void drawGridNumber(Canvas canvas) {

@@ -25,6 +25,9 @@
             android:name=".arena_map"
             android:exported="true" />
         <activity
+            android:name=".interactive_control"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true" >
         <intent-filter>

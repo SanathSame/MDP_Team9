@@ -488,7 +488,8 @@ public class Bluetoothconnection extends AppCompatActivity{
             String message = intent.getStringExtra("receivedMessage");
             showLog("receivedMessage: message --- " + message);
             sharedPreferences();
-            String receivedText = sharedPreferences.getString("message", "") + "\n" + message;
+            String receivedText = message;
+//            String receivedText = sharedPreferences.getString("message", "") + "\n" + message;
             editor.putString("message", receivedText);
             editor.commit();
             refreshMessageReceived();

@@ -2,10 +2,10 @@ from pcComm import *
 import socket
 import os
 import tqdm
-from android import *
+# from android import *
 #from stm32 import *
 from pcComm import *
-import bluetooth
+# import bluetooth
 import sys
 
 BUFFER_SIZE = 1024
@@ -106,8 +106,34 @@ def TestSTM():
     except KeyboardInterrupt:
         print("Terminating the program now...")
 
+def TestImagePrediction():
+    # model = torch.hub.load('ultralytics/yolov5', 'custom', path='Image Recognition/weights/best.pt')
+    s = socket.socket()        
+    host = '192.168.9.9'# ip of raspberry pi 
+    port = 1234          
+    s.connect((host, port))
+    print("Connected")
+
+    # signal to rpi that we want an image
+
+    with open("RPI/images/to_predict.jpeg", "wb") as f:
+        while True:
+            data = s.recv(1024)
+            print(data)
+            if not data:
+                break
+
+            f.write(data)
+        print("File done")
+
+    print("Received")
+    s.close()
+
+    os.system('python3 "Image Recognition/detect.py" --weights "Image Recognition/weights/best.pt" --source "RPI/images/to_predict.jpeg" --name "../../../RPI/predictions/run"')
+  
+
 if __name__ == "__main__":
-    TestTCP()
+    TestImagePrediction()
     #TestBluetooth()
     #Testtest()
     #TestSTM()

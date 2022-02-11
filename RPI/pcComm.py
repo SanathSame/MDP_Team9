@@ -17,6 +17,8 @@ class PcComm():
         self.msgQueue = []
         self.BUFFER_SIZE = 1024
 
+        self.connect()
+
     # Enqueue the commands
     def enqueue(self, msg):
         self.msgQueue.append(msg)
@@ -39,10 +41,10 @@ class PcComm():
                 self.numConnections += 1
                 print("RPi is connected to " + str(self.imgClient))
 
-                self.algoClient, self.algoClientIP = self.serverSocket.accept()
-                self.numConnections += 1
-                print("RPi is connected to " + str(self.algoClient))
-                print("Number of concurrent connections: " + str(self.numConnections))
+                # self.algoClient, self.algoClientIP = self.serverSocket.accept()
+                # self.numConnections += 1
+                # print("RPi is connected to " + str(self.algoClient))
+                # print("Number of concurrent connections: " + str(self.numConnections))
 
                 self.isConnected = True
 
@@ -68,19 +70,26 @@ class PcComm():
         except Exception as e:
             print("Error in disconnecting from PC: " + str(e))
 
-    def sendMsgToImg(self, msg=""):
+    def sendMsgToImg(self, camera, msg=""):
+        print("Inside pccomm sendmsgtoimg", msg, self.isConnected)
         try:
             if msg != "":
                 if self.isConnected:
-                    #msg = msg + '\n'
-                    self.imgClient.sendall(msg.encode())
-                    print("In send(msg) function, Message has been sent to PC: " + str(msg))
-                    return True
+                    print("Connected to pc")
+                    camera.capture('a.jpeg')
+                    print("Captured image for sending")
+
+                    with open("a.jpeg", "rb") as img_file:
+                        img_bytes = img_file.read()
+                        self.imgClient.send(img_bytes)
+
+                    print("Sent file")
 
                 else:
                     print("In send(msg) function, RPI is not connected properly...")
                     self.connect()
                     return False
+
         except Exception as e:
             print("Error in sending: " + str(e))
             self.connect()

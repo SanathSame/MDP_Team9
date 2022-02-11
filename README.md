@@ -1,5 +1,11 @@
 # MDP_Team9
 
+## Setup
+
+```
+pip install -r requirements.txt
+```
+
 ## RPI
 
 Files related to RPI. 

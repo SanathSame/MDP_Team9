@@ -32,4 +32,4 @@ def predict(img_path):
 
     
 if __name__ == "__main__":
-    print(predict("Image Recognition/data/images/test copy.jpeg"))
+    print(predict("Image Recognition/data/images/n.jpeg"))

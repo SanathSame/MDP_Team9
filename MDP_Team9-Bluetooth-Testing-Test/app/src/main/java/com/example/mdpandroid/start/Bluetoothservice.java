@@ -175,7 +175,11 @@ public class Bluetoothservice {
             Log.d(TAG, "StartClientThread Dialog show failure");
         }
 
-
+        // Cancel any thread currently running a connection
+        if (mConnectedThread != null) {
+            mConnectedThread.cancel();
+            mConnectedThread = null;
+        }
         mConnectThread = new ConnectThread(device, uuid);
         mConnectThread.start();
     }

@@ -28,6 +28,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Set;
@@ -36,10 +41,11 @@ import java.util.UUID;
 public class Bluetoothconnection extends AppCompatActivity{
 
     private static final String TAG = "Bluetoothconnection";
-    SharedPreferences sharedPreferences;
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
+    private static Context context;
     private static final int REQUEST_ENABLE_BT = 0;
     private static final UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    public ArrayList <BluetoothDevice> bluetoothdevicelist = new ArrayList<>();
     public static BluetoothDevice mBTDevice;
     BluetoothAdapter mbluetoothadapter;
     Bluetoothservice mBluetoothconnection;
@@ -49,7 +55,9 @@ public class Bluetoothconnection extends AppCompatActivity{
     public DeviceListAdapter mNewDevlceListAdapter;
     public DeviceListAdapter mPairedDevlceListAdapter;
 
-    TextView msenttext, mreceivedtext, mbluestatus;
+    static TextView mreceivedtext;
+
+    TextView msenttext, mbluestatus;
     Button mturnonbtn, mturnoffbtn, mdiscoverbtn, mconnectbtn, mbackbtn, msentbtn;
     ListView lvnewdevice, lvpairedevice;
 
@@ -110,13 +118,17 @@ public class Bluetoothconnection extends AppCompatActivity{
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         registerReceiver(mBroadcastReceiver4, filter);
 
+        //Initialize SharedPreferences
+        Bluetoothconnection.context = getApplicationContext();
+        this.sharedPreferences();
+
         IntentFilter filter2 = new IntentFilter("ConnectionStatus");
         LocalBroadcastManager.getInstance(this).registerReceiver(mBroadcastReceiver5, filter2);
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
+
         //Bluetooth
         mbluetoothadapter = BluetoothAdapter.getDefaultAdapter();
-
-        sharedPreferences = getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
 
         lvnewdevice.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -212,7 +224,7 @@ public class Bluetoothconnection extends AppCompatActivity{
                 editor.putString("message", sharedPreferences.getString("message", "") + '\n' + sentText);
                 editor.commit();
 //                mreceivedtext.setText(sharedPreferences.getString("message", ""));
-//                msenttext.setText("");
+                msenttext.setText("");
 
                 if (Bluetoothservice.BluetoothConnectionStatus == true) {
                     byte[] bytes = sentText.getBytes(Charset.defaultCharset());
@@ -289,6 +301,15 @@ public class Bluetoothconnection extends AppCompatActivity{
             }
         });
 
+    }
+
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
+    }
+
+    public static void sharedPreferences() {
+        sharedPreferences = Bluetoothconnection.getSharedPreferences(Bluetoothconnection.context);
+        editor = sharedPreferences.edit();
     }
 
     @Override
@@ -419,8 +440,8 @@ public class Bluetoothconnection extends AppCompatActivity{
             checkBTPermission();
             BluetoothDevice mDevice = intent.getParcelableExtra("Device");
             String status = intent.getStringExtra("Status");
-//            sharedPreferences = getApplicationContext().getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
-//            editor = sharedPreferences.edit();
+            sharedPreferences = getApplicationContext().getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
+            editor = sharedPreferences.edit();
 
             if(status.equals("connected")){
                 try {
@@ -431,22 +452,22 @@ public class Bluetoothconnection extends AppCompatActivity{
 
                 Log.d(TAG, "mBroadcastReceiver5: Device now connected to "+mDevice.getName());
                 Toast.makeText(Bluetoothconnection.this, "Device now connected to "+mDevice.getName(), Toast.LENGTH_LONG).show();
-//                editor.putString("connStatus", "Connected to " + mDevice.getName());
+                editor.putString("connStatus", "Connected to " + mDevice.getName());
                 mbluestatus.setText("Connected to " + mDevice.getName());
             }
             else if(status.equals("disconnected") && retryConnection == false){
                 Log.d(TAG, "mBroadcastReceiver5: Disconnected from "+mDevice.getName());
                 Toast.makeText(Bluetoothconnection.this, "Disconnected from "+mDevice.getName(), Toast.LENGTH_LONG).show();
                 mBluetoothconnection = new Bluetoothservice(Bluetoothconnection.this);
-//                mBluetoothConnection.startAcceptThread();
+                mBluetoothconnection.startAcceptThread();
 
 
-//                sharedPreferences = getApplicationContext().getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
-//                editor = sharedPreferences.edit();
-//                editor.putString("connStatus", "Disconnected");
+                sharedPreferences = getApplicationContext().getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
+                editor = sharedPreferences.edit();
+                editor.putString("connStatus", "Disconnected");
                 TextView connStatusTextView = findViewById(R.id.bluestatus);
                 connStatusTextView.setText("Disconnected");
-//                editor.commit();
+                editor.commit();
 
                 try {
 //                    myDialog.show();
@@ -457,15 +478,33 @@ public class Bluetoothconnection extends AppCompatActivity{
                 reconnectionHandler.postDelayed(reconnectionRunnable, 5000);
 
             }
-//            editor.commit();
+            editor.commit();
         }
     };
+
+    BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String message = intent.getStringExtra("receivedMessage");
+            showLog("receivedMessage: message --- " + message);
+            sharedPreferences();
+            String receivedText = sharedPreferences.getString("message", "") + "\n" + message;
+            editor.putString("message", receivedText);
+            editor.commit();
+            refreshMessageReceived();
+        }
+    };
+
+    public static void refreshMessageReceived() {
+        mreceivedtext.setText(sharedPreferences.getString("message", ""));
+    }
 
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy: called");
         super.onDestroy();
         try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
             unregisterReceiver(mBroadcastReceiver1);
             unregisterReceiver(mBroadcastReceiver2);
             unregisterReceiver(mBroadcastReceiver3);

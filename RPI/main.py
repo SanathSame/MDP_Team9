@@ -6,7 +6,7 @@ from android import *
 from stm32 import *
 from picamera import PiCamera
 from ultrasonic import *
-# from picamera.array import PiRGBArray
+import matplotlib.pyplot as plt
 
 class RPI(threading.Thread):
     def __init__(self):
@@ -27,14 +27,18 @@ class RPI(threading.Thread):
 
         self.imgCount = 0
         self.camera = None
-        #self.SEPARATOR = "@.@"
+
+        #temp variables
+        '''self.x1 = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+        self.y2 = [4.4,5.7,6.9,7,8,9,10,13,14, 15]
+        self.y1 =[5,6,7,8,9,10,13,14, 15, 19]'''
+        self.time = 0.1
+        self.x1 = []
+        self.y1 = []
+        self.y2 = []
 
     def startThread(self):
-        # pc send thread created
-        #sendToPcThread = threading.Thread(target=self.sendToPc, args=(), name="send_Pc_Thread")
-        #sendToSTMThread = threading.Thread(target=self.sendToSTM, args=(), name="send_STM_Thread")
-
-        # pc read thread created
+        # Read threads created
         #receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
         receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
         receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
@@ -141,11 +145,17 @@ class RPI(threading.Thread):
             stmMsg = self.stm.receiveMsg()
             if stmMsg:
                 print("Message from STM: " + stmMsg)
-                time.sleep(2)
+                '''time.sleep(2)
                 msg = str(input("Message for STM: "))
                 if len(msg) < 6:
                     msg += " " * (6 - len(msg))
-                    self.sendToSTM(msg)
+                    self.sendToSTM(msg)'''
+                y1 , y2 = stmMsg.split()
+                rpi.y1.append(int(y1))
+                rpi.y2.append(int(y2))
+                rpi.x1.append(self.time)
+                self.time += 0.1
+
 
     def snapPic(self):
         try:
@@ -174,6 +184,16 @@ class RPI(threading.Thread):
             except Exception as e:
                 print("Error with Ultra: %s" %str(e))
 
+    def plot_values(self, x1, y1, y2):
+        plt.plot(x1, y1, label="line 1")
+        plt.plot(x1, y2, label="line 2")
+        plt.xlabel('time/s')
+        plt.ylabel('distance')
+        plt.title('STM test')
+        plt.legend()
+        plt.show()
+
+
     def closeAll(self):
         self.pcObject.disconnect()
         self.androidObject.disconnect()
@@ -191,4 +211,5 @@ if __name__ == "__main__":
             pass
 
     except KeyboardInterrupt:
+        rpi.plot_values(rpi.x1, rpi.y1, rpi.y2)
         rpi.closeAll()

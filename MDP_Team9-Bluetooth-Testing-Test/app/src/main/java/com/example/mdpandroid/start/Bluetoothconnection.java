@@ -110,7 +110,7 @@ public class Bluetoothconnection extends AppCompatActivity{
             _map = (BoardMap) getIntent().getSerializableExtra("boardmap"); //Obtaining data
         }
         setContentView(R.layout.activity_bluetoothconnection);
-//        useReceivedMessage(_map, mapCanvas, "ROBOT 15, 15, 0");
+        useReceivedMessage(_map, mapCanvas, "TARGET 1,20");
 
         msenttext = findViewById(R.id.senttext);
         mreceivedtext = findViewById(R.id.receivedtext);
@@ -316,6 +316,7 @@ public class Bluetoothconnection extends AppCompatActivity{
                 i.putExtras(bundle);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
+
             }
         });
 
@@ -514,10 +515,30 @@ public class Bluetoothconnection extends AppCompatActivity{
         }
     };
     public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
-        String[] parts = msg.replace(" ","").replace("ROBOT", "").split(",");
-        _map.getRobo().setX(Integer.parseInt(parts[0]));
-        _map.getRobo().setY(20-Integer.parseInt(parts[1]));
-        _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW
+        int j;
+        String[] cases = {"ROBOT", "TARGET"};
+        String[] parts;
+        for(j = 0; j < cases.length; j++)
+            if(msg.contains(cases[j]))
+                break;
+        switch(j) {
+            case 0:
+                parts = msg.replace(" ","").replace("ROBOT", "").split(",");
+                _map.getRobo().setX(Integer.parseInt(parts[0]));
+                _map.getRobo().setY(20-Integer.parseInt(parts[1]));
+                _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW
+                break;
+            case 1:
+                parts = msg.replace(" ","").replace("TARGET", "").split(",");
+                int targetid = Integer.parseInt(parts[0]);
+                int imageid = Integer.parseInt(parts[1]);
+                Target t = _map.getTargets().get(targetid-1);
+                t.setImg(imageid);
+                break;
+            default:
+                System.out.println("invalid");
+        }
+
     }
 
     public static void refreshMessageReceived() {

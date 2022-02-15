@@ -338,7 +338,7 @@ public final class MapCanvas extends View implements Serializable {
             textPaint.setColor(Color.WHITE);
             textPaint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText(Integer.toString(this._map.getTargets().get(tarNum).getImg()),
-                    this.cellSize * (x - 1) + this.cellSize * 0.5f,
+                    this.cellSize * (x - 1) + this.cellSize * 0.50f,
                     this.cellSize * y - this.cellSize * 0.25f,
                     textPaint
             );

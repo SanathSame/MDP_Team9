@@ -36,7 +36,9 @@ import static com.example.mdpandroid.map.Target.TARGET_FACE_EAST;
 import static com.example.mdpandroid.map.Target.TARGET_FACE_WEST;
 import static com.example.mdpandroid.map.Target.TARGET_FACE_SOUTH;
 
-public final class MapCanvas extends View {
+import java.io.Serializable;
+
+public final class MapCanvas extends View implements Serializable {
     private int pathColor;
     private int startColor;
     private int endColor;
@@ -508,4 +510,5 @@ public final class MapCanvas extends View {
         this.isSolving = flag;
     }
 }
+
 

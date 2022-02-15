@@ -3,9 +3,10 @@ package com.example.mdpandroid.map;
 import static com.example.mdpandroid.map.Robot.ROBOT_FACE_NORTH;
 import static com.example.mdpandroid.map.Target.TARGET_IMG_NULL;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BoardMap {
+public class BoardMap implements Serializable {
     Robot robo;
     ArrayList<Target> targets = new ArrayList<Target>();
     Target lastTouched;
@@ -26,9 +27,8 @@ public class BoardMap {
         super();
         robo = new Robot(this);
         board[robo.getX()][robo.getY()] = CAR_CELL_CODE;
-
-        // targets.add(new Target(10, 21-10, targets.size())); // 10, 10
-        // targets.add(new Target(15, 21-15, targets.size())); // 15, 15
+        //targets.add(new Target(10, 21-10, targets.size())); // 10, 10
+        //targets.add(new Target(15, 21-15, targets.size())); // 15, 15
         // targets.add(new Target(15, 21-5, targets.size())); // 15, 5
         // targets.add(new Target(20, 21-20, targets.size())); // 20, 20
         // targets.add(new Target(20, 21-1, targets.size())); // 20, 1
@@ -39,6 +39,14 @@ public class BoardMap {
             // n++;
         // }
     }
+//    public final void addTargets(ArrayList targets){
+//        System.out.println("hello");
+//        System.out.println(targets);
+//        targets.add(new Target(10, 21-10, targets.size())); // 10, 10
+//        targets.add(new Target(15, 21-15, targets.size())); // 15, 15
+//        System.out.println(targets);
+//        System.out.println("end");
+//    }
 
     public final void resetGrid() {
         for(int i = 1; i <= 19; ++i)

@@ -1,6 +1,8 @@
 package com.example.mdpandroid.map;
 
-public class Target {
+import java.io.Serializable;
+
+public class Target implements Serializable {
     private int x, y, n, f, i;
 
     public static final int TARGET_FACE_NORTH = 0;

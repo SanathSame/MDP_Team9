@@ -2,7 +2,9 @@ package com.example.mdpandroid.map;
 
 import static com.example.mdpandroid.map.BoardMap.TARGET_CELL_CODE;
 
-public class Robot {
+import java.io.Serializable;
+
+public class Robot implements Serializable {
     private int x, y, s, m, f;
 
     private BoardMap _map;

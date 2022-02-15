@@ -31,7 +31,7 @@
 <!--            <Button-->
 <!--                android:layout_width="wrap_content"-->
 <!--                android:layout_height="wrap_content"-->
-<!--                android:id="@+id/btn_fastest"-->
+<!--                android:id="@+id/btnbt_fastest"-->
 <!--                android:text="Fastest"-->
 <!--                android:textColor="@color/blue"-->
 <!--                app:rippleColor="@color/blue_hl"-->

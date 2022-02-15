@@ -1,11 +1,15 @@
 package com.example.mdpandroid;
 
+import static com.example.mdpandroid.map.BoardMap.TARGET_CELL_CODE;
 import static com.example.mdpandroid.map.Robot.*;
+import static com.example.mdpandroid.map.Target.TARGET_IMG_NULL;
 
+import com.example.mdpandroid.map.Target;
 import com.example.mdpandroid.start.Bluetoothconnection;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 
 import android.os.Handler;
@@ -42,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     MapCanvas mapCanvas;
     private BoardMap _map = new BoardMap();
+    private BoardMap mapPass = new BoardMap();
     Button btnReset;
     Button btnTarget;
     Button btnImg;
@@ -79,10 +84,29 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
         bottomSheetViewPager = (ViewPager) this.findViewById(R.id.viewpager);
         topTitle = (TextView) this.findViewById(R.id.top_title);
+        Canvas canvas;
 
         setupBottomSheet();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mapPass = (BoardMap) getIntent().getSerializableExtra("boardmap"); //Obtaining data
+            ArrayList<Target> targets = mapPass.getTargets();
+            _map = mapCanvas.getFinder();
+            _map.getRobo().setX(mapPass.getRobo().getX());
+            _map.getRobo().setY(mapPass.getRobo().getY());
+            _map.getRobo().setFacing(mapPass.getRobo().getFacing());
 
-        _map = mapCanvas.getFinder();
+            for(int i=0; i < mapPass.getTargets().size(); i++) {
+                _map.getTargets().add(new Target(mapPass.getTargets().get(i).getX(), mapPass.getTargets().get(i).getY(), i, mapPass.getTargets().get(i).getF()));
+                _map.getBoard()[mapPass.getTargets().get(i).getX()][mapPass.getTargets().get(i).getY()] = TARGET_CELL_CODE;
+            }
+            updateRoboStatus();
+        }
+        else{
+            _map = mapCanvas.getFinder();
+            System.out.println(_map.getRobo());
+        }
+
 
         btnTarget.setOnClickListener(new OnClickListener() {
             @Override
@@ -99,9 +123,14 @@ public class MainActivity extends AppCompatActivity {
 
         Button backBtn = findViewById(R.id.btn_back);
         backBtn.setOnClickListener(v->{
-            Intent intent = new Intent(this, StartedActivity.class);
-            startActivity(intent);
-            finish();
+            Bundle bundle = new Bundle();
+            System.out.println(mapCanvas.getFinder());
+            //bundle.putSerializable("mapcanvas", mapCanvas);
+            bundle.putSerializable("boardmap", _map);
+            Intent i = new Intent(getApplicationContext(), Bluetoothconnection.class);
+            i.putExtras(bundle);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
         });
 
 //        btnFastest.setOnClickListener(new OnClickListener() {

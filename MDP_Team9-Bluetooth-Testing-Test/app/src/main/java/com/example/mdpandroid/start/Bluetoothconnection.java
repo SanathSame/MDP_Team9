@@ -1,7 +1,13 @@
 package com.example.mdpandroid.start;
 
+import static com.example.mdpandroid.map.BoardMap.TARGET_CELL_CODE;
+
 import com.example.mdpandroid.R;
 import com.example.mdpandroid.MainActivity;
+import com.example.mdpandroid.map.BoardMap;
+import com.example.mdpandroid.map.MapCanvas;
+import com.example.mdpandroid.map.Target;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
@@ -41,7 +47,7 @@ import java.util.UUID;
 public class Bluetoothconnection extends AppCompatActivity{
 
     private static final String TAG = "Bluetoothconnection";
-    private static SharedPreferences sharedPreferences;
+    public static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static Context context;
     private static final int REQUEST_ENABLE_BT = 0;
@@ -49,6 +55,7 @@ public class Bluetoothconnection extends AppCompatActivity{
     public static BluetoothDevice mBTDevice;
     BluetoothAdapter mbluetoothadapter;
     Bluetoothservice mBluetoothconnection;
+    MapCanvas mapCanvas;
 
     public ArrayList<BluetoothDevice> mNewBTDevices;
     public ArrayList<BluetoothDevice> mPairedBTDevices;
@@ -63,6 +70,8 @@ public class Bluetoothconnection extends AppCompatActivity{
 
     boolean retryConnection = false;
     Handler reconnectionHandler = new Handler();
+    BoardMap _map;
+    //MapCanvas mapCanvas;
 
     Runnable reconnectionRunnable = new Runnable() {
         @Override
@@ -96,7 +105,12 @@ public class Bluetoothconnection extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            _map = (BoardMap) getIntent().getSerializableExtra("boardmap"); //Obtaining data
+        }
         setContentView(R.layout.activity_bluetoothconnection);
+        useReceivedMessage(_map, mapCanvas, "ROBOT 1,2,0");
 
         msenttext = findViewById(R.id.senttext);
         mreceivedtext = findViewById(R.id.receivedtext);
@@ -296,8 +310,12 @@ public class Bluetoothconnection extends AppCompatActivity{
         mbackbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent blueintent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(blueintent);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("boardmap", _map);
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                i.putExtras(bundle);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
             }
         });
 
@@ -489,12 +507,22 @@ public class Bluetoothconnection extends AppCompatActivity{
             showLog("receivedMessage: message --- " + message);
             sharedPreferences();
             String receivedText = message;
-//            String receivedText = sharedPreferences.getString("message", "") + "\n" + message;
             editor.putString("message", receivedText);
             editor.commit();
+            useReceivedMessage(_map, mapCanvas, receivedText);
             refreshMessageReceived();
         }
     };
+    public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
+        String[] parts = msg.replace(" ","").replace("ROBOT", "").split(",");
+        System.out.println(parts[0]);
+        int xy = Integer.parseInt(parts[0]);
+        System.out.println(xy + "hello");
+        System.out.println(_map.getTargets().size() + "penis");
+        _map.getRobo().setX(Integer.parseInt(parts[0]));
+        _map.getRobo().setY(20-Integer.parseInt(parts[1]));
+        _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW
+    }
 
     public static void refreshMessageReceived() {
         mreceivedtext.setText(sharedPreferences.getString("message", ""));

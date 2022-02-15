@@ -98,9 +98,12 @@ public class MainActivity extends AppCompatActivity {
 
             for(int i=0; i < mapPass.getTargets().size(); i++) {
                 _map.getTargets().add(new Target(mapPass.getTargets().get(i).getX(), mapPass.getTargets().get(i).getY(), i, mapPass.getTargets().get(i).getF()));
+                if(mapPass.getTargets().get(i).getImg() > -1)
+                    _map.getTargets().get(i).setImg(mapPass.getTargets().get(i).getImg());
                 _map.getBoard()[mapPass.getTargets().get(i).getX()][mapPass.getTargets().get(i).getY()] = TARGET_CELL_CODE;
             }
             updateRoboStatus();
+
         }
         else{
             _map = mapCanvas.getFinder();
@@ -229,8 +232,6 @@ public class MainActivity extends AppCompatActivity {
                         mHandler.removeCallbacks(mAction);
                         mHandler = null;
                         break;
-
-
                 }
                 updateRoboStatus();
                 return false;

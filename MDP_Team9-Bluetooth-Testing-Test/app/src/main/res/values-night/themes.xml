@@ -1,0 +1,14 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.MDP13CTRLer" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- <item name="actionBarSize">50dip</item> -->
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/yellow</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/black_hl</item>
+        <!-- Customize your theme here. -->
+        <item name="android:navigationBarColor">@color/black_hl</item>
+    </style>
+</resources>

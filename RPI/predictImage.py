@@ -9,7 +9,13 @@ WEIGHTS_PATH = 'Image Recognition/weights/best.pt' # Path to weights being used
 MODEL_PATH = 'Image Recognition' # Path to yolov5 repo locally
 PREDICTIONS_DIR = 'RPI/predictions' # Path to save predictions
 
-def predict(img_path):
+def predict(img_path: str):
+    """
+    Given a path to an image file, predict what classes are in the image
+    Returns a list of strings with the format "IMG <ID> <CLASS>", where 
+    - ID is the ID of the class
+    - CLASS is the name of the class
+    """
     model = torch.hub.load(MODEL_PATH, 'custom', path=WEIGHTS_PATH, source='local')
 
     img = cv2.imread(img_path)
@@ -24,6 +30,7 @@ def predict(img_path):
         counter += 1
 
     # Extract ids and classnames
+    # Note that results are sorted from highest confidence to lowest confidence
     predicted_ids = results.pandas().xyxy[0][['class']].values.flatten()
     predicted_classnames = results.pandas().xyxy[0][['name']].values.flatten()
 

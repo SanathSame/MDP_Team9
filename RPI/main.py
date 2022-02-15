@@ -181,7 +181,9 @@ if __name__ == "__main__":
         print("Gonna sleep first")
         
         time.sleep(3)
+        print("Sending image")
         rpi.sendToImg()
+        print("Sent image")
 
     except KeyboardInterrupt:
         rpi.closeAll()

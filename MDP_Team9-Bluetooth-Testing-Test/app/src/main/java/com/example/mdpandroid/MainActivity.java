@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             _map = mapCanvas.getFinder();
-            System.out.println(_map.getRobo());
         }
 
 
@@ -124,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
         Button backBtn = findViewById(R.id.btn_back);
         backBtn.setOnClickListener(v->{
             Bundle bundle = new Bundle();
-            System.out.println(mapCanvas.getFinder());
-            //bundle.putSerializable("mapcanvas", mapCanvas);
             bundle.putSerializable("boardmap", _map);
             Intent i = new Intent(getApplicationContext(), Bluetoothconnection.class);
             i.putExtras(bundle);

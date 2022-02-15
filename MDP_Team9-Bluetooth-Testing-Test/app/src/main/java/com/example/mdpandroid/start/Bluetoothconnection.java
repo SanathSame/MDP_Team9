@@ -110,7 +110,7 @@ public class Bluetoothconnection extends AppCompatActivity{
             _map = (BoardMap) getIntent().getSerializableExtra("boardmap"); //Obtaining data
         }
         setContentView(R.layout.activity_bluetoothconnection);
-        useReceivedMessage(_map, mapCanvas, "ROBOT 1,2,0");
+//        useReceivedMessage(_map, mapCanvas, "ROBOT 15, 15, 0");
 
         msenttext = findViewById(R.id.senttext);
         mreceivedtext = findViewById(R.id.receivedtext);
@@ -515,10 +515,6 @@ public class Bluetoothconnection extends AppCompatActivity{
     };
     public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
         String[] parts = msg.replace(" ","").replace("ROBOT", "").split(",");
-        System.out.println(parts[0]);
-        int xy = Integer.parseInt(parts[0]);
-        System.out.println(xy + "hello");
-        System.out.println(_map.getTargets().size() + "penis");
         _map.getRobo().setX(Integer.parseInt(parts[0]));
         _map.getRobo().setY(20-Integer.parseInt(parts[1]));
         _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW

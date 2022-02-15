@@ -39,14 +39,6 @@ public class BoardMap implements Serializable {
             // n++;
         // }
     }
-//    public final void addTargets(ArrayList targets){
-//        System.out.println("hello");
-//        System.out.println(targets);
-//        targets.add(new Target(10, 21-10, targets.size())); // 10, 10
-//        targets.add(new Target(15, 21-15, targets.size())); // 15, 15
-//        System.out.println(targets);
-//        System.out.println("end");
-//    }
 
     public final void resetGrid() {
         for(int i = 1; i <= 19; ++i)

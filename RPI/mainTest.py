@@ -2,10 +2,10 @@ from pcComm import *
 import socket
 import os
 import tqdm
-# from android import *
-#from stm32 import *
+from android import *
+from stm32 import *
 from pcComm import *
-# import bluetooth
+import bluetooth
 import sys
 
 BUFFER_SIZE = 1024

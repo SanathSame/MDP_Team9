@@ -91,3 +91,4 @@ If you want to check sample code to send images to the server, check `send_image
 - https://www.youtube.com/watch?v=gDoMYuyY_qw
 - https://youtu.be/a9Bre0YJ8L8Rocket
 - https://youtu.be/5h5UtLau3Vc
+- https://github.com/ultralytics/yolov5/issues/36

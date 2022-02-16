@@ -13,14 +13,14 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        self.pcObject = PcComm()
-        self.androidObject = Android()
+        #self.pcObject = PcComm()
+        #self.androidObject = Android()
         self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
+        #self.pcObject.connect()
         #self.androidObject.connect()
-        #self.stm.connect()
+        self.stm.connect()
         print("Connecting to other devices...")
 
         time.sleep(2)
@@ -29,10 +29,7 @@ class RPI(threading.Thread):
         self.camera = None
 
         #temp variables
-        '''self.x1 = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-        self.y2 = [4.4,5.7,6.9,7,8,9,10,13,14, 15]
-        self.y1 =[5,6,7,8,9,10,13,14, 15, 19]'''
-        self.time = 0.1
+        self.time = 0.05
         self.x1 = []
         self.y1 = []
         self.y2 = []
@@ -51,9 +48,10 @@ class RPI(threading.Thread):
         receiveFromSTMThread.daemon = True
 
         #receiveFromImgThread.start()
-        receiveFromAlgoThread.start()
+        #receiveFromAlgoThread.start()
         #receiveFromAndroidThread.start()
-        #receiveFromSTMThread.start()
+        self.sendToSTM("F 200 ")            #Hardcoded msg to be sent to STM
+        receiveFromSTMThread.start()
 
     def receiveFromImg(self):
         while True:
@@ -137,24 +135,28 @@ class RPI(threading.Thread):
     def sendToSTM(self, msgToSTM):
         if (msgToSTM):
             self.stm.sendMsg(msgToSTM)
-            print("Message send to Arduino is " + msgToSTM)
+            print("Message send to STM is " + msgToSTM)
+        '''while True:
+            msgToSTM = input("Enter your msg: ")
+            self.stm.sendMsg(msgToSTM)'''
 
     def receiveFromSTM(self):
         # Enclose in while loop
         while True:
             stmMsg = self.stm.receiveMsg()
-            if stmMsg:
-                print("Message from STM: " + stmMsg)
+            if stmMsg is not None and ord(stmMsg[0]) != 0 :
+                #print("Message from STM: " + stmMsg)       #Comment for debug
+
                 '''time.sleep(2)
                 msg = str(input("Message for STM: "))
                 if len(msg) < 6:
                     msg += " " * (6 - len(msg))
                     self.sendToSTM(msg)'''
-                y1 , y2 = stmMsg.split()
+                y1, y2 = int(stmMsg[:3]), int(stmMsg[4:])
                 rpi.y1.append(int(y1))
                 rpi.y2.append(int(y2))
                 rpi.x1.append(self.time)
-                self.time += 0.1
+                self.time += 0.05
 
 
     def snapPic(self):
@@ -162,11 +164,7 @@ class RPI(threading.Thread):
             self.camera.start_preview()
             self.camera.capture('a.jpeg')
             print("Captured image for sending")
-            '''for i, filename in enumerate(self.camera.capture_continuous('image{counter:02d}.jpg')):
-                print(filename)
-                time.sleep(1)
-                if i == 1:
-                    break'''
+
         except Exception as e:
             print("Error in taking picture...")
     
@@ -182,21 +180,27 @@ class RPI(threading.Thread):
             except KeyboardInterrupt:
                 ultrasonic.cleanup()
             except Exception as e:
-                print("Error with Ultra: %s" %str(e))
+                print("Error with Ultra: %s" % str(e))
 
-    def plot_values(self, x1, y1, y2):
+    '''def plot_values(self, x1, y1, y2):
+        plt.figure(1)
         plt.plot(x1, y1, label="line 1")
         plt.plot(x1, y2, label="line 2")
         plt.xlabel('time/s')
         plt.ylabel('distance')
         plt.title('STM test')
         plt.legend()
-        plt.show()
+        plt.show()'''
 
 
     def closeAll(self):
-        self.pcObject.disconnect()
-        self.androidObject.disconnect()
+        #self.pcObject.disconnect()
+        #self.androidObject.disconnect()
+        with open("test1.csv", 'w') as f:
+            f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
+            f.write(str(rpi.y2[20:-10])[1:-1])
+            f.close()
+        print("in closing....")
         self.stm.disconnect()
         self.camera.close()
 
@@ -211,5 +215,4 @@ if __name__ == "__main__":
             pass
 
     except KeyboardInterrupt:
-        rpi.plot_values(rpi.x1, rpi.y1, rpi.y2)
         rpi.closeAll()

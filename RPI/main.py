@@ -6,7 +6,6 @@ from android import *
 from stm32 import *
 from picamera import PiCamera
 from ultrasonic import *
-import matplotlib.pyplot as plt
 
 class RPI(threading.Thread):
     def __init__(self):

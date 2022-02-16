@@ -209,9 +209,16 @@ if __name__ == "__main__":
     try:
         rpi.camera = PiCamera()
         rpi.camera.resolution = (640, 480)
+
         rpi.startThread()
         while True:
             pass
-
+            
+        '''print("Gonna sleep first")
+        
+        time.sleep(3)
+        print("Sending image")
+        rpi.sendToImg()
+        print("Sent image")'''
     except KeyboardInterrupt:
         rpi.closeAll()

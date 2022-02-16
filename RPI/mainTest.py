@@ -7,14 +7,17 @@ from stm32 import *
 from pcComm import *
 import bluetooth
 import sys
+from predictImage import predict
 
 BUFFER_SIZE = 1024
 SEPARATOR = "@.@"
+IP_ADDRESS = "192.168.9.9"
+PORT = 1234
 
 # Test TCP codes
 def TestTCP():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(("192.168.9.9", 1234))
+    sock.connect((IP_ADDRESS, PORT))
 
     # Sending msg
     msg = input("Enter message: ")
@@ -107,16 +110,13 @@ def TestSTM():
         print("Terminating the program now...")
 
 def TestImagePrediction():
-    # model = torch.hub.load('ultralytics/yolov5', 'custom', path='Image Recognition/weights/best.pt')
-    s = socket.socket()        
-    host = '192.168.9.9'# ip of raspberry pi 
-    port = 1234          
-    s.connect((host, port))
+    s = socket.socket()      
+    s.connect((IP_ADDRESS, PORT))
     print("Connected")
 
-    # signal to rpi that we want an image
-
-    with open("RPI/images/to_predict.jpeg", "wb") as f:
+    # Get image from RPI and save locally
+    SAVE_FILE = "RPI/images/to_predict.jpeg"
+    with open(SAVE_FILE, "wb") as f:
         while True:
             data = s.recv(1024)
             print(data)
@@ -127,10 +127,17 @@ def TestImagePrediction():
         print("File done")
 
     print("Received")
-    s.close()
+    # s.close()
 
-    os.system('python3 "Image Recognition/detect.py" --weights "Image Recognition/weights/best.pt" --source "RPI/images/to_predict.jpeg" --name "../../../RPI/predictions/run"')
-  
+    predictions = predict(SAVE_FILE)
+    print("Predictions", predictions)
+
+    # s.connect((IP_ADDRESS, PORT))
+    if len(predictions) == 0:
+        s.send(bytes("NOIMAGE", "utf-8"))
+    else:
+        s.send(bytes(predictions[0], "utf-8"))
+    s.close()
 
 if __name__ == "__main__":
     TestImagePrediction()

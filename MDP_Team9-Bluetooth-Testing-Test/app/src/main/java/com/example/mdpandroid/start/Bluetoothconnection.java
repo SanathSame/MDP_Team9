@@ -110,7 +110,6 @@ public class Bluetoothconnection extends AppCompatActivity{
             _map = (BoardMap) getIntent().getSerializableExtra("boardmap"); //Obtaining data
         }
         setContentView(R.layout.activity_bluetoothconnection);
-        useReceivedMessage(_map, mapCanvas, "TARGET 1,20");
 
         msenttext = findViewById(R.id.senttext);
         mreceivedtext = findViewById(R.id.receivedtext);

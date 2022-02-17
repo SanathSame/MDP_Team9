@@ -12,14 +12,14 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        self.pcObject = PcComm()
+        #self.pcObject = PcComm()
         self.androidObject = Android()
-        self.stm = STM()
+        #self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
+        #self.pcObject.connect()
         self.androidObject.connect()
-        self.stm.connect()
+        #self.stm.connect()
         print("Connecting to other devices...")
 
         time.sleep(2)
@@ -35,23 +35,21 @@ class RPI(threading.Thread):
 
     def startThread(self):
         # Read threads created
-        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
+        #receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
         #receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
         receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
-        receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
+        #receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
 
         # Makes Threads run in the background
-        receiveFromImgThread.daemon = True
+        #receiveFromImgThread.daemon = True
         #receiveFromAlgoThread.daemon = True
         receiveFromAndroidThread.daemon = True
-        receiveFromSTMThread.daemon = True
+        #receiveFromSTMThread.daemon = True
 
-        receiveFromImgThread.start()
+        #receiveFromImgThread.start()
         #receiveFromAlgoThread.start()
         receiveFromAndroidThread.start()
-        #self.sendToSTM("F 200 ")            #Hardcoded msg to be sent to STM
-        #self.sendToSTM("S     ")
-        receiveFromSTMThread.start()
+        #receiveFromSTMThread.start()
 
     def receiveFromImg(self):
         while True:
@@ -59,9 +57,8 @@ class RPI(threading.Thread):
             if imgMsg:
                 print("Message received from Image: " + str(imgMsg))
                 if imgMsg[:4] == "IMG":
-                    self.sendToAndroid(imgMsg[4:])
-
-
+                    pass
+                    #self.sendToAndroid(imgMsg[4:])
 
     def receiveFromAlgo(self):
         while True:
@@ -144,7 +141,7 @@ class RPI(threading.Thread):
         # Enclose in while loop
         while True:
             stmMsg = self.stm.receiveMsg()
-            if stmMsg is not None and ord(stmMsg[0]) != 0 :
+            if stmMsg is not None and ord(stmMsg[0]) != 0:
                 #print("Message from STM: " + stmMsg)       #Comment for debug
 
                 '''time.sleep(2)
@@ -182,26 +179,11 @@ class RPI(threading.Thread):
             except Exception as e:
                 print("Error with Ultra: %s" % str(e))
 
-    '''def plot_values(self, x1, y1, y2):
-        plt.figure(1)
-        plt.plot(x1, y1, label="line 1")
-        plt.plot(x1, y2, label="line 2")
-        plt.xlabel('time/s')
-        plt.ylabel('distance')
-        plt.title('STM test')
-        plt.legend()
-        plt.show()'''
-
 
     def closeAll(self):
-        self.pcObject.disconnect()
+        #self.pcObject.disconnect()
         self.androidObject.disconnect()
-        '''with open("test1.csv", 'w') as f:
-            f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
-            f.write(str(rpi.y2[20:-10])[1:-1])
-            f.close()
-        print("in closing....")'''
-        self.stm.disconnect()
+        #self.stm.disconnect()
         self.camera.close()
 
 

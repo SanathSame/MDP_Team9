@@ -12,13 +12,13 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        self.pcObject = PcComm()
-        self.androidObject = Android()
+        #self.pcObject = PcComm()
+        #self.androidObject = Android()
         self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
-        self.androidObject.connect()
+        #self.pcObject.connect()
+        #self.androidObject.connect()
         self.stm.connect()
         print("Connecting to other devices...")
 
@@ -35,23 +35,25 @@ class RPI(threading.Thread):
 
     def startThread(self):
         # Read threads created
-        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
-        #receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
+        #receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
+        receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
         receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
         receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
 
         # Makes Threads run in the background
-        receiveFromImgThread.daemon = True
-        #receiveFromAlgoThread.daemon = True
+        #receiveFromImgThread.daemon = True
+        receiveFromAlgoThread.daemon = True
         receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
 
-        receiveFromImgThread.start()
+        #receiveFromImgThread.start()
         #receiveFromAlgoThread.start()
-        receiveFromAndroidThread.start()
-        #self.sendToSTM("F 200 ")            #Hardcoded msg to be sent to STM
+        #receiveFromAndroidThread.start()
+        #self.sendToSTM("F 100 ")            #Hardcoded msg to be sent to STM
         #self.sendToSTM("S     ")
         receiveFromSTMThread.start()
+
+        self.sendToSTM()
 
     def receiveFromImg(self):
         while True:
@@ -132,31 +134,31 @@ class RPI(threading.Thread):
     
     letter(CAPS) value 
     '''
-    def sendToSTM(self, msgToSTM):
-        if (msgToSTM):
+    def sendToSTM(self): #, msgToSTM):
+        '''if (msgToSTM):
             self.stm.sendMsg(msgToSTM)
-            print("Message send to STM is " + msgToSTM)
-        '''while True:
-            msgToSTM = input("Enter your msg: ")
-            self.stm.sendMsg(msgToSTM)'''
+            print("Message send to STM is " + msgToSTM)'''
+        while True:
+            msgToSTM = input("Enter your command (6 chars): ")
+            self.stm.sendMsg(str(msgToSTM))
 
     def receiveFromSTM(self):
         # Enclose in while loop
         while True:
             stmMsg = self.stm.receiveMsg()
             if stmMsg is not None and ord(stmMsg[0]) != 0 :
-                #print("Message from STM: " + stmMsg)       #Comment for debug
+                print("Message from STM: " + stmMsg)       #Comment for debug
 
                 '''time.sleep(2)
                 msg = str(input("Message for STM: "))
                 if len(msg) < 6:
                     msg += " " * (6 - len(msg))
                     self.sendToSTM(msg)'''
-                y1, y2 = int(stmMsg[:3]), int(stmMsg[4:])
+                '''y1, y2 = int(stmMsg[:3]), int(stmMsg[4:])
                 rpi.y1.append(int(y1))
                 rpi.y2.append(int(y2))
                 rpi.x1.append(self.time)
-                self.time += 0.05
+                self.time += 0.05'''
 
 
     def snapPic(self):
@@ -194,8 +196,8 @@ class RPI(threading.Thread):
 
 
     def closeAll(self):
-        self.pcObject.disconnect()
-        self.androidObject.disconnect()
+        #self.pcObject.disconnect()
+        #self.androidObject.disconnect()
         '''with open("test1.csv", 'w') as f:
             f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
             f.write(str(rpi.y2[20:-10])[1:-1])

@@ -6,9 +6,13 @@ import static com.example.mdpandroid.map.Target.TARGET_IMG_NULL;
 
 import com.example.mdpandroid.map.Target;
 import com.example.mdpandroid.start.Bluetoothconnection;
-
+import android.content.IntentFilter;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.BroadcastReceiver;
+
 import android.graphics.Canvas;
 import android.os.Bundle;
 
@@ -20,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,6 +49,11 @@ import com.example.mdpandroid.map.BoardMap;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Declaration Variables
+    private static SharedPreferences sharedPreferences;
+    private static SharedPreferences.Editor editor;
+    private static Context context;
+
     MapCanvas mapCanvas;
     private BoardMap _map = new BoardMap();
     private BoardMap mapPass = new BoardMap();
@@ -55,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnReverse;
     ImageButton btnLeft;
     ImageButton btnRight;
-    TextView topTitle;
+    TextView topTitle, testingmsg;
 
     Toolbar topToolbar;
     Toolbar bottomSheetToolbar;
@@ -84,26 +94,37 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
         bottomSheetViewPager = (ViewPager) this.findViewById(R.id.viewpager);
         topTitle = (TextView) this.findViewById(R.id.top_title);
-        Canvas canvas;
+        testingmsg = this.findViewById(R.id.Testingmsg);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
+
+        // Set up sharedPreferences
+        MainActivity.context = getApplicationContext();
+        this.sharedPreferences();
+
 
         setupBottomSheet();
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mapPass = (BoardMap) getIntent().getSerializableExtra("boardmap"); //Obtaining data
-            ArrayList<Target> targets = mapPass.getTargets();
-            _map = mapCanvas.getFinder();
-            _map.getRobo().setX(mapPass.getRobo().getX());
-            _map.getRobo().setY(mapPass.getRobo().getY());
-            _map.getRobo().setFacing(mapPass.getRobo().getFacing());
+            try {
+                ArrayList<Target> targets = mapPass.getTargets();
+                _map = mapCanvas.getFinder();
+                _map.getRobo().setX(mapPass.getRobo().getX());
+                _map.getRobo().setY(mapPass.getRobo().getY());
+                _map.getRobo().setFacing(mapPass.getRobo().getFacing());
 
-            for(int i=0; i < mapPass.getTargets().size(); i++) {
-                _map.getTargets().add(new Target(mapPass.getTargets().get(i).getX(), mapPass.getTargets().get(i).getY(), i, mapPass.getTargets().get(i).getF()));
-                if(mapPass.getTargets().get(i).getImg() > -1)
-                    _map.getTargets().get(i).setImg(mapPass.getTargets().get(i).getImg());
-                _map.getBoard()[mapPass.getTargets().get(i).getX()][mapPass.getTargets().get(i).getY()] = TARGET_CELL_CODE;
+                for(int i=0; i < mapPass.getTargets().size(); i++) {
+                    _map.getTargets().add(new Target(mapPass.getTargets().get(i).getX(), mapPass.getTargets().get(i).getY(), i, mapPass.getTargets().get(i).getF()));
+                    if(mapPass.getTargets().get(i).getImg() > -1)
+                        _map.getTargets().get(i).setImg(mapPass.getTargets().get(i).getImg());
+                    _map.getBoard()[mapPass.getTargets().get(i).getX()][mapPass.getTargets().get(i).getY()] = TARGET_CELL_CODE;
+                }
+                updateRoboStatus();
             }
-            updateRoboStatus();
-
+            catch (NullPointerException e) {
+                System.err.println("Null pointer exception");
+            }
         }
         else{
             _map = mapCanvas.getFinder();
@@ -297,6 +318,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void sharedPreferences() {
+        sharedPreferences = MainActivity.getSharedPreferences(MainActivity.context);
+        editor = sharedPreferences.edit();
+    }
+
+    private static SharedPreferences getSharedPreferences(Context context) {
+        return context.getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
+    }
+
+    public void refreshMessageReceived() {
+        testingmsg.setText(sharedPreferences.getString("message", ""));
+    }
+
+    public void refreshMessageReceivedfromblue() {
+        Bluetoothconnection.getMessageReceivedtext().setText(sharedPreferences.getString("message", ""));
+    }
+
     private void showBottomSheetDialog(String dialog) {
         topToolbar.setVisibility(View.GONE);
         switch (dialog) {
@@ -312,6 +350,60 @@ public class MainActivity extends AppCompatActivity {
                 final MapConfigDialog mapConfigDialog = new MapConfigDialog();
                 mapConfigDialog.show(getSupportFragmentManager(), mapConfigDialog.getTag());
                 break;
+        }
+    }
+
+    BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshMessageReceivedfromblue();
+//            String message = intent.getStringExtra("receivedMessage");
+//            sharedPreferences();
+//            String receivedText = sharedPreferences.getString("message", "") + "\n" + message;
+//            editor.putString("message", receivedText);
+//            editor.commit();
+            String receivedText = sharedPreferences.getString("message", "");
+            System.out.println(receivedText + "test");
+            useReceivedMessage(_map, mapCanvas, receivedText);
+            refreshMessageReceived();
+        }
+    };
+    public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
+        int j;
+        System.out.println("works");
+        String[] cases = {"ROBOT", "TARGET"};
+        String[] parts;
+        for(j = 0; j < cases.length; j++)
+            if(msg.contains(cases[j]))
+                break;
+        switch(j) {
+            case 0:
+                System.out.println("works1");
+                parts = msg.replace(" ","").replace("ROBOT", "").split(",");
+                _map.getRobo().setX(Integer.parseInt(parts[0]));
+                _map.getRobo().setY(20-Integer.parseInt(parts[1]));
+                _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW
+                System.out.println("works2");
+                break;
+            case 1:
+                parts = msg.replace(" ","").replace("TARGET", "").split(",");
+                int targetid = Integer.parseInt(parts[0]);
+                int imageid = Integer.parseInt(parts[1]);
+                Target t = _map.getTargets().get(targetid-1);
+                t.setImg(imageid);
+                break;
+            default:
+                System.out.println("invalid");
+        }
+
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        try{
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+        } catch(IllegalArgumentException e){
+            e.printStackTrace();
         }
     }
 }

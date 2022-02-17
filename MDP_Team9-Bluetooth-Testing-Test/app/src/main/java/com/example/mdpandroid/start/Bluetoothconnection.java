@@ -47,7 +47,7 @@ import java.util.UUID;
 public class Bluetoothconnection extends AppCompatActivity{
 
     private static final String TAG = "Bluetoothconnection";
-    public static SharedPreferences sharedPreferences;
+    private static SharedPreferences sharedPreferences;
     private static SharedPreferences.Editor editor;
     private static Context context;
     private static final int REQUEST_ENABLE_BT = 0;
@@ -330,6 +330,14 @@ public class Bluetoothconnection extends AppCompatActivity{
         editor = sharedPreferences.edit();
     }
 
+    public static TextView getMessageReceivedtext() {
+        return mreceivedtext;
+    }
+
+    public static void refreshMessageReceived() {
+        mreceivedtext.setText(sharedPreferences.getString("message", ""));
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode){
@@ -509,40 +517,36 @@ public class Bluetoothconnection extends AppCompatActivity{
             String receivedText = message;
             editor.putString("message", receivedText);
             editor.commit();
-            useReceivedMessage(_map, mapCanvas, receivedText);
+            System.out.println("bluetooth shit");
+//            useReceivedMessage(_map, mapCanvas, receivedText);
             refreshMessageReceived();
         }
     };
-    public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
-        int j;
-        String[] cases = {"ROBOT", "TARGET"};
-        String[] parts;
-        for(j = 0; j < cases.length; j++)
-            if(msg.contains(cases[j]))
-                break;
-        switch(j) {
-            case 0:
-                parts = msg.replace(" ","").replace("ROBOT", "").split(",");
-                _map.getRobo().setX(Integer.parseInt(parts[0]));
-                _map.getRobo().setY(20-Integer.parseInt(parts[1]));
-                _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW
-                break;
-            case 1:
-                parts = msg.replace(" ","").replace("TARGET", "").split(",");
-                int targetid = Integer.parseInt(parts[0]);
-                int imageid = Integer.parseInt(parts[1]);
-                Target t = _map.getTargets().get(targetid-1);
-                t.setImg(imageid);
-                break;
-            default:
-                System.out.println("invalid");
-        }
-
-    }
-
-    public static void refreshMessageReceived() {
-        mreceivedtext.setText(sharedPreferences.getString("message", ""));
-    }
+//    public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
+//        int j;
+//        String[] cases = {"ROBOT", "TARGET"};
+//        String[] parts;
+//        for(j = 0; j < cases.length; j++)
+//            if(msg.contains(cases[j]))
+//                break;
+//        switch(j) {
+//            case 0:
+//                parts = msg.replace(" ","").replace("ROBOT", "").split(",");
+//                _map.getRobo().setX(Integer.parseInt(parts[0]));
+//                _map.getRobo().setY(20-Integer.parseInt(parts[1]));
+//                _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW
+//                break;
+//            case 1:
+//                parts = msg.replace(" ","").replace("TARGET", "").split(",");
+//                int targetid = Integer.parseInt(parts[0]);
+//                int imageid = Integer.parseInt(parts[1]);
+//                Target t = _map.getTargets().get(targetid-1);
+//                t.setImg(imageid);
+//                break;
+//            default:
+//                System.out.println("invalid");
+//        }
+//    }
 
     @Override
     protected void onDestroy() {

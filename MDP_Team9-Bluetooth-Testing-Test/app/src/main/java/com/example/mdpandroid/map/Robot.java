@@ -23,8 +23,8 @@ public class Robot implements Serializable {
     public static final int ROBOT_FACE_WEST = 3;
 
     public static final String ROBOT_COMMAND_POS = "ROBOT";
-    public static final String STM_COMMAND_FORWARD = "f";
-    public static final String STM_COMMAND_REVERSE = "b";
+    public static final String STM_COMMAND_FORWARD = "F 10"; //mod
+    public static final String STM_COMMAND_REVERSE = "B 10"; //mod
     public static final String STM_COMMAND_STOP = "x";
     public static final String STM_COMMAND_LEFT = "l";
     public static final String STM_COMMAND_RIGHT = "r";

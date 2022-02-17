@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (v.getId()) {
                             case R.id.btn_accelerate:
                             case R.id.btn_reverse:
-                                MessageFragment.sendMessage("BHLD -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
+                                MessageFragment.sendMessage("BTH -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
                                 Log.d("ROBOT TOUCH DOWN", _map.getRobo().toString());
                                 break;
                             case R.id.btn_left:

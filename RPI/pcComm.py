@@ -37,14 +37,14 @@ class PcComm():
                 self.serverSocket.listen(2)
 
                 print("RPi is listening for PC communication...")
-                '''self.imgClient, self.imgClientIP = self.serverSocket.accept()
+                self.imgClient, self.imgClientIP = self.serverSocket.accept()
                 self.numConnections += 1
-                print("RPi is connected to " + str(self.imgClient))'''
+                print("RPi is connected to " + str(self.imgClient))
 
-                self.algoClient, self.algoClientIP = self.serverSocket.accept()
+                '''self.algoClient, self.algoClientIP = self.serverSocket.accept()
                 self.numConnections += 1
                 print("RPi is connected to " + str(self.algoClient))
-                print("Number of concurrent connections: " + str(self.numConnections))
+                print("Number of concurrent connections: " + str(self.numConnections))'''
 
                 self.isConnected = True
 
@@ -61,9 +61,9 @@ class PcComm():
                 self.imgClient.close()
                 print("Image Rec client socket closed...")
 
-            if self.algoClient:
+            '''if self.algoClient:
                 self.algoClient.close()
-                print("Algo client socket closed...")
+                print("Algo client socket closed...")'''
 
             self.isConnected = False
 

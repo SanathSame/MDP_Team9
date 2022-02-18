@@ -8,6 +8,7 @@ from pcComm import *
 import bluetooth
 import sys
 from predictImage import predict
+import time
 
 BUFFER_SIZE = 1024
 SEPARATOR = "@.@"
@@ -110,37 +111,68 @@ def TestSTM():
         print("Terminating the program now...")
 
 def TestImagePrediction():
-    s = socket.socket()      
+    s = socket.socket()  
     s.connect((IP_ADDRESS, PORT))
     print("Connected")
 
+    data = s.recv(1024)
+    filesize = int(data.decode('utf-8'))
+    print("Filesize", filesize)
+
     # Get image from RPI and save locally
     SAVE_FILE = "RPI/images/to_predict.jpeg"
+    total_data_received = len(data)
     with open(SAVE_FILE, "wb") as f:
         while True:
             data = s.recv(1024)
-            print(data)
+
             if not data:
+                break
+            
+            total_data_received += len(data)
+            if total_data_received >= filesize:
                 break
 
             f.write(data)
         print("File done")
 
     print("Received")
-    # s.close()
 
     predictions = predict(SAVE_FILE)
     print("Predictions", predictions)
 
-    # s.connect((IP_ADDRESS, PORT))
     if len(predictions) == 0:
         s.send(bytes("NOIMAGE", "utf-8"))
     else:
         s.send(bytes(predictions[0], "utf-8"))
     s.close()
 
+def TestMultipleMessages():
+    s = socket.socket()  
+    s.connect((IP_ADDRESS, PORT))
+    print("Connected")
+
+    ending = "@.@"
+
+    str_received = ""
+
+    while True:
+        data = s.recv(1024)
+
+        if data.endswith(ending):
+            str_received += data.strip(ending)
+            break
+        
+        if not data:
+            break
+
+        str_received += data
+
+    print("Data fully received:", data)
+
 if __name__ == "__main__":
     TestImagePrediction()
+    # TestMultipleMessages()
     #TestBluetooth()
     #Testtest()
     #TestSTM()

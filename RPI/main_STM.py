@@ -12,12 +12,12 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        #self.pcObject = PcComm()
+        self.pcObject = PcComm()
         #self.androidObject = Android()
         self.stm = STM()
 
         # Establish connection with other subsystems
-        #self.pcObject.connect()
+        self.pcObject.connect()
         #self.androidObject.connect()
         self.stm.connect()
         print("Connecting to other devices...")
@@ -47,13 +47,34 @@ class RPI(threading.Thread):
         receiveFromSTMThread.daemon = True
 
         #receiveFromImgThread.start()
-        #receiveFromAlgoThread.start()
+        receiveFromAlgoThread.start()
         #receiveFromAndroidThread.start()
         #self.sendToSTM("F 100 ")            #Hardcoded msg to be sent to STM
         #self.sendToSTM("S     ")
         receiveFromSTMThread.start()
 
-        self.sendToSTM()
+        '''for i in range(0, 10, 2):
+            self.sendToSTM(str(i) + "   F 10  ")
+            time.sleep(0.5)
+            self.sendToSTM(str(i+1) + "   B 10  ")
+            time.sleep(0.5)'''
+        # self.sendToSTM("STM 1   F 50  ")
+        # time.sleep(0.5)
+        # self.sendToSTM("2   RF 90 ")
+        # time.sleep(0.5)
+        # self.sendToSTM("3   LF 180")
+        # time.sleep(0.5)
+        # self.sendToSTM("4   B 70  ")
+        # time.sleep(0.5)
+
+        # self.sendToSTM("5   C     ")
+        # '''time.sleep(20)
+        # self.sendToSTM("5   F 1000")
+        # time.sleep(0.05)
+        # self.sendToSTM("6   RF 360")
+        # time.sleep(0.05)
+        # self.sendToSTM("7   B 900 ")'''
+
 
     def receiveFromImg(self):
         while True:
@@ -73,6 +94,9 @@ class RPI(threading.Thread):
                 if algoMsg[:7] == "TAKEPIC":
                     self.snapPic()
                     self.sendToImg(algoMsg[7:]) #Send the obstacle: XX YY
+                elif algoMsg[0:4] == "STM":
+                    self.sendToSTM(algoMsg[5:])
+
 
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
@@ -123,10 +147,12 @@ class RPI(threading.Thread):
         while True:
             androidMsg = self.androidObject.receiveMsg()
             if androidMsg:
-                print("Message from android: " + androidMsg)
+                print("Message from android: " + androidMsg + "|||")
                 if androidMsg.upper() == "W":
                     tmp = input("Message please: ")
                     self.sendToAndroid(tmp)
+                elif androidMsg[0:3] == "STM":
+                    self.sendToSTM(androidMsg[4:])
 
     '''
     w s - control motor: drive rear wheel, value from 1000 to 3500 (speed)
@@ -134,13 +160,13 @@ class RPI(threading.Thread):
     
     letter(CAPS) value 
     '''
-    def sendToSTM(self): #, msgToSTM):
-        '''if (msgToSTM):
+    def sendToSTM(self, msgToSTM):
+        if (msgToSTM):
             self.stm.sendMsg(msgToSTM)
-            print("Message send to STM is " + msgToSTM)'''
-        while True:
+            print("Message send to STM is " + msgToSTM)
+        '''while True:
             msgToSTM = input("Enter your command (6 chars): ")
-            self.stm.sendMsg(str(msgToSTM))
+            self.stm.sendMsg(str(msgToSTM))'''
 
     def receiveFromSTM(self):
         # Enclose in while loop
@@ -148,6 +174,13 @@ class RPI(threading.Thread):
             stmMsg = self.stm.receiveMsg()
             if stmMsg is not None and ord(stmMsg[0]) != 0 :
                 print("Message from STM: " + stmMsg)       #Comment for debug
+
+                # if "Done C" in stmMsg:
+                #     self.sendToSTM("0   F 40  ")
+                #     time.sleep(0.5)
+                #     self.sendToSTM("1   LF 90 ")
+                #     time.sleep(0.5)
+                #     self.sendToSTM("2   B 100 ")
 
                 '''time.sleep(2)
                 msg = str(input("Message for STM: "))

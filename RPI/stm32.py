@@ -23,7 +23,7 @@ class STM():
 
     def sendMsg(self, msg):
         try:
-            print('Sending message: ' + str(msg))
+            #print('Sending message: ' + str(msg))
             self.service.write(msg.encode('utf-8'))
         except Exception as err:
             print('Error in sending message...')

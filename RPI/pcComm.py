@@ -112,7 +112,7 @@ class PcComm():
 
     def receiveMsgFromImg(self):
         try:
-            msgReceived = self.imgClient.recv(10).decode("utf-8")
+            msgReceived = self.imgClient.recv(20).decode("utf-8")
             if str(msgReceived) != "":
                 print("In send(msg) function, Message received is: " + str(msgReceived))
                 return msgReceived

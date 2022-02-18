@@ -35,29 +35,23 @@ class RPI(threading.Thread):
 
     def startThread(self):
         # Read threads created
-        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
-        #receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
+        #receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
+        receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
         #receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
         #receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
 
         # Makes Threads run in the background
-        receiveFromImgThread.daemon = True
-        #receiveFromAlgoThread.daemon = True
+        #receiveFromImgThread.daemon = True
+        receiveFromAlgoThread.daemon = True
         #receiveFromAndroidThread.daemon = True
         #receiveFromSTMThread.daemon = True
 
-        receiveFromImgThread.start()
-        #receiveFromAlgoThread.start()
+        #receiveFromImgThread.start()
+        receiveFromAlgoThread.start()
         #receiveFromAndroidThread.start()
         #receiveFromSTMThread.start()
 
-        print("Taking picture... ")
-        self.snapPic()
-
-        time.sleep(3)
-        print("Sending image")
-        self.sendToImg()
-        print("Sent image")
+        self.sendToAlgo("HI JUN WEI")
 
     def receiveFromImg(self):
         while True:

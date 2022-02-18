@@ -12,13 +12,13 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        self.pcObject = PcComm()
-        self.androidObject = Android()
+        #self.pcObject = PcComm()
+        #self.androidObject = Android()
         self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
-        self.androidObject.connect()
+        #self.pcObject.connect()
+        #self.androidObject.connect()
         self.stm.connect()
         print("Connecting to other devices...")
 
@@ -33,47 +33,30 @@ class RPI(threading.Thread):
         self.y1 = []
         self.y2 = []
 
-
-        '''
-        ANDROID (AND):
-        ALG ROBOT XX YY D  (X-COORDINDATE, Y-COORDINATE, DIRECTION)
-        ALG OBS 1 XX YY D || OBS 2 X Y D (OBSTACLE ID, X-COORDINDATE, Y-COORDINATE, DIRECTION)
-        ALG OBS 1 XX YY D
-        ALG STARTPF (WEEK 8)
-        ALG STARTPARKING (WEEK 9)
-        
-        
-        ALG:
-        IMG TAKEPICTURE 1 (OBSTACLE NUMBER)
-        STM XXX F XXXX (XXX - COUNTER, DIRECTION, DIST/ANGLE)
-        AND 
-        
-        STM:
-        AND XXX DONE (XXX - COUNTER)
-        
-        IMG: 
-        RPI TARGET 1 22 (OBSTACLE ID, IMAGE ID)      
-        '''
-
     def startThread(self):
         # Read threads created
-        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
-        #receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
+        #receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
+        receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
         receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
         receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
 
         # Makes Threads run in the background
-        receiveFromImgThread.daemon = True
-        #receiveFromAlgoThread.daemon = True
+        #receiveFromImgThread.daemon = True
+        receiveFromAlgoThread.daemon = True
         receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
 
-        receiveFromImgThread.start()
+        #receiveFromImgThread.start()
         #receiveFromAlgoThread.start()
-        receiveFromAndroidThread.start()
-        #self.sendToSTM("F 200 ")            #Hardcoded msg to be sent to STM
+        #receiveFromAndroidThread.start()
+        self.sendToSTM("LF 15 ")            #Hardcoded msg to be sent to STM
         #self.sendToSTM("S     ")
         receiveFromSTMThread.start()
+
+    def test(self, x):
+        print(int(x.split(' ')[1]))
+        self.sendToSTM(x)
+        time.sleep(2 * int(x.split(" ")[1]) / 15)
 
     def receiveFromImg(self):
         while True:
@@ -216,13 +199,13 @@ class RPI(threading.Thread):
 
 
     def closeAll(self):
-        self.pcObject.disconnect()
-        self.androidObject.disconnect()
-        '''with open("test1.csv", 'w') as f:
+        #self.pcObject.disconnect()
+        #self.androidObject.disconnect()
+        with open("test1.csv", 'w') as f:
             f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
             f.write(str(rpi.y2[20:-10])[1:-1])
             f.close()
-        print("in closing....")'''
+        print("in closing....")
         self.stm.disconnect()
         self.camera.close()
 
@@ -232,10 +215,16 @@ if __name__ == "__main__":
     try:
         rpi.camera = PiCamera()
         rpi.camera.resolution = (640, 480)
-
-        rpi.startThread()
+        for i in range(5):
+                rpi.test("LF 180")
         while True:
             pass
-
+            
+        '''print("Gonna sleep first")
+        
+        time.sleep(3)
+        print("Sending image")
+        rpi.sendToImg()
+        print("Sent image")'''
     except KeyboardInterrupt:
         rpi.closeAll()

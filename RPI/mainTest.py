@@ -140,7 +140,8 @@ def TestImagePrediction():
     s.close()
 
 if __name__ == "__main__":
-    TestImagePrediction()
+    #TestImagePrediction()
     #TestBluetooth()
     #Testtest()
     #TestSTM()
+    TestTCP()

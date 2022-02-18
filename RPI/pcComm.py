@@ -37,14 +37,14 @@ class PcComm():
                 self.serverSocket.listen(2)
 
                 print("RPi is listening for PC communication...")
-                self.imgClient, self.imgClientIP = self.serverSocket.accept()
+                '''self.imgClient, self.imgClientIP = self.serverSocket.accept()
                 self.numConnections += 1
-                print("RPi is connected to " + str(self.imgClient))
+                print("RPi is connected to " + str(self.imgClient))'''
 
-                '''self.algoClient, self.algoClientIP = self.serverSocket.accept()
+                self.algoClient, self.algoClientIP = self.serverSocket.accept()
                 self.numConnections += 1
                 print("RPi is connected to " + str(self.algoClient))
-                print("Number of concurrent connections: " + str(self.numConnections))'''
+                print("Number of concurrent connections: " + str(self.numConnections))
 
                 self.isConnected = True
 
@@ -57,13 +57,13 @@ class PcComm():
                 self.serverSocket.close()
                 print("RPi socket closed...")
 
-            if self.imgClient:
+            '''if self.imgClient:
                 self.imgClient.close()
-                print("Image Rec client socket closed...")
+                print("Image Rec client socket closed...")'''
 
-            '''if self.algoClient:
+            if self.algoClient:
                 self.algoClient.close()
-                print("Algo client socket closed...")'''
+                print("Algo client socket closed...")
 
             self.isConnected = False
 
@@ -94,7 +94,10 @@ class PcComm():
             if msg != "":
                 if self.isConnected:
                     #msg = msg + '\n'
-                    self.algoClient.sendall(msg.encode())
+                    msgLength = msg.encode("UTF-8")
+                    self.algoClient.send(len(msgLength).to_bytes(2, byteorder="big"))
+                    self.algoClient.send(msgLength)
+                    #self.algoClient.send(msg.encode('UTF-8'))
                     print("In send(msg) function, Message has been sent to PC: " + str(msg))
                     return True
 

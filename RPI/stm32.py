@@ -30,7 +30,7 @@ class STM():
 
     def receiveMsg(self):
         try:
-            msg = self.service.read(7)
+            msg = self.service.read(20)
             if len(msg) > 0:
                 return msg.decode('utf-8')
         except Exception as e:

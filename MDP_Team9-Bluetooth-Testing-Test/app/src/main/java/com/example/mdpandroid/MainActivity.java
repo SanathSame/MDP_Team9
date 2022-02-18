@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnRight;
     TextView topTitle, receivemsg;
 
+    int msgCount = 0;
     Toolbar topToolbar;
     Toolbar bottomSheetToolbar;
     TabLayout bottomSheetTabLayout; //bottom_sheet_tabs
@@ -226,9 +227,17 @@ public class MainActivity extends AppCompatActivity {
                         switch (v.getId()) {
                             case R.id.btn_accelerate:
                             case R.id.btn_reverse:
-                                message = (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE);
+                                String space = "     ";
+                                if(msgCount>=10)
+                                    space = "    ";
+
+                                message = ("STM " + msgCount + space + (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
                                 //MessageFragment.sendMessage("BTH -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
+
                                 sendMessage(message);
+                                msgCount++;
+                                System.out.println(message);
+
                                 Log.d("ROBOT TOUCH DOWN", _map.getRobo().toString());
                                 break;
                             case R.id.btn_left:

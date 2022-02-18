@@ -226,12 +226,13 @@ public class Bluetoothconnection extends AppCompatActivity{
             }
         });
 
-        //sent btn
+//        sent btn
         msentbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showLog("Clicked sendTextBtn");
                 String sentText = "" + msenttext.getText().toString();
+                sharedPreferences();
 
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("message", sharedPreferences.getString("message", "") + '\n' + sentText);

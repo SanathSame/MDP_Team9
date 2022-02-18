@@ -2,7 +2,7 @@ package com.example.mdpandroid;
 
 import static com.example.mdpandroid.map.BoardMap.TARGET_CELL_CODE;
 import static com.example.mdpandroid.map.Robot.*;
-import static com.example.mdpandroid.map.Target.TARGET_IMG_NULL;
+
 
 import com.example.mdpandroid.map.Target;
 import com.example.mdpandroid.start.Bluetoothconnection;
@@ -18,6 +18,7 @@ import android.os.Bundle;
 
 import android.os.Handler;
 
+import com.example.mdpandroid.start.Bluetoothservice;
 import com.example.mdpandroid.start.StartedActivity;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -34,6 +35,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import biz.laenger.android.vpbs.BottomSheetUtils;
@@ -59,13 +61,14 @@ public class MainActivity extends AppCompatActivity {
     private BoardMap mapPass = new BoardMap();
     Button btnReset;
     Button btnTarget;
+    Button btnsenttext;
     Button btnImg;
     Button btnFastest;
     ImageButton btnForward;
     ImageButton btnReverse;
     ImageButton btnLeft;
     ImageButton btnRight;
-    TextView topTitle, testingmsg;
+    TextView topTitle, receivemsg;
 
     Toolbar topToolbar;
     Toolbar bottomSheetToolbar;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPager bottomSheetViewPager; //bottom_sheet_viewpager
 
     ArrayList longpress = new ArrayList();
+    String message;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -94,8 +98,7 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
         bottomSheetViewPager = (ViewPager) this.findViewById(R.id.viewpager);
         topTitle = (TextView) this.findViewById(R.id.top_title);
-        testingmsg = this.findViewById(R.id.Testingmsg);
-
+        receivemsg = this.findViewById(R.id.Testingmsg);
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
 
         // Set up sharedPreferences
@@ -137,9 +140,10 @@ public class MainActivity extends AppCompatActivity {
                 MessageFragment.sendMessage("MAP -> RPI:\t\t ", "RESET" + '\n');
                 int n = 0;
                 while (n < _map.getTargets().size()) {
-                    String message;
                     message = "OBS|[" + (n+1) + "," + _map.getTargets().get(n).getX() + "," + (21-_map.getTargets().get(n).getY()) + "," + _map.getTargets().get(n).getF() + "]";
                     MessageFragment.sendMessage("MAP -> RPI:\t\t ", message + '\n');
+                    sendMessage(message);
+                    System.out.println(message);
                     n++;
                 }}
         });
@@ -222,7 +226,9 @@ public class MainActivity extends AppCompatActivity {
                         switch (v.getId()) {
                             case R.id.btn_accelerate:
                             case R.id.btn_reverse:
-                                MessageFragment.sendMessage("BTH -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
+                                message = (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE);
+                                //MessageFragment.sendMessage("BTH -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
+                                sendMessage(message);
                                 Log.d("ROBOT TOUCH DOWN", _map.getRobo().toString());
                                 break;
                             case R.id.btn_left:
@@ -276,10 +282,14 @@ public class MainActivity extends AppCompatActivity {
                     mHandler.postDelayed(this, DELAYms);
                 }
             };
-
         });
     }
-
+    private void sendMessage(String msg){
+        if (Bluetoothservice.BluetoothConnectionStatus == true) {
+            byte[] bytes = msg.getBytes(Charset.defaultCharset());
+            Bluetoothservice.write(bytes);
+        }
+    }
 //    private void setupImgLongClick() {
 //
 //        btnImg.setOnLongClickListener(new View.OnLongClickListener() {
@@ -309,13 +319,21 @@ public class MainActivity extends AppCompatActivity {
         BottomSheetUtils.setupViewPager(bottomSheetViewPager);
     }
 
-    public void bluetoothOnClickMethods(View v) {
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof BluetoothFragment) {
-                BluetoothFragment bluetooth_fragment = (BluetoothFragment) fragment;
-                bluetooth_fragment.myClickMethod(v, this);
-            }
-        }
+//    public void bluetoothOnClickMethods(View v) {
+//        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+//            if (fragment instanceof BluetoothFragment) {
+//                BluetoothFragment bluetooth_fragment = (BluetoothFragment) fragment;
+//                bluetooth_fragment.myClickMethod(v, this);
+//            }
+//        }
+//    }
+
+    public void refreshMessageReceived() {
+        receivemsg.setText(sharedPreferences.getString("message", ""));
+    }
+
+    public void refreshMessageReceivedfromblue() {
+        Bluetoothconnection.getMessageReceivedtext().setText(sharedPreferences.getString("message", ""));
     }
 
     public void sharedPreferences() {
@@ -327,13 +345,6 @@ public class MainActivity extends AppCompatActivity {
         return context.getSharedPreferences("Shared Preferences", Context.MODE_PRIVATE);
     }
 
-    public void refreshMessageReceived() {
-        testingmsg.setText(sharedPreferences.getString("message", ""));
-    }
-
-    public void refreshMessageReceivedfromblue() {
-        Bluetoothconnection.getMessageReceivedtext().setText(sharedPreferences.getString("message", ""));
-    }
 
     private void showBottomSheetDialog(String dialog) {
         topToolbar.setVisibility(View.GONE);
@@ -357,11 +368,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             refreshMessageReceivedfromblue();
-//            String message = intent.getStringExtra("receivedMessage");
-//            sharedPreferences();
-//            String receivedText = sharedPreferences.getString("message", "") + "\n" + message;
-//            editor.putString("message", receivedText);
-//            editor.commit();
             String receivedText = sharedPreferences.getString("message", "");
             System.out.println(receivedText + "test");
             useReceivedMessage(_map, mapCanvas, receivedText);

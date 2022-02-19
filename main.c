@@ -177,7 +177,7 @@ int countRequired, encoderAVal, encoderBVal, encoderTarget, targetCount;
 int errorA, errorB, prevErrorA, prevErrorB, sumErrorA, sumErrorB;
 int robotAngle;
 
-uint8_t cmds[1000][20], prevCmd[20], rxBuffer[20], taskDone, txBuffer[20];
+uint8_t cmds[1000][20], cmdState, prevCmd[20], rxBuffer[20], txBuffer[20];
 uint8_t driveACmd, driveBCmd, startDriving;
 uint8_t angleCmd, servoCmd;
 
@@ -253,7 +253,7 @@ int main(void)
 
   countRequired = 15;
 
-  taskDone = 0;
+  cmdState = 1;
 
   driveACmd = 0;
   driveBCmd = 0;
@@ -263,8 +263,8 @@ int main(void)
   servoCmd = 0;
 
   servoCenter = 74;
-  servoLeft = 48;
-  servoRight = 130;
+  servoLeft = 60;  //48
+  servoRight = 88;  //130
 
   batteryCounter = 0;
   irCounter = 0;
@@ -874,26 +874,30 @@ void driveRobot(uint8_t *cmd)
 	motorBVal = driveMotorPWM;
   }
   else if (distA >= robotDist - distBuffer && distB >= robotDist - distBuffer)
-  {
-	startDriving = 0;
-	angleCmd = 0;
 	stopRobot();
-  }
 }
 
 void stopRobot()
 {
+  startDriving = 0;
+
+  if (angleCmd != 0)
+  {
+    angleCmd = 0;
+    strncpy((char*)cmds[actionCounter], (char*)prevCmd, 20);
+  }
+
   motorAVal = 0;
   motorBVal = 0;
   driveACmd = 0;
   driveBCmd = 0;
-  osDelay(10 * motorDelay);
+  osDelay(15 * motorDelay);
 
   servoVal = servoCenter;
   servoCmd = 0;
-  osDelay(100 + servoDelay);
+  osDelay((uint32_t)(1.2 * servoDelay));
 
-  taskDone = 1;
+  cmdState = 2;
 }
 
 void turnRobot(uint8_t *cmd)
@@ -922,7 +926,7 @@ void turnRobot(uint8_t *cmd)
     servoVal = (angleCmd == 'L' && driveACmd == 'F') || (angleCmd == 'R' && driveACmd == 'B') ? servoLeft : servoRight;
     servoCmd = 'T';
 
-    osDelay(100 + servoDelay);
+    osDelay((uint32_t)(1.2 * servoDelay));
 
     strncpy((char*)prevCmd, (char*)cmd, 20);
     strncpy((char*)cmds[actionCounter], (char*)cmd, 4);
@@ -946,13 +950,18 @@ void oled(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	sprintf(strBuffer, "%d", (int)cmdState);
+	OLED_ShowString(0, 0, (uint8_t*)strBuffer);
+
 	if (actionCounter <= fillCounter)
       OLED_ShowString(10, 0, angleCmd != 0 ? prevCmd : cmds[actionCounter]);
 
-    sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
+	sprintf(strBuffer, "DistA: %-5d", (int)distA);
+    //sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
 	OLED_ShowString(10, 10, (uint8_t*)strBuffer);
 
-	sprintf(strBuffer, "MotorB: %-5d", (int)motorBVal);
+	sprintf(strBuffer, "DistB: %-5d", (int)distB);
+	//sprintf(strBuffer, "MotorB: %-5d", (int)motorBVal);
 	OLED_ShowString(10, 20, (uint8_t*)strBuffer);
 
 	sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
@@ -1018,8 +1027,9 @@ void ir(void *argument)
 void rpi(void *argument)
 {
   /* USER CODE BEGIN rpi */
-  int cmdCounter;
   char strCounter[4];
+  int cmdCounter;
+  uint8_t cmdType;
   /* Infinite loop */
   for(;;)
   {
@@ -1030,27 +1040,38 @@ void rpi(void *argument)
 	  strncpy(strCounter, (char*)rxBuffer, 3);
       cmdCounter = atoi(strCounter);
 
-      if (cmdCounter != fillCounter)
-        strncpy((char*)cmds[++fillCounter], (char*)rxBuffer, 20);
+      if (cmdCounter >= 0 && cmdCounter < 1000)
+      {
+        strncpy((char*)cmds[cmdCounter], (char*)rxBuffer, 20);
+
+        if (cmdCounter > fillCounter)
+          fillCounter = cmdCounter;
+      }
 
       memset(rxBuffer, 0, 20);
 	}
 
-    if (taskDone == 1)
+    if (cmdState == 2)
     {
-      taskDone = 0;
+      cmdState = 0;
+      cmdType = cmds[actionCounter][4];
 
       strncpy(strCounter, (char*)cmds[actionCounter], 3);
-      sprintf((char*)txBuffer, cmds[actionCounter][4] == 'C' ? "Done C" : "Done %d", atoi(strCounter));
+      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C" : "Done %d", atoi(strCounter));
       HAL_UART_Transmit(&huart3, txBuffer, 20, 0xFFFF);
 
-      if (cmds[actionCounter][4] == 'C')
+      if (cmdType == 'C')
       {
     	actionCounter = 0;
     	fillCounter = -1;
+    	cmdState = 1;
       }
-      else if (actionCounter <= fillCounter)
-        ++actionCounter;
+    }
+
+    if (cmdState == 0 && actionCounter <= fillCounter)
+    {
+      cmdState = 1;
+      ++actionCounter;
     }
 
     osDelay(rpiDelay);
@@ -1283,11 +1304,13 @@ void encoderB(void *argument)
 void dispatch(void *argument)
 {
   /* USER CODE BEGIN dispatch */
+  char strCounter[5];
+  int cmdCounter;
   uint8_t cmdType;
   /* Infinite loop */
   for(;;)
   {
-	if (actionCounter <= fillCounter)
+	if (cmdState == 1 && actionCounter <= fillCounter)
 	{
 	  cmdType = cmds[actionCounter][4];
 
@@ -1297,8 +1320,18 @@ void dispatch(void *argument)
 	    turnRobot(cmds[actionCounter]);
 	  else if (cmdType == 'S')
 	    stopRobot();
+	  else if (cmdType == 'J')
+	  {
+		strncpy(strCounter, (char*)(cmds[actionCounter] + 6), 4);
+		cmdCounter = atoi(strCounter);
+
+		if (cmdCounter >= 0 && cmdCounter < 1000 && cmdCounter <= fillCounter)
+		  actionCounter = cmdCounter;
+	  }
 	  else if (cmdType == 'C')
-		taskDone = 1;
+		cmdState = 2;
+	  else
+		++actionCounter;
 	}
 
 	osDelay(dispatchDelay);

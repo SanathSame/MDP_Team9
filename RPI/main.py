@@ -36,23 +36,21 @@ class RPI(threading.Thread):
 
         '''
         ANDROID (AND):
-        ALG ROBOT XX YY D  (X-COORDINDATE, Y-COORDINATE, DIRECTION)
-        ALG OBS 1 XX YY D || OBS 2 X Y D (OBSTACLE ID, X-COORDINDATE, Y-COORDINATE, DIRECTION)
-        ALG OBS 1 XX YY D
-        ALG STARTPF (WEEK 8)
-        ALG STARTPARKING (WEEK 9)
+        "ALG ROBOT XX YY D"  (X-COORDINDATE, Y-COORDINATE, DIRECTION)
+        "ALG OBS 1 XX YY D || OBS 2 X Y D" (OBSTACLE ID, X-COORDINDATE, Y-COORDINATE, DIRECTION)
+        "ALG STARTPF" (WEEK 8)
+        "ALG STARTPARKING" (WEEK 9)
         
         
         ALG:
-        IMG TAKEPICTURE 1 (OBSTACLE NUMBER)
-        STM XXX F XXXX (XXX - COUNTER, DIRECTION, DIST/ANGLE)
-        AND 
+        "IMG TAKEPICTURE 1" (OBSTACLE NUMBER)
+        "STM XXX F 10  " (XXX - COUNTER, DIRECTION, DIST/ANGLE) 
         
         STM:
-        AND XXX DONE (XXX - COUNTER)
+        "AND XXX DONE" (XXX - COUNTER)
         
         IMG: 
-        RPI TARGET 1 22 (OBSTACLE ID, IMAGE ID)      
+        "RPI TARGET 1 22" (OBSTACLE ID, IMAGE ID)      
         '''
 
     def startThread(self):

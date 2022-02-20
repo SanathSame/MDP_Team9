@@ -168,11 +168,11 @@ void turnRobot(uint8_t *cmd);
 float pi, radius;
 float encoderGrad, encoderInt;
 float kd, ki, kp;
-float distA, distB, distBuffer, robotDist, tempA, tempB;
+float distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
 float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
 
 int actionCounter, fillCounter;
-int driveMotorPWM, maxMotorPWM, motorAVal, motorBVal;
+int driveMotorPWM, maxMotorPWM, motorAVal, motorBVal, turnMotorPWM;
 int countRequired, encoderAVal, encoderBVal, encoderTarget, targetCount;
 int errorA, errorB, prevErrorA, prevErrorB, sumErrorA, sumErrorB;
 int robotAngle;
@@ -234,26 +234,32 @@ int main(void)
   ki = 0;
   kp = 0;
 
-  distBuffer = 5;
+  distOffset = 5;
+  turnOffset = 0.5;
 
-  lbGrad = 1;
-  lbInt = 0;
-  lfGrad = 1;
-  lfInt = 0;
-  rbGrad = 1;
-  rbInt = 0;
-  rfGrad = 1;
-  rfInt = 0;
+  lbGrad = 0.390119353921512;
+  lbInt = 1.405188423049935;
+  lfGrad = 0.374241777484367;
+  lfInt = -0.80255211795561;
+  rbGrad = 0.406223321414319;
+  rbInt = -1.03827694476358;
+  rfGrad = 0.364677963587823;
+  rfInt = 1.011921094590065;
 
   actionCounter = 0;
   fillCounter = -1;
 
   driveMotorPWM = 9000;
   maxMotorPWM = 9500;
+  turnMotorPWM = 3500;
 
   countRequired = 15;
 
+  for (int counter = 0; counter < 1000; ++counter)
+	memset(cmds[counter], 0, 20);
   cmdState = 1;
+  memset(rxBuffer, 0, 20);
+  memset(txBuffer, 0, 20);
 
   driveACmd = 0;
   driveBCmd = 0;
@@ -263,11 +269,16 @@ int main(void)
   servoCmd = 0;
 
   servoCenter = 74;
-  servoLeft = 60;  //48
-  servoRight = 88;  //130
+  servoLeft = 50;
+  servoRight = 109;
 
   batteryCounter = 0;
   irCounter = 0;
+  for (int counter = 0; counter < 5; ++counter)
+  {
+	batteryVal[counter] = 0;
+	irVal[counter] = 0;
+  }
 
   batteryDelay = 2000;
   dispatchDelay = 10;
@@ -834,14 +845,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 int irToDist(uint32_t reading)
 {
-  int avgIRVal = 0;
+  float avgIRVal = 0.0;
 
   for (int counter = 0; counter < 5; ++counter)
   	avgIRVal += irVal[counter];
 
-  avgIRVal /= 10;
+  avgIRVal /= 5;
 
-  return avgIRVal;
+  return (int)(avgIRVal + 0.5);
 }
 
 void driveRobot(uint8_t *cmd)
@@ -852,6 +863,8 @@ void driveRobot(uint8_t *cmd)
 
   driveACmd = cmd[4];
   driveBCmd = cmd[4];
+
+  distBuffer = angleCmd == 0 ? distOffset : turnOffset;
 
   if (startDriving == 0)
   {
@@ -870,8 +883,8 @@ void driveRobot(uint8_t *cmd)
 	tempA = 0.0;
 	tempB = 0.0;
 
-	motorAVal = driveMotorPWM;
-	motorBVal = driveMotorPWM;
+	motorAVal = angleCmd == 0 ? driveMotorPWM : turnMotorPWM;
+	motorBVal = motorAVal;
   }
   else if (distA >= robotDist - distBuffer && distB >= robotDist - distBuffer)
 	stopRobot();
@@ -879,14 +892,6 @@ void driveRobot(uint8_t *cmd)
 
 void stopRobot()
 {
-  startDriving = 0;
-
-  if (angleCmd != 0)
-  {
-    angleCmd = 0;
-    strncpy((char*)cmds[actionCounter], (char*)prevCmd, 20);
-  }
-
   motorAVal = 0;
   motorBVal = 0;
   driveACmd = 0;
@@ -897,6 +902,12 @@ void stopRobot()
   servoCmd = 0;
   osDelay((uint32_t)(1.2 * servoDelay));
 
+  startDriving = 0;
+  if (angleCmd != 0)
+  {
+    strncpy((char*)cmds[actionCounter], (char*)prevCmd, 20);
+    angleCmd = 0;
+  }
   cmdState = 2;
 }
 
@@ -946,15 +957,17 @@ void oled(void *argument)
 {
   /* USER CODE BEGIN 5 */
   char strBuffer[20];
-  int avgBatteryVal;
+  float avgBatteryVal;
   /* Infinite loop */
   for(;;)
   {
 	sprintf(strBuffer, "%d", (int)cmdState);
 	OLED_ShowString(0, 0, (uint8_t*)strBuffer);
 
-	if (actionCounter <= fillCounter)
-      OLED_ShowString(10, 0, angleCmd != 0 ? prevCmd : cmds[actionCounter]);
+	sprintf(strBuffer, "          ");
+	if (actionCounter <= fillCounter && cmds[actionCounter][0] != 0)
+      strncpy(strBuffer, (char*)(angleCmd != 0 ? prevCmd : cmds[actionCounter]), 20);
+	OLED_ShowString(10, 0, (uint8_t*)strBuffer);
 
 	sprintf(strBuffer, "DistA: %-5d", (int)distA);
     //sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
@@ -972,13 +985,13 @@ void oled(void *argument)
 	//sprintf(strBuffer, "DistB: %-5d", (int)distB);
 	OLED_ShowString(10, 40, (uint8_t*)strBuffer);
 
-	avgBatteryVal = 0;
+	avgBatteryVal = 0.0;
 	for (int counter = 0; counter < 5; ++counter)
 	  avgBatteryVal += batteryVal[counter];
 
 	avgBatteryVal /= 5;
 
-	sprintf(strBuffer, "Battery: %-5d", avgBatteryVal);
+	sprintf(strBuffer, "Battery: %-5d", (int)(avgBatteryVal + 0.5));
 	OLED_ShowString(10, 50, (uint8_t*)strBuffer);
 
 	OLED_Refresh_Gram();
@@ -1057,14 +1070,20 @@ void rpi(void *argument)
       cmdType = cmds[actionCounter][4];
 
       strncpy(strCounter, (char*)cmds[actionCounter], 3);
-      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C" : "Done %d", atoi(strCounter));
+      sprintf((char*)txBuffer, cmdType == 'C' ? "C Done" : "%d %d %d", atoi(strCounter), (int)distA, (int)distB);
       HAL_UART_Transmit(&huart3, txBuffer, 20, 0xFFFF);
+
+      distA = 0.0;
+      distB = 0.0;
 
       if (cmdType == 'C')
       {
     	actionCounter = 0;
     	fillCounter = -1;
     	cmdState = 1;
+
+    	for (int counter = 0; counter < 1000; ++counter)
+    	  memset(cmds[counter], 0, 20);
       }
     }
 

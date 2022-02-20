@@ -78,8 +78,8 @@ class RPI(threading.Thread):
             imgMsg = self.pcObject.receiveMsgFromImg()
             if imgMsg:
                 print("Message received from Image: " + str(imgMsg))
-                if imgMsg[:4] == "IMG":
-                    self.sendToAndroid(imgMsg[4:])
+                if imgMsg[:4] == "AND":
+                    self.sendToAndroid(imgMsg[5:])
 
 
 
@@ -95,6 +95,7 @@ class RPI(threading.Thread):
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
         if msgToImg:
+            self.snapPic()
             self.pcObject.sendMsgToImg(msgToImg)
             print("Message is sent to PC: " + str(msgToImg))
 

@@ -1,6 +1,6 @@
 import socket
 import time
-#import tqdm
+import os
 
 class PcComm():
     def __init__(self):
@@ -74,7 +74,12 @@ class PcComm():
         try:
             if msg != "":
                 if self.isConnected:
-                    with open("a.jpeg", "rb") as img_file:
+                    FILE_TO_READ = "a.jpeg"
+                    filesize = os.path.getsize(FILE_TO_READ)
+                    self.imgClient.send(bytes(str(filesize), "utf-8"))
+                    time.sleep(0.5)
+
+                    with open(FILE_TO_READ, "rb") as img_file:
                         img_bytes = img_file.read()
                         self.imgClient.send(img_bytes)
                     print("Successfully sent image to server...")
@@ -112,7 +117,7 @@ class PcComm():
 
     def receiveMsgFromImg(self):
         try:
-            msgReceived = self.imgClient.recv(20).decode("utf-8")
+            msgReceived = self.imgClient.recv(self.BUFFER_SIZE).decode("utf-8")
             if str(msgReceived) != "":
                 print("In send(msg) function, Message received is: " + str(msgReceived))
                 return msgReceived

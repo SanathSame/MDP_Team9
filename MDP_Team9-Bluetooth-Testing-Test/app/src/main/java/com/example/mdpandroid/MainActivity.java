@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         btnLeft = (ImageButton) this.findViewById(R.id.btn_left);
         btnRight = (ImageButton) this.findViewById(R.id.btn_right);
         //btnImg = (Button) this.findViewById(R.id.btn_img);
-        //btnFastest = (Button) this.findViewById(R.id.btn_fastest);
+        btnFastest = (Button) this.findViewById(R.id.btn_fastest);
         topToolbar = (Toolbar) this.findViewById(R.id.toolbar_top);
         bottomSheetToolbar = (Toolbar) this.findViewById(R.id.bottom_sheet_toolbar);
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
@@ -140,13 +140,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 MessageFragment.sendMessage("MAP -> RPI:\t\t ", "RESET" + '\n');
                 int n = 0;
+                message = "";
                 while (n < _map.getTargets().size()) {
-                    message = "OBS|[" + (n+1) + "," + _map.getTargets().get(n).getX() + "," + (21-_map.getTargets().get(n).getY()) + "," + _map.getTargets().get(n).getF() + "]";
+                    message = message + "OBS " + (n+1) + " " + _map.getTargets().get(n).getX() + " " + (21-_map.getTargets().get(n).getY()) + " " + _map.getTargets().get(n).getF() + " || ";
+                    receivemsg.setText(message);
                     MessageFragment.sendMessage("MAP -> RPI:\t\t ", message + '\n');
-                    sendMessage(message);
-                    System.out.println(message);
                     n++;
-                }}
+                }
+                sendMessage("ALG "+ message);
+                System.out.println("ALG "+ message);
+
+            }
+
+
         });
 
         Button backBtn = findViewById(R.id.btn_back);
@@ -159,13 +165,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-//        btnFastest.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
+        btnFastest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessage("STM START_FASTEST");
+                receivemsg.setText("STM START_FASTEST");
 //                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "START_FASTEST");
-//                showBottomSheetDialog("fastest");
-//            }
-//        });
+                showBottomSheetDialog("fastest");
+            }
+        });
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override

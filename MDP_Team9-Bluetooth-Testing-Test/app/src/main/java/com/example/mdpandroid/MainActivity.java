@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 message = ("STM " + msgCount + space + (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
                                 //MessageFragment.sendMessage("BTH -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
-
+                                System.out.println(message);
                                 sendMessage(message);
                                 msgCount++;
                                 System.out.println(message);
@@ -250,7 +250,11 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case R.id.btn_left:
                             case R.id.btn_right:
-                                MessageFragment.sendMessage("BHLD -> RPI:\t\t", (direction == ROBOT_SERVO_LEFT ? STM_COMMAND_LEFT : STM_COMMAND_RIGHT));
+                                space = "     ";
+                                message = (direction == ROBOT_MOTOR_FORWARD ? "SR" : "SL");
+                                //MessageFragment.sendMessage("BHLD -> RPI:\t\t", (direction == ROBOT_SERVO_LEFT ? STM_COMMAND_LEFT : STM_COMMAND_RIGHT));
+                                sendMessage(direction == ROBOT_MOTOR_FORWARD ? "SR" : "SL");
+                                System.out.println(message);
                                 Log.d("ROBOT TOUCH DOWN", _map.getRobo().toString());
                                 break;
                         }
@@ -288,6 +292,7 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.btn_reverse:
                             _map.getRobo().motorRotate(direction);
                             Log.d("ROBOT RUNNABLE", _map.getRobo().toString());
+                            System.out.println("penis");
                             break;
                         case R.id.btn_left:
                         case R.id.btn_right:

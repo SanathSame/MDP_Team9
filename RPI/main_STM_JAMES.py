@@ -12,7 +12,7 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        self.pcObject = PcComm()
+        #self.pcObject = PcComm()
         #self.androidObject = Android()
         self.stm = STM()
 
@@ -33,114 +33,151 @@ class RPI(threading.Thread):
         self.y1 = []
         self.y2 = []
 
-
-        '''
-        ANDROID (AND):
-        "ALG ROBOT XX YY D"  (X-COORDINDATE, Y-COORDINATE, DIRECTION)
-        "ALG OBS 1 XX YY D || OBS 2 X Y D" (OBSTACLE ID, X-COORDINDATE, Y-COORDINATE, DIRECTION)
-        "ALG STARTPF" (WEEK 8)
-        "ALG STARTPARKING" (WEEK 9)
-        
-        
-        ALG:
-        "IMG TAKEPICTURE 1" (OBSTACLE NUMBER)
-        "STM XXX F 10  " (XXX - COUNTER, DIRECTION, DIST/ANGLE) 
-        
-        STM:
-        "AND XXX DONE" (XXX - COUNTER)
-        
-        IMG: 
-        "RPI TARGET 1 22" (OBSTACLE ID, IMAGE ID)      
-        '''
+    def calc(self, a, L):
+        if not L:
+            a = a[::-1]
+        d = []
+        for i in range(len(a) - 1):
+            if a[i + 1] > a[i]:
+                d.append(360 - a[i + 1] + a[i])
+            else:
+                d.append(a[i] - a[i + 1])
+        print(d, sum(d) / len(d))
 
     def startThread(self):
         # Read threads created
-        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
+        #receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
         receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
         receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
         receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
 
         # Makes Threads run in the background
-        receiveFromImgThread.daemon = True
-        receiveFromAlgoThread.daemon = True
+        #receiveFromImgThread.daemon = True
+        #receiveFromAlgoThread.daemon = True
         receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
 
-        receiveFromImgThread.start()
-        receiveFromAlgoThread.start()
+        #receiveFromImgThread.start()
+        #receiveFromAlgoThread.start()
         #receiveFromAndroidThread.start()
-        '''self.sendToSTM("0   F 10  ")            #Hardcoded msg to be sent to STM
-        time.sleep(1)
-        self.sendToSTM("1   LF 90 ")
-        time.sleep(1)
-        self.sendToSTM("2   F 10  ")
-        time.sleep(1)
-        self.sendToSTM("3   C     ")'''
+        #self.sendToSTM("F 100 ")            #Hardcoded msg to be sent to STM
+        #self.sendToSTM("S     ")
         receiveFromSTMThread.start()
 
-        '''self.snapPic()
-        print("Picture taken....")
-        self.sendToImg()
-        print("Sent img to server")'''
+        '''for i in range(0, 10, 2):
+            self.sendToSTM(str(i) + "   F 10  ")
+            time.sleep(0.5)
+            self.sendToSTM(str(i+1) + "   B 10  ")
+            time.sleep(0.5)'''
+        # self.sendToSTM("STM 1   F 50  ")
+        # time.sleep(0.5)
+        # self.sendToSTM("2   RF 90 ")
+        # time.sleep(0.5)
+        # self.sendToSTM("3   LF 180")
+        # time.sleep(0.5)
+        # self.sendToSTM("4   B 70  ")
+        # time.sleep(0.5)
+
+        # self.sendToSTM("5   C     ")
+        # '''time.sleep(20)
+        # self.sendToSTM("5   F 1000")
+        # time.sleep(0.05)
+        # self.sendToSTM("6   RF 360")
+        # time.sleep(0.05)
+        # self.sendToSTM("7   B 900 ")'''
+        while True:
+            self.sendToSTM("0   F 100 ")
+            a = input("continue? ")
+
+            self.sendToSTM("1   B 100 ")
+            time.sleep(0.05)
+            self.sendToSTM("2   C     ")
+
+            b = input("continue? ")
+
+
+            '''a = [int(input('a0'))]
+            L = input("L").upper() == 'L'
+            dir = input("Dir").upper()
+            dis = input("Dis")
+            for i in range(5):
+            self.sendToSTM(str(i) + "   " + dir + " " + (" " + dis if len(dis) == 2 else dis))
+            #time.sleep(0.05)
+            a.append(int(input('Ang')))
+            self.calc(a, L)
+            time.sleep(0.05)
+            self.sendToSTM("6   C     ")'''
+        #self.sendToSTM("0   F   15")
+        #wasd = input()
+        #time.sleep(0.05)
+        #self.sendToSTM("1   F  100")
+        #time.sleep(0.05)
+        #self.sendToSTM("2   J    0")
+        self.sendToSTM("0   F   50")
+        time.sleep(0.05)
+        self.sendToSTM("1   LF 180")
+        time.sleep(0.05)
+        self.sendToSTM("2   F   50")
+        time.sleep(0.05)
+        self.sendToSTM("3   B   50")
+        time.sleep(0.05)
+        self.sendToSTM("4   LB 180")
+        time.sleep(0.05)
+        self.sendToSTM("5   B   50")
+        time.sleep(0.05)
+        self.sendToSTM("6   F   50")
+        time.sleep(0.05)
+        self.sendToSTM("7   RF 180")
+        time.sleep(0.05)
+        self.sendToSTM("8   F   50")
+        time.sleep(0.05)
+        self.sendToSTM("9   RB 180")
+        time.sleep(0.05)
+        self.sendToSTM("10  F   50")
+        time.sleep(0.05)
+        self.sendToSTM("11  RF  45")
+        time.sleep(0.05)
+        self.sendToSTM("12  LF 135")
+        time.sleep(0.05)
+        self.sendToSTM("13  RF 360")
+        time.sleep(0.05)
+        self.sendToSTM("14  LF 360")
+
+
+
 
     def receiveFromImg(self):
-        counter = 0
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
-            if imgMsg is not None:
+            if imgMsg:
                 print("Message received from Image: " + str(imgMsg))
-                predictions = imgMsg.split()
-                if not predictions:
-                    continue
-                #print(predictions[1])
-                print(predictions)
-                if len(predictions) == 3:
-                    if int(predictions[1]) == 12:
-                        counter += 1
-                        print("Current counter in receive from image: " + str(counter))
-                        self.sendToAlgo("CONTINUE")
-                        predictions = []
-                    else:
-                        self.sendToAlgo("STOP")
-                elif len(predictions) == 1:
-                    if predictions[0] == "NOIMAGE":
-                        pass
-
-                '''if imgMsg[:3] == "AND":
-                    self.sendToAndroid(imgMsg[4:])'''
+                if imgMsg[:4] == "IMG":
+                    self.sendToAndroid(imgMsg[4:])
 
 
 
     def receiveFromAlgo(self):
         while True:
             algoMsg = self.pcObject.receiveMsgFromAlgo()
+            if algoMsg:
+                print("Message received from Algo: " + str(algoMsg[1:]))
+                if algoMsg[:7] == "TAKEPIC":
+                    self.snapPic()
+                    self.sendToImg(algoMsg[7:]) #Send the obstacle: XX YY
+                elif algoMsg[1:4] == "STM":
+                    self.sendToSTM(algoMsg[5:])
 
-            #print("Message received from Algo: " + str(algoMsg[2:]))        ## Start from index 2 to remove unknown symbol
-            if algoMsg is not None:
-                commands = algoMsg.split("\n")
-                for c in commands:
-                    if c[2:5] == "IMG":
-                        print("Message sending to img server: " + str(c[6:] + "|||"))
-                        #self.snapPic()
-                        self.sendToImg()            #Send the obstacle: XX YY
-                    if c[2:5] == "STM":
-                        print("Message sending to STM: " + str(c[6:] + "|||"))
-                        #time.sleep(0.05)
-                        self.sendToSTM(c[6:])
-                    time.sleep(0.5)
-                commands = None
 
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
         if msgToImg:
-            self.snapPic()
             self.pcObject.sendMsgToImg(msgToImg)
-            print("Message is sent to IMG server: " + str(msgToImg))
+            print("Message is sent to PC: " + str(msgToImg))
 
     def sendToAlgo(self, msgToAlgo):
         if msgToAlgo:
             self.pcObject.sendMsgToAlgo(msgToAlgo)
-            print("Message is sent to Algo server: " + str(msgToAlgo))
+            print("Message is sent to PC: " + str(msgToAlgo))
 
     '''def receiveFromPc(self):
         while True:
@@ -180,10 +217,12 @@ class RPI(threading.Thread):
         while True:
             androidMsg = self.androidObject.receiveMsg()
             if androidMsg:
-                print("Message from android: " + androidMsg)
+                print("Message from android: " + androidMsg + "|||")
                 if androidMsg.upper() == "W":
                     tmp = input("Message please: ")
                     self.sendToAndroid(tmp)
+                elif androidMsg[0:3] == "STM":
+                    self.sendToSTM(androidMsg[4:])
 
     '''
     w s - control motor: drive rear wheel, value from 1000 to 3500 (speed)
@@ -196,15 +235,22 @@ class RPI(threading.Thread):
             self.stm.sendMsg(msgToSTM)
             print("Message send to STM is " + msgToSTM)
         '''while True:
-            msgToSTM = input("Enter your msg: ")
-            self.stm.sendMsg(msgToSTM)'''
+            msgToSTM = input("Enter your command (6 chars): ")
+            self.stm.sendMsg(str(msgToSTM))'''
 
     def receiveFromSTM(self):
         # Enclose in while loop
         while True:
             stmMsg = self.stm.receiveMsg()
             if stmMsg is not None and ord(stmMsg[0]) != 0 :
-                #print("Message from STM: " + stmMsg)       #Comment for debug
+                print("Message from STM: " + stmMsg)       #Comment for debug
+
+                # if "Done C" in stmMsg:
+                #     self.sendToSTM("0   F 40  ")
+                #     time.sleep(0.5)
+                #     self.sendToSTM("1   LF 90 ")
+                #     time.sleep(0.5)
+                #     self.sendToSTM("2   B 100 ")
 
                 '''time.sleep(2)
                 msg = str(input("Message for STM: "))
@@ -216,8 +262,6 @@ class RPI(threading.Thread):
                 rpi.y2.append(int(y2))
                 rpi.x1.append(self.time)
                 self.time += 0.05'''
-                if stmMsg[:4] == "DONE":
-                    self.sendToAlgo(stmMsg)
 
 
     def snapPic(self):
@@ -255,8 +299,8 @@ class RPI(threading.Thread):
 
 
     def closeAll(self):
-        self.pcObject.disconnect()
-        self.androidObject.disconnect()
+        #self.pcObject.disconnect()
+        #self.androidObject.disconnect()
         '''with open("test1.csv", 'w') as f:
             f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
             f.write(str(rpi.y2[20:-10])[1:-1])

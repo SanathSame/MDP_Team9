@@ -37,9 +37,9 @@ class PcComm():
                 self.serverSocket.listen(2)
 
                 print("RPi is listening for PC communication...")
-                '''self.imgClient, self.imgClientIP = self.serverSocket.accept()
+                self.imgClient, self.imgClientIP = self.serverSocket.accept()
                 self.numConnections += 1
-                print("RPi is connected to " + str(self.imgClient))'''
+                print("RPi is connected to " + str(self.imgClient))
 
                 self.algoClient, self.algoClientIP = self.serverSocket.accept()
                 self.numConnections += 1
@@ -74,6 +74,7 @@ class PcComm():
         try:
             if msg != "":
                 if self.isConnected:
+                    self.imgClient.send(bytes("TAKEPICTURE", "utf-8"))
                     FILE_TO_READ = "a.jpeg"
                     filesize = os.path.getsize(FILE_TO_READ)
                     self.imgClient.send(bytes(str(filesize), "utf-8"))
@@ -103,7 +104,7 @@ class PcComm():
                     self.algoClient.send(len(msgLength).to_bytes(2, byteorder="big"))
                     self.algoClient.send(msgLength)
                     #self.algoClient.send(msg.encode('UTF-8'))
-                    print("In send(msg) function, Message has been sent to PC: " + str(msg))
+                    print("In send(msg) function, Message has been sent to Algo: " + str(msg))
                     return True
 
                 else:
@@ -119,7 +120,7 @@ class PcComm():
         try:
             msgReceived = self.imgClient.recv(self.BUFFER_SIZE).decode("utf-8")
             if str(msgReceived) != "":
-                print("In send(msg) function, Message received is: " + str(msgReceived))
+                print("In receiveMsgFromImg() function, Message received is: " + str(msgReceived))
                 return msgReceived
             else:
                 return None

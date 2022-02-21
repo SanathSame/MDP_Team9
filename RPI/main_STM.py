@@ -12,12 +12,12 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        self.pcObject = PcComm()
+        #self.pcObject = PcComm()
         #self.androidObject = Android()
         self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
+        #self.pcObject.connect()
         #self.androidObject.connect()
         self.stm.connect()
         print("Connecting to other devices...")
@@ -42,12 +42,12 @@ class RPI(threading.Thread):
 
         # Makes Threads run in the background
         #receiveFromImgThread.daemon = True
-        receiveFromAlgoThread.daemon = True
+        #receiveFromAlgoThread.daemon = True
         receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
 
         #receiveFromImgThread.start()
-        receiveFromAlgoThread.start()
+        #receiveFromAlgoThread.start()
         #receiveFromAndroidThread.start()
         #self.sendToSTM("F 100 ")            #Hardcoded msg to be sent to STM
         #self.sendToSTM("S     ")
@@ -58,12 +58,12 @@ class RPI(threading.Thread):
             time.sleep(0.5)
             self.sendToSTM(str(i+1) + "   B 10  ")
             time.sleep(0.5)'''
-        # self.sendToSTM("STM 1   F 50  ")
-        # time.sleep(0.5)
-        # self.sendToSTM("2   RF 90 ")
-        # time.sleep(0.5)
-        # self.sendToSTM("3   LF 180")
-        # time.sleep(0.5)
+        self.sendToSTM("1   F 100 ")
+        time.sleep(0.5)
+        #self.sendToSTM("2   RF 90 ")
+        #time.sleep(0.5)
+        #self.sendToSTM("3   LF 180")
+        #time.sleep(0.5)
         # self.sendToSTM("4   B 70  ")
         # time.sleep(0.5)
 
@@ -172,7 +172,7 @@ class RPI(threading.Thread):
         # Enclose in while loop
         while True:
             stmMsg = self.stm.receiveMsg()
-            if stmMsg is not None and ord(stmMsg[0]) != 0 :
+            if stmMsg is not None and ord(stmMsg[0]) != 0:
                 print("Message from STM: " + stmMsg)       #Comment for debug
 
                 # if "Done C" in stmMsg:

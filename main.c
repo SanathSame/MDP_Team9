@@ -157,7 +157,7 @@ void battery(void *argument);
 void led(void *argument);
 
 /* USER CODE BEGIN PFP */
-int irToDist(uint32_t reading);
+int irToDist();
 void driveRobot(uint8_t *cmd);
 void stopRobot();
 void turnRobot(uint8_t *cmd);
@@ -178,11 +178,12 @@ int errorA, errorB, prevErrorA, prevErrorB, sumErrorA, sumErrorB;
 int robotAngle;
 
 uint8_t cmds[1000][20], cmdState, prevCmd[20], rxBuffer[20], txBuffer[20];
-uint8_t driveACmd, driveBCmd, startDriving;
+uint8_t driveACmd, driveBCmd, startDriving, startPID;
 uint8_t angleCmd, servoCmd;
 
+uint32_t tick1, tick2;
 uint32_t servoCenter, servoLeft, servoRight, servoVal;
-uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5];
+uint32_t batteryCounter, batteryVal[5], irCounter, irVal[100];
 uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay;  // rpiDelay <= encoderDelay
 /* USER CODE END 0 */
 
@@ -232,7 +233,7 @@ int main(void)
 
   kd = 0;
   ki = 0;
-  kp = 0;
+  kp = 6;
 
   distOffset = 5;
   turnOffset = 0.5;
@@ -264,6 +265,7 @@ int main(void)
   driveACmd = 0;
   driveBCmd = 0;
   startDriving = 0;
+  startPID = 0;
 
   angleCmd = 0;
   servoCmd = 0;
@@ -843,14 +845,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   UNUSED(huart);
 }
 
-int irToDist(uint32_t reading)
+int irToDist()
 {
   float avgIRVal = 0.0;
 
-  for (int counter = 0; counter < 5; ++counter)
+  for (int counter = 0; counter < 100; ++counter)
   	avgIRVal += irVal[counter];
 
-  avgIRVal /= 5;
+  avgIRVal /= 100;
 
   return (int)(avgIRVal + 0.5);
 }
@@ -869,6 +871,7 @@ void driveRobot(uint8_t *cmd)
   if (startDriving == 0)
   {
 	startDriving = 1;
+	startPID = 1;
 
 	targetCount = 0;
 	encoderTarget = 0;
@@ -892,8 +895,8 @@ void driveRobot(uint8_t *cmd)
 
 void stopRobot()
 {
-  motorAVal = 0;
-  motorBVal = 0;
+  startPID = 0;
+
   driveACmd = 0;
   driveBCmd = 0;
   osDelay(15 * motorDelay);
@@ -908,6 +911,7 @@ void stopRobot()
     strncpy((char*)cmds[actionCounter], (char*)prevCmd, 20);
     angleCmd = 0;
   }
+
   cmdState = 2;
 }
 
@@ -961,28 +965,33 @@ void oled(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	sprintf(strBuffer, "%d", (int)cmdState);
-	OLED_ShowString(0, 0, (uint8_t*)strBuffer);
-
 	sprintf(strBuffer, "          ");
 	if (actionCounter <= fillCounter && cmds[actionCounter][0] != 0)
       strncpy(strBuffer, (char*)(angleCmd != 0 ? prevCmd : cmds[actionCounter]), 20);
 	OLED_ShowString(10, 0, (uint8_t*)strBuffer);
 
-	sprintf(strBuffer, "DistA: %-5d", (int)distA);
+	//sprintf(strBuffer, "DistA: %-5d", (int)distA);
     //sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
+	//sprintf(strBuffer, "EncA: %-5d", (int)encoderAVal);
+	sprintf(strBuffer, "IR: %d", irToDist());
+	//sprintf(strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
+	//sprintf(strBuffer, "Tick1: %d", (int)tick1);
 	OLED_ShowString(10, 10, (uint8_t*)strBuffer);
 
-	sprintf(strBuffer, "DistB: %-5d", (int)distB);
+	//sprintf(strBuffer, "DistB: %-5d", (int)distB);
 	//sprintf(strBuffer, "MotorB: %-5d", (int)motorBVal);
-	OLED_ShowString(10, 20, (uint8_t*)strBuffer);
+	//sprintf(strBuffer, "EncB: %-5d", (int)encoderBVal);
+	//sprintf(strBuffer, "Tick2: %d", (int)tick2);
+	//OLED_ShowString(10, 20, (uint8_t*)strBuffer);
 
 	sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
 	//sprintf(strBuffer, "DistA: %-5d", (int)distA);
+	//sprintf(strBuffer, "TempA: %-5d", (int)tempA);
 	OLED_ShowString(10, 30, (uint8_t*)strBuffer);
 
 	sprintf(strBuffer, "Fill: %-5d", (int)fillCounter);
 	//sprintf(strBuffer, "DistB: %-5d", (int)distB);
+	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
 	OLED_ShowString(10, 40, (uint8_t*)strBuffer);
 
 	avgBatteryVal = 0.0;
@@ -1014,8 +1023,8 @@ void ir(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	if (irCounter > 4)
-	  for (irCounter = 0; irCounter < 4; ++irCounter)
+	if (irCounter > 99)
+	  for (irCounter = 0; irCounter < 99; ++irCounter)
 	    irVal[irCounter] = irVal[irCounter + 1];
 
 	HAL_ADC_Start(&hadc1);
@@ -1070,11 +1079,8 @@ void rpi(void *argument)
       cmdType = cmds[actionCounter][4];
 
       strncpy(strCounter, (char*)cmds[actionCounter], 3);
-      sprintf((char*)txBuffer, cmdType == 'C' ? "C Done" : "%d %d %d", atoi(strCounter), (int)distA, (int)distB);
+      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C" : "Done %d", atoi(strCounter));
       HAL_UART_Transmit(&huart3, txBuffer, 20, 0xFFFF);
-
-      distA = 0.0;
-      distB = 0.0;
 
       if (cmdType == 'C')
       {
@@ -1240,7 +1246,10 @@ void encoderA(void *argument)
 		  distA += encoderInt;
 
 		distA += encoderGrad * pi * radius * encoderAVal / 165;
+	  }
 
+	  if (startPID == 1)
+	  {
 		if (encoderTarget == 0 && targetCount++ == countRequired)
 		  encoderTarget = encoderAVal <= encoderBVal ? encoderAVal : encoderBVal;
 		else if (angleCmd == 0 && encoderTarget != 0)
@@ -1294,7 +1303,10 @@ void encoderB(void *argument)
 		  distB += encoderInt;
 
 		distB += encoderGrad * pi * radius * encoderBVal / 165;
+	  }
 
+	  if (startPID == 1)
+	  {
 		if (encoderTarget == 0 && targetCount++ == countRequired)
 		  encoderTarget = encoderAVal <= encoderBVal ? encoderAVal : encoderBVal;
 		else if (angleCmd == 0 && encoderTarget != 0)

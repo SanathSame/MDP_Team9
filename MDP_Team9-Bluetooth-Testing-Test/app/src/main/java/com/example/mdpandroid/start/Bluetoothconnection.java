@@ -1,12 +1,8 @@
 package com.example.mdpandroid.start;
-
-import static com.example.mdpandroid.map.BoardMap.TARGET_CELL_CODE;
-
 import com.example.mdpandroid.R;
 import com.example.mdpandroid.MainActivity;
 import com.example.mdpandroid.map.BoardMap;
 import com.example.mdpandroid.map.MapCanvas;
-import com.example.mdpandroid.map.Target;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -30,15 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Set;
@@ -56,7 +46,7 @@ public class Bluetoothconnection extends AppCompatActivity{
     BluetoothAdapter mbluetoothadapter;
     Bluetoothservice mBluetoothconnection;
     MapCanvas mapCanvas;
-
+    Context mContext;
     public ArrayList<BluetoothDevice> mNewBTDevices;
     public ArrayList<BluetoothDevice> mPairedBTDevices;
     public DeviceListAdapter mNewDevlceListAdapter;
@@ -133,6 +123,8 @@ public class Bluetoothconnection extends AppCompatActivity{
 
         //Initialize SharedPreferences
         Bluetoothconnection.context = getApplicationContext();
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("Value",0);
+        SharedPreferences.Editor editor = pref.edit();
         this.sharedPreferences();
 
         IntentFilter filter2 = new IntentFilter("ConnectionStatus");
@@ -226,7 +218,7 @@ public class Bluetoothconnection extends AppCompatActivity{
             }
         });
 
-//        sent btn
+//      sent btn
         msentbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -513,13 +505,17 @@ public class Bluetoothconnection extends AppCompatActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("receivedMessage");
+//            Intent incomingintent = new Intent("incomingmessage");
+//            incomingintent.putExtra("receivedmessage", incomingintent);
+//            LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingintent);
             showLog("receivedMessage: message --- " + message);
-            sharedPreferences();
+            SharedPreferences pref = getSharedPreferences("Value",0);
             String receivedText = message;
+            SharedPreferences.Editor editor = pref.edit();
             editor.putString("message", receivedText);
             editor.commit();
+            editor.apply();
             System.out.println("bluetooth shit");
-//            useReceivedMessage(_map, mapCanvas, receivedText);
             refreshMessageReceived();
         }
     };
@@ -550,7 +546,7 @@ public class Bluetoothconnection extends AppCompatActivity{
 //    }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         Log.d(TAG, "onDestroy: called");
         super.onDestroy();
         try {

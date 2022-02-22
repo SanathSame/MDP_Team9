@@ -7,13 +7,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.mdpandroid.R;
+import com.example.mdpandroid.start.MessageBox;
 
 
 public class PagerAdapter extends FragmentPagerAdapter {
 
     public enum TabItem {
-        CONNECTION(BluetoothFragment.class, R.string.tab_connection),
-        MESSAGE(MessageFragment.class, R.string.tab_message);
+        MESSAGE(MessageBox.class, R.string.tab_message);
 
         private final Class<? extends Fragment> fragmentClass;
         private final int titleResId;

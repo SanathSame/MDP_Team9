@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.example.mdpandroid.start.Bluetoothservice;
+import com.example.mdpandroid.start.MessageBox;
 import com.example.mdpandroid.start.StartedActivity;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
@@ -39,13 +40,11 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import biz.laenger.android.vpbs.BottomSheetUtils;
-import com.example.mdpandroid.bluetooth.BluetoothFragment;
-import com.example.mdpandroid.bluetooth.MessageFragment;
+
 import com.example.mdpandroid.bluetooth.PagerAdapter;
 import com.example.mdpandroid.bluetooth.PagerAdapter.TabItem;
 
 import com.example.mdpandroid.leaderboard.MapConfigDialog;
-import com.example.mdpandroid.leaderboard.TimerDialogFragment;
 import com.example.mdpandroid.map.MapCanvas;
 import com.example.mdpandroid.map.BoardMap;
 
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnRight;
     TextView topTitle, receivemsg;
 
-    int msgCount = 0;
     Toolbar topToolbar;
     Toolbar bottomSheetToolbar;
     TabLayout bottomSheetTabLayout; //bottom_sheet_tabs
@@ -93,14 +91,13 @@ public class MainActivity extends AppCompatActivity {
         btnLeft = (ImageButton) this.findViewById(R.id.btn_left);
         btnRight = (ImageButton) this.findViewById(R.id.btn_right);
         //btnImg = (Button) this.findViewById(R.id.btn_img);
-        btnFastest = (Button) this.findViewById(R.id.btn_fastest);
+        //btnFastest = (Button) this.findViewById(R.id.btn_fastest);
         topToolbar = (Toolbar) this.findViewById(R.id.toolbar_top);
         bottomSheetToolbar = (Toolbar) this.findViewById(R.id.bottom_sheet_toolbar);
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
         bottomSheetViewPager = (ViewPager) this.findViewById(R.id.viewpager);
         topTitle = (TextView) this.findViewById(R.id.top_title);
-        receivemsg = this.findViewById(R.id.Testingmsg);
-        LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
+//      LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
 
         // Set up sharedPreferences
         MainActivity.context = getApplicationContext();
@@ -138,21 +135,15 @@ public class MainActivity extends AppCompatActivity {
         btnTarget.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                MessageFragment.sendMessage("MAP -> RPI:\t\t ", "RESET" + '\n');
+                MessageBox.sendMessage("MAP -> RPI:\t\t ", "RESET" + '\n');
                 int n = 0;
-                message = "";
                 while (n < _map.getTargets().size()) {
-                    message = message + "OBS " + (n+1) + " " + _map.getTargets().get(n).getX() + " " + (21-_map.getTargets().get(n).getY()) + " " + _map.getTargets().get(n).getF() + " || ";
-                    receivemsg.setText(message);
-                    MessageFragment.sendMessage("MAP -> RPI:\t\t ", message + '\n');
+                    message = "OBS|[" + (n+1) + "," + _map.getTargets().get(n).getX() + "," + (21-_map.getTargets().get(n).getY()) + "," + _map.getTargets().get(n).getF() + "]";
+                    MessageBox.sendMessage("MAP -> RPI:\t\t ", message + '\n');
+                    sendMessage(message);
+                    System.out.println(message);
                     n++;
-                }
-                sendMessage("ALG "+ message);
-                System.out.println("ALG "+ message);
-
-            }
-
-
+                }}
         });
 
         Button backBtn = findViewById(R.id.btn_back);
@@ -165,15 +156,13 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
         });
 
-        btnFastest.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendMessage("STM START_FASTEST");
-                receivemsg.setText("STM START_FASTEST");
+//        btnFastest.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
 //                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "START_FASTEST");
-                showBottomSheetDialog("fastest");
-            }
-        });
+//                showBottomSheetDialog("fastest");
+//            }
+//        });
 
         btnReset.setOnClickListener(new OnClickListener() {
             @Override
@@ -235,26 +224,14 @@ public class MainActivity extends AppCompatActivity {
                         switch (v.getId()) {
                             case R.id.btn_accelerate:
                             case R.id.btn_reverse:
-                                String space = "     ";
-                                if(msgCount>=10)
-                                    space = "    ";
-
-                                message = ("STM " + msgCount + space + (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
-                                //MessageFragment.sendMessage("BTH -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
-                                System.out.println(message);
+                                message = (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE);
+                                MessageBox.sendMessage("BTH -> RPI:\t\t", (direction == ROBOT_MOTOR_FORWARD ? STM_COMMAND_FORWARD : STM_COMMAND_REVERSE));
                                 sendMessage(message);
-                                msgCount++;
-                                System.out.println(message);
-
                                 Log.d("ROBOT TOUCH DOWN", _map.getRobo().toString());
                                 break;
                             case R.id.btn_left:
                             case R.id.btn_right:
-                                space = "     ";
-                                message = (direction == ROBOT_MOTOR_FORWARD ? "SR" : "SL");
-                                //MessageFragment.sendMessage("BHLD -> RPI:\t\t", (direction == ROBOT_SERVO_LEFT ? STM_COMMAND_LEFT : STM_COMMAND_RIGHT));
-                                sendMessage(direction == ROBOT_MOTOR_FORWARD ? "SR" : "SL");
-                                System.out.println(message);
+                                MessageBox.sendMessage("BHLD -> RPI:\t\t", (direction == ROBOT_SERVO_LEFT ? STM_COMMAND_LEFT : STM_COMMAND_RIGHT));
                                 Log.d("ROBOT TOUCH DOWN", _map.getRobo().toString());
                                 break;
                         }
@@ -265,18 +242,18 @@ public class MainActivity extends AppCompatActivity {
                         switch (v.getId()) {
                             case R.id.btn_accelerate:
                             case R.id.btn_reverse:
-                                MessageFragment.sendMessage("BRLS -> RPI:\t\t", STM_COMMAND_STOP);
+                                MessageBox.sendMessage("BRLS -> RPI:\t\t", STM_COMMAND_STOP);
                                 _map.getRobo().setMotor(ROBOT_MOTOR_STOP);
                                 Log.d("ROBOT TOUCH UP", _map.getRobo().toString());
                                 break;
                             case R.id.btn_left:
                             case R.id.btn_right:
-                                MessageFragment.sendMessage("BRLS -> RPI:\t\t", STM_COMMAND_CENTRE);
+                                MessageBox.sendMessage("BRLS -> RPI:\t\t", STM_COMMAND_CENTRE);
                                 _map.getRobo().setServo(ROBOT_SERVO_CENTRE);
                                 Log.d("ROBOT TOUCH UP", _map.getRobo().toString());
                                 break;
                         }
-                        MessageFragment.addSeparator();
+                        MessageBox.addSeparator();
                         mHandler.removeCallbacks(mAction);
                         mHandler = null;
                         break;
@@ -292,7 +269,6 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.btn_reverse:
                             _map.getRobo().motorRotate(direction);
                             Log.d("ROBOT RUNNABLE", _map.getRobo().toString());
-                            System.out.println("penis");
                             break;
                         case R.id.btn_left:
                         case R.id.btn_right:
@@ -334,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupBottomSheet() {
 //        bottomSheetToolbar.setTitle(R.string.bottom_sheet_title);
-        final PagerAdapter sectionsPagerAdapter = new PagerAdapter(getSupportFragmentManager(), this, TabItem.CONNECTION, TabItem.MESSAGE);
+        final PagerAdapter sectionsPagerAdapter = new PagerAdapter(getSupportFragmentManager(), this, TabItem.MESSAGE);
         bottomSheetViewPager.setOffscreenPageLimit(1);
         bottomSheetViewPager.setAdapter(sectionsPagerAdapter);
         bottomSheetTabLayout.setupWithViewPager(bottomSheetViewPager);
@@ -351,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     public void refreshMessageReceived() {
-        receivemsg.setText(sharedPreferences.getString("message", ""));
+        //receivemsg.setText(sharedPreferences.getString("message", ""));
     }
 
     public void refreshMessageReceivedfromblue() {
@@ -368,34 +344,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void showBottomSheetDialog(String dialog) {
-        topToolbar.setVisibility(View.GONE);
-        switch (dialog) {
-            case "img":
-                TimerDialogFragment imgDialog = MessageFragment.getTimerDialog("Image Recognition Run");
-                imgDialog.show(getSupportFragmentManager(), imgDialog.getTag());
-                break;
-            case "fastest":
-                TimerDialogFragment fastestDialog = MessageFragment.getTimerDialog("Fastest Path Run");
-                fastestDialog.show(getSupportFragmentManager(), fastestDialog.getTag());
-                break;
-            case "config":
-                final MapConfigDialog mapConfigDialog = new MapConfigDialog();
-                mapConfigDialog.show(getSupportFragmentManager(), mapConfigDialog.getTag());
-                break;
-        }
-    }
+//    private void showBottomSheetDialog(String dialog) {
+//        topToolbar.setVisibility(View.GONE);
+//        switch (dialog) {
+//            case "img":
+//                TimerDialogFragment imgDialog = MessageFragment.getTimerDialog("Image Recognition Run");
+//                imgDialog.show(getSupportFragmentManager(), imgDialog.getTag());
+//                break;
+//            case "fastest":
+//                TimerDialogFragment fastestDialog = MessageFragment.getTimerDialog("Fastest Path Run");
+//                fastestDialog.show(getSupportFragmentManager(), fastestDialog.getTag());
+//                break;
+//            case "config":
+//                final MapConfigDialog mapConfigDialog = new MapConfigDialog();
+//                mapConfigDialog.show(getSupportFragmentManager(), mapConfigDialog.getTag());
+//                break;
+//        }
+//    }
 
-    BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            refreshMessageReceivedfromblue();
-            String receivedText = sharedPreferences.getString("message", "");
-            System.out.println(receivedText + "test");
-            useReceivedMessage(_map, mapCanvas, receivedText);
-            refreshMessageReceived();
-        }
-    };
+//    BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            refreshMessageReceivedfromblue();
+//            String receivedText = sharedPreferences.getString("message", "");
+//            System.out.println(receivedText + "test");
+//            useReceivedMessage(_map, mapCanvas, receivedText);
+//            refreshMessageReceived();
+//        }
+//    };
     public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
         int j;
         System.out.println("works");
@@ -429,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         try{
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
+//            LocalBroadcastManager.getInstance(this).unregisterReceiver(messageReceiver);
         } catch(IllegalArgumentException e){
             e.printStackTrace();
         }

@@ -6,6 +6,7 @@ from android import *
 from stm32 import *
 from picamera import PiCamera
 from ultrasonic import *
+import RPi.GPIO as GPIO
 
 class RPI(threading.Thread):
     def __init__(self):
@@ -53,19 +54,37 @@ class RPI(threading.Thread):
         #self.sendToSTM("S     ")
         receiveFromSTMThread.start()
 
+        '''count = 0
+        while True:
+            rpi.sendToSTM(str(count) + "   F 100 ")
+            A = input("hhi")
+            count += 1
+            time.sleep(0.05)
+            rpi.sendToSTM(str(count) + "   B 100 ")
+            count += 1
+            b = input("hhi")'''
+
+        #self.sendToSTM(str(0) + "   LF 360")
+
         '''for i in range(0, 10, 2):
             self.sendToSTM(str(i) + "   F 10  ")
             time.sleep(0.5)
             self.sendToSTM(str(i+1) + "   B 10  ")
             time.sleep(0.5)'''
-        self.sendToSTM("1   F 100 ")
+        self.sendToSTM("0   B 35  ")
         time.sleep(0.5)
-        #self.sendToSTM("2   RF 90 ")
-        #time.sleep(0.5)
-        #self.sendToSTM("3   LF 180")
-        #time.sleep(0.5)
-        # self.sendToSTM("4   B 70  ")
-        # time.sleep(0.5)
+        #A = input("hihi")
+        self.sendToSTM("1   RF 90 ")
+        time.sleep(0.5)
+        #A = input("hihi")
+        self.sendToSTM("2   F 12  ")
+        time.sleep(0.5)
+        #A = input("hihi")
+        self.sendToSTM("3   LF 190")
+        time.sleep(0.5)
+        #A = input("hihi")
+        self.sendToSTM("4   C     ")
+        time.sleep(0.5)
 
         # self.sendToSTM("5   C     ")
         # '''time.sleep(20)
@@ -237,18 +256,43 @@ class RPI(threading.Thread):
             f.close()
         print("in closing....")'''
         self.stm.disconnect()
-        self.camera.close()
+        #self.camera.close()
 
 
 if __name__ == "__main__":
     rpi = RPI()
     try:
-        rpi.camera = PiCamera()
-        rpi.camera.resolution = (640, 480)
+        #rpi.camera = PiCamera()
+        #rpi.camera.resolution = (640, 480)
+        '''ultrasonic = Ultrasonic()
+        dist = ultrasonic.distance()
+        print("Measured Distance = %.1f cm" % dist)
+        count = 0
+        time.sleep(2)
+        while dist > 20:
+            if (dist-20) >= 100:
+                rpi.sendToSTM(str(count) + "   F " + str(int(dist-20 +1)) + " ")
+                time.sleep(4)
+                dist = ultrasonic.distance()
+                print("Measured Distance = %.1f cm" % dist)
+                count += 1
+            else:
+                rpi.sendToSTM(str(count) + "   F " + str(int(dist-20+1)) + "  ")
+                time.sleep(4)
+                dist = ultrasonic.distance()
+                print("Measured Distance = %.1f cm" % dist)
+                count += 1
+
+        rpi.sendToSTM(str(count) + "   C     ")
+
+        GPIO.cleanup()'''
+
+
 
         rpi.startThread()
         while True:
             pass
-
     except KeyboardInterrupt:
+        #rpi.sendToSTM(str(count) + "   C     ")
         rpi.closeAll()
+        GPIO.cleanup()

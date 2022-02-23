@@ -50,6 +50,7 @@ class PcComm():
 
         except Exception as e:
             print("Connection Error: " + str(e))
+            self.connect()
 
     def disconnect(self):
         try:
@@ -57,9 +58,9 @@ class PcComm():
                 self.serverSocket.close()
                 print("RPi socket closed...")
 
-            '''if self.imgClient:
+            if self.imgClient:
                 self.imgClient.close()
-                print("Image Rec client socket closed...")'''
+                print("Image Rec client socket closed...")
 
             if self.algoClient:
                 self.algoClient.close()
@@ -86,7 +87,7 @@ class PcComm():
                     print("Successfully sent image to server...")
 
                 else:
-                    print("In send(msg) function, RPI is not connected properly...")
+                    print("In sendMsgToImg() function, RPI is not connected properly...")
                     self.connect()
                     return False
 
@@ -99,16 +100,14 @@ class PcComm():
         try:
             if msg != "":
                 if self.isConnected:
-                    #msg = msg + '\n'
                     msgLength = msg.encode("UTF-8")
                     self.algoClient.send(len(msgLength).to_bytes(2, byteorder="big"))
                     self.algoClient.send(msgLength)
-                    #self.algoClient.send(msg.encode('UTF-8'))
-                    print("In send(msg) function, Message has been sent to Algo: " + str(msg))
+                    print("In sendMsgToAlgo() function, Message has been sent to Algo: " + str(msg))
                     return True
 
                 else:
-                    print("In send(msg) function, RPI is not connected properly...")
+                    print("In sendMsgToAlgo() function, RPI is not connected properly...")
                     self.connect()
                     return False
         except Exception as e:
@@ -134,11 +133,7 @@ class PcComm():
         try:
             msgReceived = self.algoClient.recv(self.BUFFER_SIZE).decode("utf-8")
             if str(msgReceived) != "":
-                print("In send(msg) function, Message received is: " + str(msgReceived))
-                '''commands = msgReceived.split(' ')
-                for i in range(len(commands)):
-                    if commands[i] != '':
-                        self.enqueue(commands[i])'''
+                print("In receiveMsgFromAlgo() function, Message received is: " + str(msgReceived))
                 return str(msgReceived)
             else:
                 return None

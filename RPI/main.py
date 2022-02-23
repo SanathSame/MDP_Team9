@@ -6,6 +6,7 @@ from android import *
 from stm32 import *
 from picamera import PiCamera
 from ultrasonic import *
+import RPi.GPIO as GPIO
 
 class RPI(threading.Thread):
     def __init__(self):
@@ -20,7 +21,7 @@ class RPI(threading.Thread):
         #self.pcObject.connect()
         #self.androidObject.connect()
         self.stm.connect()
-        print("Connecting to other devices...")
+        print("Connection to devices completed...")
 
         time.sleep(2)
 
@@ -69,22 +70,10 @@ class RPI(threading.Thread):
         receiveFromImgThread.start()
         receiveFromAlgoThread.start()
         #receiveFromAndroidThread.start()
-        '''self.sendToSTM("0   F 10  ")            #Hardcoded msg to be sent to STM
-        time.sleep(1)
-        self.sendToSTM("1   LF 90 ")
-        time.sleep(1)
-        self.sendToSTM("2   F 10  ")
-        time.sleep(1)
-        self.sendToSTM("3   C     ")'''
         receiveFromSTMThread.start()
-
-        '''self.snapPic()
-        print("Picture taken....")
-        self.sendToImg()
-        print("Sent img to server")'''
+        self.A5_TASK()
 
     def receiveFromImg(self):
-        counter = 0
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
             if imgMsg is not None:
@@ -96,8 +85,6 @@ class RPI(threading.Thread):
                 print(predictions)
                 if len(predictions) == 3:
                     if int(predictions[1]) == 12:
-                        counter += 1
-                        print("Current counter in receive from image: " + str(counter))
                         self.sendToAlgo("CONTINUE")
                         predictions = []
                     else:
@@ -115,8 +102,8 @@ class RPI(threading.Thread):
         while True:
             algoMsg = self.pcObject.receiveMsgFromAlgo()
 
-            #print("Message received from Algo: " + str(algoMsg[2:]))        ## Start from index 2 to remove unknown symbol
             if algoMsg is not None:
+                print("Message received from Algo: " + str(algoMsg[2:]))  ## Start from index 2 to remove unknown symbol
                 commands = algoMsg.split("\n")
                 for c in commands:
                     if c[2:5] == "IMG":
@@ -216,7 +203,11 @@ class RPI(threading.Thread):
                 rpi.y2.append(int(y2))
                 rpi.x1.append(self.time)
                 self.time += 0.05'''
-                if stmMsg[:4] == "DONE":
+
+                print("Message from STM: " + str(stmMsg))
+                if str(stmMsg[:6]) == "Done C":
+                    self.sendToImg()
+                elif str(stmMsg[:4]) == "Done":
                     self.sendToAlgo(stmMsg)
 
 
@@ -256,7 +247,7 @@ class RPI(threading.Thread):
 
     def closeAll(self):
         self.pcObject.disconnect()
-        self.androidObject.disconnect()
+        #self.androidObject.disconnect()
         '''with open("test1.csv", 'w') as f:
             f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
             f.write(str(rpi.y2[20:-10])[1:-1])
@@ -265,12 +256,37 @@ class RPI(threading.Thread):
         self.stm.disconnect()
         self.camera.close()
 
+    def A5_TASK(self):
+        ultrasonic = Ultrasonic()
+        dist = ultrasonic.distance()
+        print("Measured Distance = %.1f cm" % dist)
+        count = 0
+        if dist > 20:
+            if (dist - 20) >= 100:
+                self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + " ")
+                time.sleep(4)
+                dist = ultrasonic.distance()
+                print("Measured Distance = %.1f cm" % dist)
+                count += 1
+            else:
+                self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + "  ")
+                time.sleep(4)
+                dist = ultrasonic.distance()
+                print("Measured Distance = %.1f cm" % dist)
+                count += 1
+
+        time.sleep(0.05)
+        rpi.sendToSTM(str(count) + "   C     ")
+
+        GPIO.cleanup()
+
 
 if __name__ == "__main__":
     rpi = RPI()
     try:
         rpi.camera = PiCamera()
         rpi.camera.resolution = (640, 480)
+
 
         rpi.startThread()
         while True:

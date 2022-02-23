@@ -20,7 +20,7 @@ class Ultrasonic():
         GPIO.output(self.GPIO_TRIGGER, True)
     
         # set Trigger after 0.01ms to LOW
-        time.sleep(0.00001)
+        time.sleep(0.000015)
         GPIO.output(self.GPIO_TRIGGER, False)
     
         StartTime = time.time()
@@ -44,6 +44,7 @@ class Ultrasonic():
     
 if __name__ == '__main__':
     try:
+
         while True:
             ultrasonic = Ultrasonic()
             dist = ultrasonic.distance()

@@ -20,13 +20,17 @@ class STM():
 
         except Exception as e:
             print("Error in connecting to STM: " + str(e))
+            time.sleep(0.5)
+            self.connect()
 
     def sendMsg(self, msg):
         try:
-            #print('Sending message: ' + str(msg))
             self.service.write(msg.encode('utf-8'))
-        except Exception as err:
-            print('Error in sending message...')
+        except Exception as e:
+            print('Error in sending message to STM: ' + str(e))
+            self.connect()
+            time.sleep(0.5)
+            self.sendMsg(msg)
 
     def receiveMsg(self):
         try:
@@ -34,7 +38,10 @@ class STM():
             if len(msg) > 0:
                 return msg.decode('utf-8')
         except Exception as e:
-            print('Error receiving message: ' + str(e))
+            print('Error receiving message from STM: ' + str(e))
+            self.connect()
+            time.sleep(0.5)
+            self.receiveMsg()
 
     def disconnect(self):
         try:

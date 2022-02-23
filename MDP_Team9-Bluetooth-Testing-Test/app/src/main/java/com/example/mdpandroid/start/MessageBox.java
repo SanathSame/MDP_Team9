@@ -81,6 +81,12 @@ public class MessageBox extends Fragment {
         }
         System.out.println(sentText);
     }
+    public static void receiveMessage(String txt) {
+        String sentText = txt;
+        statusWindowTxt += "From RPI: " + sentText + "\n";
+        messageSentTextView.setText(statusWindowTxt);
+        System.out.println(sentText);
+    }
 
     public static void refreshMessageReceived() {
         messageReceivedTextView.setText(sharedPreferences.getString("message", ""));

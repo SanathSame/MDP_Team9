@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetTabLayout = (TabLayout) this.findViewById(R.id.topTabs);
         bottomSheetViewPager = (ViewPager) this.findViewById(R.id.viewpager);
         topTitle = (TextView) this.findViewById(R.id.top_title);
-//      LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
+      LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, new IntentFilter("incomingMessage"));
 
         // Set up sharedPreferences
         MainActivity.context = getApplicationContext();
@@ -380,36 +380,53 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    BroadcastReceiver messageReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            refreshMessageReceivedfromblue();
-//            String receivedText = sharedPreferences.getString("message", "");
-//            System.out.println(receivedText + "test");
-//            useReceivedMessage(_map, mapCanvas, receivedText);
-//            refreshMessageReceived();
-//        }
-//    };
+    BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            refreshMessageReceivedfromblue();
+            String receivedText = sharedPreferences.getString("message", "");
+            System.out.println(receivedText + "test");
+            useReceivedMessage(_map, mapCanvas, receivedText);
+            refreshMessageReceived();
+            MessageBox.receiveMessage(receivedText);
+            System.out.println("rubbish");
+        }
+    };
     public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
         int j;
         String[] cases = {"ROBOT", "TARGET"};
+        System.out.println("rubbishe");
         String[] parts;
         for(j = 0; j < cases.length; j++)
             if(msg.contains(cases[j]))
                 break;
         switch(j) {
             case 0:
+                try {
                 parts = msg.replace(" ","").replace("ROBOT", "").split(",");
                 _map.getRobo().setX(Integer.parseInt(parts[0]));
                 _map.getRobo().setY(20-Integer.parseInt(parts[1]));
                 _map.getRobo().setFacing(Integer.parseInt(parts[2])); //0123 NSEW
+                System.out.println("robot change");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println("exc");
+
+                }
+                System.out.println("switch");
                 break;
             case 1:
+                try {
                 parts = msg.replace(" ","").replace("TARGET", "").split(",");
                 int targetid = Integer.parseInt(parts[0]);
                 int imageid = Integer.parseInt(parts[1]);
                 Target t = _map.getTargets().get(targetid-1);
                 t.setImg(imageid);
+                System.out.println("target change");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 System.out.println("invalid");

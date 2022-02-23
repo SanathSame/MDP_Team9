@@ -509,13 +509,13 @@ public class Bluetoothconnection extends AppCompatActivity{
 //            incomingintent.putExtra("receivedmessage", incomingintent);
 //            LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingintent);
             showLog("receivedMessage: message --- " + message);
-            SharedPreferences pref = getSharedPreferences("Value",0);
+            sharedPreferences();
+//            SharedPreferences pref = getSharedPreferences("Value",0);
             String receivedText = message;
-            SharedPreferences.Editor editor = pref.edit();
+//            SharedPreferences.Editor editor = pref.edit();
             editor.putString("message", receivedText);
             editor.commit();
             editor.apply();
-            System.out.println("bluetooth shit");
             refreshMessageReceived();
         }
     };

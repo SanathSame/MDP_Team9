@@ -19,6 +19,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.example.mdpandroid.R;
 import com.example.mdpandroid.map.BoardMap;
 import java.nio.charset.Charset;
+import com.example.mdpandroid.leaderboard.TimerDialogFragment;
 
 public class MessageBox extends Fragment {
     private static final String TAG = "TARGET MAP";
@@ -32,6 +33,8 @@ public class MessageBox extends Fragment {
     public static TextView messageSentTextView, messageReceivedTextView;
     static EditText typeBoxEditText;
     static ScrollView scrollView;
+    private static TimerDialogFragment timerDialog;
+
 
 
 
@@ -68,13 +71,14 @@ public class MessageBox extends Fragment {
     }
 
     public static void sendMessage(String prefix, String txt) {
-        String sentText = txt;
-        statusWindowTxt += prefix + sentText + '\n';
+        String sentText = prefix + txt;
+        statusWindowTxt += sentText + "\n";
         messageSentTextView.setText(statusWindowTxt);
         if (Bluetoothservice.BluetoothConnectionStatus) {
             byte[] bytes = sentText.getBytes(Charset.defaultCharset());
             Bluetoothservice.write(bytes);
         }
+        System.out.println(sentText);
     }
 
     public static void refreshMessageReceived() {
@@ -84,7 +88,10 @@ public class MessageBox extends Fragment {
     public void refreshMessageReceivedfromblue() {
         Bluetoothconnection.getMessageReceivedtext().setText(sharedPreferences.getString("message", ""));
     }
-
+    public static TimerDialogFragment getTimerDialog(String runType) {
+        timerDialog = new TimerDialogFragment(runType);
+        return timerDialog;
+    }
     BroadcastReceiver messageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

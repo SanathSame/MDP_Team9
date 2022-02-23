@@ -22,6 +22,7 @@ import android.view.View;
 import com.example.mdpandroid.R;
 import com.example.mdpandroid.R.styleable;
 import com.example.mdpandroid.start.Bluetoothservice;
+import com.example.mdpandroid.start.MessageBox;
 
 import static com.example.mdpandroid.map.BoardMap.EMPTY_CELL_CODE;
 import static com.example.mdpandroid.map.BoardMap.TARGET_CELL_CODE;
@@ -432,12 +433,8 @@ public final class MapCanvas extends View implements Serializable {
                         case TARGET_BLOCK_TURN:
                             t.cycleFaceClockwise(true);
                             _map.setLastTouchedTarget(t); //don't rmb logic to put in this case or all cases
-                            String msg = t.toString();
-                            if (Bluetoothservice.BluetoothConnectionStatus == true) {
-                                byte[] bytes = msg.getBytes(Charset.defaultCharset());
-                                Bluetoothservice.write(bytes);
-                            }
-                            System.out.println("New Target: " + msg);
+                            String msg = "Target(" + t.getX() + ", " + (21-t.getY()) + ", "+ t.getF()+ ")";
+                            MessageBox.sendMessage("STM ", msg);
                             break;
                         case NEW_TARGET_TURN:
                             // LONG PRESS TO MAKE NEW
@@ -445,10 +442,7 @@ public final class MapCanvas extends View implements Serializable {
                         case CAR_BLOCK_TURN:
                             _map.getRobo().cycleFace(true);
                             msg = "TR";
-                            if (Bluetoothservice.BluetoothConnectionStatus == true) {
-                                byte[] bytes = msg.getBytes(Charset.defaultCharset());
-                                Bluetoothservice.write(bytes);
-                            }
+                            MessageBox.sendMessage("STM ", msg);
                             System.out.println("robo turn face right send tr");
                             break;
                     }
@@ -503,11 +497,8 @@ public final class MapCanvas extends View implements Serializable {
                 t.setX(x);
                 t.setY(y);
                 this._map.getBoard()[t.getX()][t.getY()] = TARGET_CELL_CODE;
-                String msg = t.toString();
-                if (Bluetoothservice.BluetoothConnectionStatus == true) {
-                    byte[] bytes = msg.getBytes(Charset.defaultCharset());
-                    Bluetoothservice.write(bytes);
-                }
+                String msg = "Target(" + t.getX() + ", " + (21-t.getY()) + ", "+ t.getF()+ ")";
+                MessageBox.sendMessage("STM ", msg);
                 System.out.println("New Target: " + msg);
 
             } else if (!isTargetInGrid) {
@@ -522,13 +513,11 @@ public final class MapCanvas extends View implements Serializable {
                 Target t = new Target(x, y, _map.getTargets().size());
                 this._map.getBoard()[t.getX()][t.getY()] = TARGET_CELL_CODE;
                 _map.getTargets().add(t);
-                String msg = t.toString();
-                if (Bluetoothservice.BluetoothConnectionStatus == true) {
-                    byte[] bytes = msg.getBytes(Charset.defaultCharset());
-                    Bluetoothservice.write(bytes);
-                }
-                System.out.println(msg);
+                String msg = "Target(" + t.getX() + ", " + (21-t.getY()) + ", "+ t.getF()+ ")";
+                //System.out.println(msg);
+                MessageBox.sendMessage("STM ", msg);
             }
+
         }
     }
 

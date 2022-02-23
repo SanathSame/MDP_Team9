@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         btnFastest.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                MessageBox.sendMessage("STM ", "START_FASTEST");
                 //MessageFragment.sendMessage("LDRB -> RPI:\t\t", "START_FASTEST");
                 showBottomSheetDialog("fastest");
             }
@@ -299,12 +300,12 @@ public class MainActivity extends AppCompatActivity {
             };
         });
     }
-    private void sendMessage(String msg){
-        if (Bluetoothservice.BluetoothConnectionStatus == true) {
-            byte[] bytes = msg.getBytes(Charset.defaultCharset());
-            Bluetoothservice.write(bytes);
-        }
-    }
+//    private void sendMessage(String msg){
+//        if (Bluetoothservice.BluetoothConnectionStatus == true) {
+//            byte[] bytes = msg.getBytes(Charset.defaultCharset());
+//            Bluetoothservice.write(bytes);
+//        }
+//    }
 //    private void setupImgLongClick() {
 //
 //        btnImg.setOnLongClickListener(new View.OnLongClickListener() {

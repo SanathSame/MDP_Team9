@@ -134,7 +134,7 @@ class PcComm():
             msgReceived = self.algoClient.recv(self.BUFFER_SIZE).decode("utf-8")
             if str(msgReceived) != "":
                 print("In receiveMsgFromAlgo() function, Message received is: " + str(msgReceived))
-                return str(msgReceived)
+                return msgReceived
             else:
                 return None
 

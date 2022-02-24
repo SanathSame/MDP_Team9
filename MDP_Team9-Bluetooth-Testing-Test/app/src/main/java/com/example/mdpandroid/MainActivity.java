@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnReverse;
     ImageButton btnLeft;
     ImageButton btnRight;
-    TextView topTitle, receivemsg;
+    TextView topTitle, statusBox;
 
     Toolbar topToolbar;
     Toolbar bottomSheetToolbar;
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         btnReverse = (ImageButton) this.findViewById(R.id.btn_reverse);
         btnLeft = (ImageButton) this.findViewById(R.id.btn_left);
         btnRight = (ImageButton) this.findViewById(R.id.btn_right);
-        //btnImg = (Button) this.findViewById(R.id.btn_img);
+        btnImg = (Button) this.findViewById(R.id.btn_img);
         btnFastest = (Button) this.findViewById(R.id.btn_fastest);
         topToolbar = (Toolbar) this.findViewById(R.id.toolbar_top);
         bottomSheetToolbar = (Toolbar) this.findViewById(R.id.bottom_sheet_toolbar);
@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     if(n > 0)
                         message += " || ";
-
                     //sendMessage(message);
                     //System.out.println(message);
 
@@ -193,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //setupImgLongClick();
+        setupImgLongClick();
         setupControlsLongClicks(btnForward, ROBOT_MOTOR_FORWARD);
         setupControlsLongClicks(btnReverse, ROBOT_MOTOR_REVERSE);
         setupControlsLongClicks(btnLeft, ROBOT_SERVO_LEFT);
@@ -306,25 +305,24 @@ public class MainActivity extends AppCompatActivity {
 //            Bluetoothservice.write(bytes);
 //        }
 //    }
-//    private void setupImgLongClick() {
-//
-//        btnImg.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                showBottomSheetDialog("config");
-//                return true;
-//            }
-//        });
-//
-//        btnImg.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                MessageFragment.sendMessage("LDRB -> RPI:\t\t", "DRAW_PATH");
-//                showBottomSheetDialog("img");
-//            }
-//        });
-//
-//    }
+    private void setupImgLongClick() {
+
+        btnImg.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showBottomSheetDialog("config");
+                return true;
+            }
+        });
+
+        btnImg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBottomSheetDialog("img");
+            }
+        });
+
+    }
 
     private void setupBottomSheet() {
 //        bottomSheetToolbar.setTitle(R.string.bottom_sheet_title);
@@ -344,9 +342,9 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    public void refreshMessageReceived() {
-        //receivemsg.setText(sharedPreferences.getString("message", ""));
-    }
+//    public void refreshMessageReceived(String statusmsg) {
+//        statusBox.setText(statusmsg);
+//    }
 
     public void refreshMessageReceivedfromblue() {
         Bluetoothconnection.getMessageReceivedtext().setText(sharedPreferences.getString("message", ""));
@@ -364,8 +362,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void showBottomSheetDialog(String dialog) {
         topToolbar.setVisibility(View.GONE);
+        System.out.println(dialog);
         switch (dialog) {
             case "img":
+                System.out.println("asdf");
                 TimerDialogFragment imgDialog = MessageBox.getTimerDialog("Image Recognition Run");
                 imgDialog.show(getSupportFragmentManager(), imgDialog.getTag());
                 break;
@@ -387,15 +387,14 @@ public class MainActivity extends AppCompatActivity {
             String receivedText = sharedPreferences.getString("message", "");
             System.out.println(receivedText + "test");
             useReceivedMessage(_map, mapCanvas, receivedText);
-            refreshMessageReceived();
             MessageBox.receiveMessage(receivedText);
-            System.out.println("rubbish");
+            updateRoboStatus();
         }
     };
     public static void useReceivedMessage(BoardMap _map, MapCanvas mapCanvas, String msg) {
         int j;
-        String[] cases = {"ROBOT", "TARGET"};
-        System.out.println("rubbishe");
+        String[] cases = {"ROBOT", "TARGET","status:"};
+        System.out.println("rubbish");
         String[] parts;
         for(j = 0; j < cases.length; j++)
             if(msg.contains(cases[j]))
@@ -424,6 +423,14 @@ public class MainActivity extends AppCompatActivity {
                 t.setImg(imageid);
                 System.out.println("target change");
 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case 2:
+                try {
+                    msg = msg.replace(" ","").replace("status:", "");
+                    MessageBox.receiveStatusMessage(msg);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

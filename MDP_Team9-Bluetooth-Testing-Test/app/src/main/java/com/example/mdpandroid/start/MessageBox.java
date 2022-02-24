@@ -27,21 +27,36 @@ public class MessageBox extends Fragment {
     private static SharedPreferences sharedPreferences;
     private BoardMap _map = new BoardMap();
     private BoardMap mapPass = new BoardMap();
-    private static String statusWindowTxt = "";
+    private static String sentWindowTxt = "";
+    private static String receiveWindowTxt = "";
+    private static String StatusWindowTxt = "";
     private static Context context;
     private static SharedPreferences.Editor editor;
-    Button send;
+    Button send,clear;
     public static TextView messageSentTextView, messageReceivedTextView;
     static EditText typeBoxEditText;
-    static ScrollView scrollView;
+    static ScrollView scrollView,scrollView_2;
     private static TimerDialogFragment timerDialog;
 
 
 
 
     public static void addSeparator() {
-        statusWindowTxt += "----------------------------------------------------" + '\n';
-        messageSentTextView.setText(statusWindowTxt);
+        sentWindowTxt += "----------------------------------------------------" + '\n';
+        messageSentTextView.setText(sentWindowTxt);
+    }
+
+    public static void receiveStatusMessage(String txt) {
+        String statusreceivedText = txt;
+        String[] statuses = new String[]{"exploring","fastest path","turning left","turning right", "moving forward", "reversing","image recognition"};
+        for (int i=0;i< statuses.length;i++)
+        {
+            if (statusreceivedText.contains(statuses[i]))
+                break;
+        }
+        StatusWindowTxt+= statusreceivedText + "\n";
+        messageReceivedTextView.setText(txt);
+        System.out.println(statusreceivedText);
     }
 
 
@@ -57,24 +72,29 @@ public class MessageBox extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.messagebox, container, false);
         send = (Button) rootview.findViewById(R.id.messageButton);
+        clear = (Button) rootview.findViewById(R.id.clearbutton);
         messageSentTextView = (TextView) rootview.findViewById(R.id.messageSentTextView);
         messageReceivedTextView = (TextView) rootview.findViewById(R.id.editText);
         typeBoxEditText = (EditText) rootview.findViewById(R.id.typeBoxEditText);
         scrollView = (ScrollView) rootview.findViewById(R.id.scrollView2D);
-
+        scrollView_2 = (ScrollView) rootview.findViewById(R.id.scrollView2);
 
         send.setOnClickListener(view -> {
             String input = "" + typeBoxEditText.getText().toString();
             sendMessage("ANDROID -> RPI:\t\t", input);
             typeBoxEditText.setText("");
         });
+        clear.setOnClickListener(view -> {
+            StatusWindowTxt = "";
+            messageReceivedTextView.setText("");
+        });
         return rootview;
     }
 
     public static void sendMessage(String prefix, String txt) {
         String sentText = prefix + txt;
-        statusWindowTxt += sentText + "\n";
-        messageSentTextView.setText(statusWindowTxt);
+        sentWindowTxt += sentText + "\n";
+        messageSentTextView.setText(sentWindowTxt);
         if (Bluetoothservice.BluetoothConnectionStatus) {
             byte[] bytes = sentText.getBytes(Charset.defaultCharset());
             Bluetoothservice.write(bytes);
@@ -82,10 +102,10 @@ public class MessageBox extends Fragment {
         System.out.println(sentText);
     }
     public static void receiveMessage(String txt) {
-        String sentText = txt;
-        statusWindowTxt += "From RPI: " + sentText + "\n";
-        messageSentTextView.setText(statusWindowTxt);
-        System.out.println(sentText);
+        String receivedText = txt;
+        receiveWindowTxt+= "FROM RPI: " + receivedText + "\n";
+        messageSentTextView.setText(receiveWindowTxt);
+        System.out.println(receivedText);
     }
 
     public static void refreshMessageReceived() {

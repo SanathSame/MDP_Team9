@@ -505,16 +505,10 @@ public class Bluetoothconnection extends AppCompatActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             String message = intent.getStringExtra("receivedMessage");
-//            Intent incomingintent = new Intent("incomingmessage");
-//            incomingintent.putExtra("receivedmessage", incomingintent);
-//            LocalBroadcastManager.getInstance(mContext).sendBroadcast(incomingintent);
             showLog("receivedMessage: message --- " + message);
             sharedPreferences();
-//            SharedPreferences pref = getSharedPreferences("Value",0);
             String receivedText = message;
-//            SharedPreferences.Editor editor = pref.edit();
             editor.putString("message", receivedText);
-            editor.commit();
             editor.apply();
             refreshMessageReceived();
         }

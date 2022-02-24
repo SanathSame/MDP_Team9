@@ -41,7 +41,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
  ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP/PeripheralDriver/Inc/oled.h
+ C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/oled.h
 
 ../Core/Inc/main.h:
 
@@ -129,4 +129,4 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
 
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP/PeripheralDriver/Inc/oled.h:
+C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/oled.h:

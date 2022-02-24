@@ -167,7 +167,7 @@ void turnRobot(uint8_t *cmd);
 /* USER CODE BEGIN 0 */
 float pi, radius;
 float encoderGrad, encoderInt;
-float kd, ki, kp;
+float kdb, kdf, kib, kif, kpb, kpf;
 float distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
 float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
 
@@ -230,9 +230,12 @@ int main(void)
   encoderGrad = 0.208211985127613;
   encoderInt = 0.556356667437655;
 
-  kd = 0;
-  ki = 0;
-  kp = 0;
+  kdb = 2;
+  kdf = 1.5;
+  kib = 1.5;
+  kif = 2;
+  kpb = 8;
+  kpf = 8.5;
 
   distOffset = 5;
   turnOffset = 0.5;
@@ -879,7 +882,7 @@ void driveRobot(uint8_t *cmd)
   if (startDriving == 0)
   {
 	startDriving = 1;
-	startPID = 1;
+	startPID = angleCmd == 0 ? 1 : 0;
 
 	targetCount = 0;
 	encoderTarget = 0;
@@ -1268,7 +1271,7 @@ void encoderA(void *argument)
 		else if (angleCmd == 0 && encoderTarget != 0)
 		{
 		  errorA = encoderTarget - encoderAVal;
-		  motorAVal += (int)(kp * errorA + kd * prevErrorA + ki * sumErrorA);
+		  motorAVal += (int)(driveACmd == 'F' ? kpf * errorA + kdf * prevErrorA + kif * sumErrorA : kpb * errorA + kdb * prevErrorA + kib * sumErrorA);
 		  prevErrorA = errorA;
 		  sumErrorA += errorA;
 		}
@@ -1325,7 +1328,7 @@ void encoderB(void *argument)
 		else if (angleCmd == 0 && encoderTarget != 0)
 	    {
 	      errorB = encoderTarget - encoderBVal;
-	  	  motorBVal += (int)(kp * errorB + kd * prevErrorB + ki * sumErrorB);
+	  	  motorBVal += (int)(int)(driveACmd == 'F' ? kpf * errorB + kdf * prevErrorB + kif * sumErrorB : kpb * errorB + kdb * prevErrorB + kib * sumErrorB);
 	  	  prevErrorB = errorB;
 	  	  sumErrorB += errorB;
 	    }
@@ -1374,6 +1377,8 @@ void dispatch(void *argument)
 	  }
 	  else if (cmdType == 'C')
 		cmdState = 2;
+	  else
+		++actionCounter;
 	}
 
 	osDelay(dispatchDelay);

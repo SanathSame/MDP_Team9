@@ -92,8 +92,6 @@ class RPI(threading.Thread):
                 '''if imgMsg[:3] == "AND":
                     self.sendToAndroid(imgMsg[4:])'''
 
-
-
     def receiveFromAlgo(self):
         while True:
             algoMsg = self.pcObject.receiveMsgFromAlgo()
@@ -109,7 +107,6 @@ class RPI(threading.Thread):
                         self.sendToSTM(c[6:])
                     time.sleep(0.5)
                 commands = None
-
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
         if msgToImg:
@@ -192,7 +189,6 @@ class RPI(threading.Thread):
                 elif str(stmMsg[:4]) == "Done":
                     self.sendToAlgo(stmMsg)
 
-
     def snapPic(self):
         try:
             self.camera.start_preview()
@@ -227,7 +223,6 @@ class RPI(threading.Thread):
         plt.legend()
         plt.show()'''
 
-
     def closeAll(self):
         GPIO.cleanup()
         self.camera.close()
@@ -240,7 +235,6 @@ class RPI(threading.Thread):
         print("in closing....")'''
         self.stm.disconnect()
 
-
     def A5_TASK(self):
         ultrasonic = Ultrasonic()
         dist = ultrasonic.distance()
@@ -248,23 +242,23 @@ class RPI(threading.Thread):
         count = 0
         if dist > 20:
             self.sendToSTM("{:<3} F {:<4}".format(count, dist-19))
+        elif dist < 10:
+            self.sendToSTM("{:<3} B {:<4}".format(count, 20-dist))
+        time.sleep(4)
+        dist = ultrasonic.distance()
+        print("Measured Distance = {:.1f} cm".format(dist))
+        count += 1
+        '''if (dist - 20) >= 100:
+            self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + " ")
+        else:
+            self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + "  ")
             time.sleep(4)
             dist = ultrasonic.distance()
-            print("Measured Distance = {:.1f} cm".format(dist))
-            count += 1
-            '''if (dist - 20) >= 100:
-                
-                self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + " ")
-                
-            else:
-                self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + "  ")
-                time.sleep(4)
-                dist = ultrasonic.distance()
-                print("Measured Distance = %.1f cm" % dist)
-                count += 1'''
+            print("Measured Distance = %.1f cm" % dist)
+            count += 1'''
 
         time.sleep(0.05)
-        rpi.sendToSTM("{:<3} C {:<4}".format(count, ""))
+        self.sendToSTM("{:<3} C {:<4}".format(count, ""))
 
 if __name__ == "__main__":
     rpi = RPI()

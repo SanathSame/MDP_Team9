@@ -54,15 +54,16 @@ class RPI(threading.Thread):
         #self.sendToSTM("S     ")
         receiveFromSTMThread.start()
 
-        '''count = 0
+        count = 0
         while True:
-            rpi.sendToSTM(str(count) + "   F 100 ")
-            A = input("hhi")
+            self.sendToSTM("{:<3} F {:<4}".format(count, 50))
+            #A = input("hhi")
             count += 1
-            time.sleep(0.05)
-            rpi.sendToSTM(str(count) + "   B 100 ")
+            time.sleep(0.2)
+            self.sendToSTM("{:<3} B {:<4}".format(count, 50))
             count += 1
-            b = input("hhi")'''
+            #time.sleep(2)
+            b = input("hhi")
 
         #self.sendToSTM(str(0) + "   LF 360")
 
@@ -71,7 +72,7 @@ class RPI(threading.Thread):
             time.sleep(0.5)
             self.sendToSTM(str(i+1) + "   B 10  ")
             time.sleep(0.5)'''
-        self.sendToSTM("0   B 35  ")
+        '''self.sendToSTM("{:<3} F {:<4}".format(0, 35))
         time.sleep(0.5)
         #A = input("hihi")
         self.sendToSTM("1   RF 90 ")
@@ -84,7 +85,7 @@ class RPI(threading.Thread):
         time.sleep(0.5)
         #A = input("hihi")
         self.sendToSTM("4   C     ")
-        time.sleep(0.5)
+        time.sleep(0.5)'''
 
         # self.sendToSTM("5   C     ")
         # '''time.sleep(20)
@@ -94,7 +95,6 @@ class RPI(threading.Thread):
         # time.sleep(0.05)
         # self.sendToSTM("7   B 900 ")'''
 
-
     def receiveFromImg(self):
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
@@ -102,8 +102,6 @@ class RPI(threading.Thread):
                 print("Message received from Image: " + str(imgMsg))
                 if imgMsg[:4] == "IMG":
                     self.sendToAndroid(imgMsg[4:])
-
-
 
     def receiveFromAlgo(self):
         while True:
@@ -115,8 +113,6 @@ class RPI(threading.Thread):
                     self.sendToImg(algoMsg[7:]) #Send the obstacle: XX YY
                 elif algoMsg[0:4] == "STM":
                     self.sendToSTM(algoMsg[5:])
-
-
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
         if msgToImg:
@@ -286,9 +282,6 @@ if __name__ == "__main__":
         rpi.sendToSTM(str(count) + "   C     ")
 
         GPIO.cleanup()'''
-
-
-
         rpi.startThread()
         while True:
             pass

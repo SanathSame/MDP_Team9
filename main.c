@@ -181,7 +181,6 @@ uint8_t cmds[1000][20], cmdState, prevCmd[20], rxBuffer[20], txBuffer[20];
 uint8_t driveACmd, driveBCmd, startDriving, startPID;
 uint8_t angleCmd, servoCmd;
 
-uint32_t tick1, tick2;
 uint32_t servoCenter, servoLeft, servoRight, servoVal;
 uint32_t batteryCounter, batteryVal[5], irCounter, irVal[100];
 uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay;  // rpiDelay <= encoderDelay
@@ -233,17 +232,17 @@ int main(void)
 
   kd = 0;
   ki = 0;
-  kp = 6;
+  kp = 0;
 
   distOffset = 5;
   turnOffset = 0.5;
 
-  lbGrad = 0.390119353921512;
-  lbInt = 1.405188423049935;
+  lbGrad = 0.406223321414319;
+  lbInt = -1.03827694476358;
   lfGrad = 0.374241777484367;
   lfInt = -0.80255211795561;
-  rbGrad = 0.406223321414319;
-  rbInt = -1.03827694476358;
+  rbGrad = 0.390119353921512;
+  rbInt = 1.405188423049935;
   rfGrad = 0.364677963587823;
   rfInt = 1.011921094590065;
 
@@ -283,11 +282,11 @@ int main(void)
   }
 
   batteryDelay = 2000;
-  dispatchDelay = 10;
-  encoderDelay = 50;
+  dispatchDelay = 1;
+  encoderDelay = 25;
   irDelay = 200;
   ledDelay = 3000;
-  motorDelay = 10;
+  motorDelay = 1;
   oledDelay = 10;
   rpiDelay = 10;
   servoDelay = 1000;
@@ -857,6 +856,15 @@ int irToDist()
   return (int)(avgIRVal + 0.5);
 }
 
+uint8_t rxFilled(uint8_t size)
+{
+  for (int counter = 0; counter < size; ++counter)
+	if (rxBuffer[counter] == 0)
+	  return 0;
+
+  return 1;
+}
+
 void driveRobot(uint8_t *cmd)
 {
   char distStr[5];
@@ -897,6 +905,8 @@ void stopRobot()
 {
   startPID = 0;
 
+  motorAVal = 0;
+  motorBVal = 0;
   driveACmd = 0;
   driveBCmd = 0;
   osDelay(15 * motorDelay);
@@ -938,7 +948,7 @@ void turnRobot(uint8_t *cmd)
 
   if (dist > 0.0)
   {
-    servoVal = (angleCmd == 'L' && driveACmd == 'F') || (angleCmd == 'R' && driveACmd == 'B') ? servoLeft : servoRight;
+    servoVal = angleCmd == 'L' ? servoLeft : servoRight;
     servoCmd = 'T';
 
     osDelay((uint32_t)(1.2 * servoDelay));
@@ -973,16 +983,18 @@ void oled(void *argument)
 	//sprintf(strBuffer, "DistA: %-5d", (int)distA);
     //sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
 	//sprintf(strBuffer, "EncA: %-5d", (int)encoderAVal);
-	sprintf(strBuffer, "IR: %d", irToDist());
+	//sprintf(strBuffer, "IR: %-5d", irToDist());
 	//sprintf(strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
-	//sprintf(strBuffer, "Tick1: %d", (int)tick1);
+	//sprintf(strBuffer, "Tick1: %-5d", (int)tick1);
+	sprintf(strBuffer, "TempA: %-5d", (int)tempA);
 	OLED_ShowString(10, 10, (uint8_t*)strBuffer);
 
 	//sprintf(strBuffer, "DistB: %-5d", (int)distB);
 	//sprintf(strBuffer, "MotorB: %-5d", (int)motorBVal);
 	//sprintf(strBuffer, "EncB: %-5d", (int)encoderBVal);
-	//sprintf(strBuffer, "Tick2: %d", (int)tick2);
-	//OLED_ShowString(10, 20, (uint8_t*)strBuffer);
+	//sprintf(strBuffer, "Tick2: %-5d", (int)tick2);
+	sprintf(strBuffer, "TempB: %-5d", (int)tempB);
+	OLED_ShowString(10, 20, (uint8_t*)strBuffer);
 
 	sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
 	//sprintf(strBuffer, "DistA: %-5d", (int)distA);
@@ -1000,7 +1012,7 @@ void oled(void *argument)
 
 	avgBatteryVal /= 5;
 
-	sprintf(strBuffer, "Battery: %-5d", (int)(avgBatteryVal + 0.5));
+	sprintf(strBuffer, "Battery: %d", (int)(avgBatteryVal + 0.5));
 	OLED_ShowString(10, 50, (uint8_t*)strBuffer);
 
 	OLED_Refresh_Gram();
@@ -1057,7 +1069,7 @@ void rpi(void *argument)
   {
 	HAL_UART_Receive_IT(&huart3, rxBuffer, 10);
 
-	if (rxBuffer[0] != 0)
+	if (rxFilled(10) == 1)
 	{
 	  strncpy(strCounter, (char*)rxBuffer, 3);
       cmdCounter = atoi(strCounter);
@@ -1079,6 +1091,7 @@ void rpi(void *argument)
       cmdType = cmds[actionCounter][4];
 
       strncpy(strCounter, (char*)cmds[actionCounter], 3);
+      //sprintf((char*)txBuffer, "%d %d", (int)tempA, (int)tempB);
       sprintf((char*)txBuffer, cmdType == 'C' ? "Done C" : "Done %d", atoi(strCounter));
       HAL_UART_Transmit(&huart3, txBuffer, 20, 0xFFFF);
 
@@ -1361,8 +1374,6 @@ void dispatch(void *argument)
 	  }
 	  else if (cmdType == 'C')
 		cmdState = 2;
-	  else
-		++actionCounter;
 	}
 
 	osDelay(dispatchDelay);

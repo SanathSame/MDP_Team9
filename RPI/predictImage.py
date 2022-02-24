@@ -29,13 +29,35 @@ def predict(img_path: str):
         cv2.imwrite('{}/{}.jpeg'.format(PREDICTIONS_DIR, counter), img[...,::-1]) # Img in rgb, but cv2 expects bgr
         counter += 1
 
-    # Extract ids and classnames
+    # Extract ids, classnames and locations of the image
     # Note that results are sorted from highest confidence to lowest confidence
-    predicted_ids = results.pandas().xyxy[0][['class']].values.flatten()
-    predicted_classnames = results.pandas().xyxy[0][['name']].values.flatten()
+    df = results.pandas().xyxyn[0]
+    df['centerx'] = df[['xmin','xmax']].mean(axis=1)
+    df['location'] = df.apply(lambda x: get_location_of_center(x['centerx']), axis=1)
 
-    id_classname = ["IMG {} {}".format(predicted_id, predicted_classname) for predicted_id, predicted_classname in list(zip(predicted_ids, predicted_classnames))]
-    return id_classname
+    predicted_ids = df[['class']].values.flatten()
+    predicted_classnames = df[['name']].values.flatten()
+    predicted_locations = df[['location']].values.flatten()
+
+    result = ["IMG {} {} {}".format(predicted_id, predicted_classname, predicted_location) for predicted_id, predicted_classname, predicted_location in list(zip(predicted_ids, predicted_classnames, predicted_locations))]
+    return result
+
+def get_location_of_center(center_location):
+    """
+    Returns where the center is located in the image
+    0 <= center_location <= 1
+    """
+
+    if center_location <= 0.2:
+        return "FAR_LEFT"
+    elif center_location <= 0.4:
+        return "LEFT"
+    elif center_location <= 0.6:
+        return "CENTER"
+    elif center_location <= 0.8:
+        return "RIGHT"
+    else:
+        return "FAR_RIGHT"
 
     
 if __name__ == "__main__":

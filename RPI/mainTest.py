@@ -111,41 +111,43 @@ def TestSTM():
         print("Terminating the program now...")
 
 def TestImagePrediction():
-    s = socket.socket()  
-    s.connect((IP_ADDRESS, PORT))
-    print("Connected")
+    # s = socket.socket()  
+    # s.connect((IP_ADDRESS, PORT))
+    # print("Connected")
 
-    data = s.recv(1024)
-    filesize = int(data.decode('utf-8'))
-    print("Filesize", filesize)
+    # data = s.recv(1024)
+    # filesize = int(data.decode('utf-8'))
+    # print("Filesize", filesize)
 
-    # Get image from RPI and save locally
+    # # Get image from RPI and save locally
     SAVE_FILE = "RPI/images/to_predict.jpeg"
-    total_data_received = len(data)
-    with open(SAVE_FILE, "wb") as f:
-        while True:
-            data = s.recv(1024)
+    # total_data_received = len(data)
+    # with open(SAVE_FILE, "wb") as f:
+    #     while True:
+    #         data = s.recv(1024)
 
-            if not data:
-                break
+    #         if not data:
+    #             break
             
-            total_data_received += len(data)
-            if total_data_received >= filesize:
-                break
+    #         total_data_received += len(data)
+    #         if total_data_received >= filesize:
+    #             break
 
-            f.write(data)
-        print("File done")
+    #         f.write(data)
+    #     print("File done")
 
-    print("Received")
+    # print("Received")
 
     predictions = predict(SAVE_FILE)
     print("Predictions", predictions)
 
     if len(predictions) == 0:
-        s.send(bytes("NOIMAGE", "utf-8"))
+        print("NOIMAGE")
+        # s.send(bytes("NOIMAGE", "utf-8"))
     else:
-        s.send(bytes(predictions[0], "utf-8"))
-    s.close()
+        print(predictions[0])
+        # s.send(bytes(predictions[0], "utf-8"))
+    # s.close()
 
 def TestMultipleMessages():
     s = socket.socket()  

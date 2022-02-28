@@ -49,6 +49,8 @@ ADC_HandleTypeDef hadc2;
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
+TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim5;
 TIM_HandleTypeDef htim8;
 
 UART_HandleTypeDef huart3;
@@ -130,6 +132,13 @@ const osThreadAttr_t LEDTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for UltraTask */
+osThreadId_t UltraTaskHandle;
+const osThreadAttr_t UltraTask_attributes = {
+  .name = "UltraTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -144,6 +153,8 @@ static void MX_TIM8_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
+static void MX_TIM5_Init(void);
+static void MX_TIM4_Init(void);
 void oled(void *argument);
 void ir(void *argument);
 void rpi(void *argument);
@@ -155,11 +166,13 @@ void encoderB(void *argument);
 void dispatch(void *argument);
 void battery(void *argument);
 void led(void *argument);
+void ultra(void *argument);
 
 /* USER CODE BEGIN PFP */
 int irToDist();
 void changeProfile();
 void driveRobot(uint8_t *cmd);
+void microDelay(uint32_t us);
 void stopRobot();
 void turnRobot(uint8_t *cmd);
 /* USER CODE END PFP */
@@ -171,6 +184,7 @@ float encoderGrad, encoderInt;
 float kdb, kdf, kib, kif, kpb, kpf;
 float distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
 float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
+float ultraDist;
 
 int actionCounter, fillCounter;
 int driveMotorPWM, maxMotorPWM, motorAVal, motorBVal, turnMotorPWM;
@@ -181,11 +195,12 @@ int robotAngle;
 uint8_t cmds[1000][20], cmdState, prevCmd[20], rxBuffer[20], txBuffer[20];
 uint8_t driveACmd, driveBCmd, startDriving, startPID;
 uint8_t angleCmd, servoCmd;
+uint8_t ultraCapture;
 uint8_t profile;
 
 uint32_t servoCenter, servoLeft, servoRight, servoVal;
-uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5];
-uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay;  // rpiDelay <= encoderDelay
+uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5], ultraVal;
+uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay, ultraDelay;  // rpiDelay <= encoderDelay
 /* USER CODE END 0 */
 
 /**
@@ -223,14 +238,19 @@ int main(void)
   MX_USART3_UART_Init();
   MX_ADC1_Init();
   MX_ADC2_Init();
+  MX_TIM5_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
 
   pi = 3.1415926536;
   radius = 3.35;
 
+  ultraCapture = 0;
   profile = 2;
   changeProfile();
+
+  ultraDist = 0;
 
   actionCounter = 0;
   fillCounter = -1;
@@ -267,6 +287,8 @@ int main(void)
 	irVal[counter] = 0;
   }
 
+  ultraVal = 0;
+
   batteryDelay = 2000;
   dispatchDelay = 1;
   encoderDelay = 25;
@@ -276,6 +298,7 @@ int main(void)
   oledDelay = 10;
   rpiDelay = 10;
   servoDelay = 700;
+  ultraDelay = 300;
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -330,6 +353,9 @@ int main(void)
 
   /* creation of LEDTask */
   LEDTaskHandle = osThreadNew(led, NULL, &LEDTask_attributes);
+
+  /* creation of UltraTask */
+  UltraTaskHandle = osThreadNew(ultra, NULL, &UltraTask_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -656,6 +682,99 @@ static void MX_TIM3_Init(void)
 }
 
 /**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_IC_InitTypeDef sConfigIC = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 15;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 65535;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_IC_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigIC.ICPolarity = TIM_INPUTCHANNELPOLARITY_RISING;
+  sConfigIC.ICSelection = TIM_ICSELECTION_DIRECTTI;
+  sConfigIC.ICPrescaler = TIM_ICPSC_DIV1;
+  sConfigIC.ICFilter = 0;
+  if (HAL_TIM_IC_ConfigChannel(&htim4, &sConfigIC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
+  * @brief TIM5 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM5_Init(void)
+{
+
+  /* USER CODE BEGIN TIM5_Init 0 */
+
+  /* USER CODE END TIM5_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM5_Init 1 */
+
+  /* USER CODE END TIM5_Init 1 */
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 15;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 4294967295;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM5_Init 2 */
+
+  /* USER CODE END TIM5_Init 2 */
+
+}
+
+/**
   * @brief TIM8 Initialization Function
   * @param None
   * @retval None
@@ -789,6 +908,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, AIN2_Pin|AIN1_Pin|BIN1_Pin|BIN2_Pin, GPIO_PIN_RESET);
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(ULTRA_TRIG_GPIO_Port, ULTRA_TRIG_Pin, GPIO_PIN_RESET);
+
   /*Configure GPIO pins : OLED_SCL_Pin OLED_SDA_Pin OLED_RST_Pin OLED_DC_Pin
                            LED_Pin */
   GPIO_InitStruct.Pin = OLED_SCL_Pin|OLED_SDA_Pin|OLED_RST_Pin|OLED_DC_Pin
@@ -811,6 +933,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(SW1_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : ULTRA_TRIG_Pin */
+  GPIO_InitStruct.Pin = ULTRA_TRIG_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(ULTRA_TRIG_GPIO_Port, &GPIO_InitStruct);
+
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
@@ -824,6 +953,29 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
 	profile = (profile + 1) % 3;
 	changeProfile();
+  }
+}
+
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+  if (htim->Instance == TIM4 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3)
+  {
+    if (ultraCapture == 0)
+    {
+      __HAL_TIM_SET_COUNTER(htim, 0);
+      __HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_3, TIM_INPUTCHANNELPOLARITY_FALLING);
+
+      ultraCapture = 1;
+    }
+    else
+    {
+      ultraVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+      __HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_3, TIM_INPUTCHANNELPOLARITY_RISING);
+      __HAL_TIM_DISABLE_IT(&htim4, TIM_IT_CC3);
+
+      ultraCapture = 0;
+      ultraDist = 0.01715 * ultraVal;
+    }
   }
 }
 
@@ -991,6 +1143,12 @@ void driveRobot(uint8_t *cmd)
 	stopRobot();
 }
 
+void microDelay(uint32_t us)
+{
+  __HAL_TIM_SET_COUNTER(&htim5, 0);
+  while (__HAL_TIM_GET_COUNTER(&htim5) < us);
+}
+
 void stopRobot()
 {
   startPID = 0;
@@ -1085,16 +1243,19 @@ void oled(void *argument)
 	//sprintf(strBuffer, "EncB: %-5d", (int)encoderBVal);
 	//sprintf(strBuffer, "Tick2: %-5d", (int)tick2);
 	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
-	//OLED_ShowString(10, 20, (uint8_t*)strBuffer);
+	sprintf(strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
+	OLED_ShowString(10, 20, (uint8_t*)strBuffer);
 
 	//sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
 	sprintf(strBuffer, "DistA: %-5d", (int)(distA + 0.5));
 	//sprintf(strBuffer, "TempA: %-5d", (int)tempA);
+	//sprintf(strBuffer, "TempA: %-5d", (int)ultraCount1);
 	OLED_ShowString(10, 30, (uint8_t*)strBuffer);
 
 	//sprintf(strBuffer, "Fill: %-5d", (int)fillCounter);
 	sprintf(strBuffer, "DistB: %-5d", (int)(distB + 0.5));
 	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
+	//sprintf(strBuffer, "TempA: %-5d", (int)ultraCount2);
 	OLED_ShowString(10, 40, (uint8_t*)strBuffer);
 
 	avgBatteryVal = 0.0;
@@ -1515,6 +1676,32 @@ void led(void *argument)
 	osDelay(ledDelay);
   }
   /* USER CODE END led */
+}
+
+/* USER CODE BEGIN Header_ultra */
+/**
+* @brief Function implementing the UltraTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_ultra */
+void ultra(void *argument)
+{
+  /* USER CODE BEGIN ultra */
+  HAL_TIM_IC_Start_IT(&htim4, TIM_CHANNEL_3);
+  HAL_TIM_Base_Start(&htim5);
+  /* Infinite loop */
+  for(;;)
+  {
+	HAL_GPIO_WritePin(ULTRA_TRIG_GPIO_Port, ULTRA_TRIG_Pin, GPIO_PIN_SET);
+	microDelay(10);
+	HAL_GPIO_WritePin(ULTRA_TRIG_GPIO_Port, ULTRA_TRIG_Pin, GPIO_PIN_RESET);
+
+	__HAL_TIM_ENABLE_IT(&htim4, TIM_IT_CC3);
+
+	osDelay(ultraDelay);
+  }
+  /* USER CODE END ultra */
 }
 
 /**

@@ -134,10 +134,11 @@ def TestImagePrediction():
                             if not data:
                                 break
 
+                            f.write(data)
                             total_data_received += len(data)
+                            
                             if total_data_received >= filesize:
                                 break
-                            f.write(data)
                         print("File done")
 
                     print("Received")

@@ -13,12 +13,12 @@ class RPI(threading.Thread):
 
         # Creating subsystem objects
         self.pcObject = PcComm()
-        #self.androidObject = Android()
-        #self.stm = STM()
+        # self.androidObject = Android()
+        # self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
-        #self.androidObject.connect()
+        #self.pcObject.connect()
+        # self.androidObject.connect()
         #self.stm.connect()
         print("Connecting to other devices...")
 
@@ -26,56 +26,46 @@ class RPI(threading.Thread):
 
         self.imgCount = 0
         self.camera = None
-
-        #temp variables
-        self.time = 0.05
-        self.x1 = []
-        self.y1 = []
-        self.y2 = []
+        #self.SEPARATOR = "@.@"
 
     def startThread(self):
-        # Read threads created
-        #receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
-        receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
-        #receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
-        #receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
+        # pc send thread created
+        #sendToPcThread = threading.Thread(target=self.sendToPc, args=(), name="send_Pc_Thread")
+        #sendToSTMThread = threading.Thread(target=self.sendToSTM, args=(), name="send_STM_Thread")
+
+        # pc read thread created
+        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
+        # receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
+        # receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
+        # receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
 
         # Makes Threads run in the background
-        #receiveFromImgThread.daemon = True
-        receiveFromAlgoThread.daemon = True
-        #receiveFromAndroidThread.daemon = True
-        #receiveFromSTMThread.daemon = True
+        receiveFromImgThread.daemon = True
+        # receiveFromAlgoThread.daemon = True
+        # receiveFromAndroidThread.daemon = True
+        # receiveFromSTMThread.daemon = True
 
-        #receiveFromImgThread.start()
-        receiveFromAlgoThread.start()
-        #receiveFromAndroidThread.start()
+        receiveFromImgThread.start()
+        #receiveFromAlgoThread.start()
+        # receiveFromAndroidThread.start()
         #receiveFromSTMThread.start()
-
-        self.sendToAlgo("HI JUN WEI")
 
     def receiveFromImg(self):
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
             if imgMsg:
                 print("Message received from Image: " + str(imgMsg))
-                if imgMsg[:4] == "IMG":
-                    pass
-                    #self.sendToAndroid(imgMsg[4:])
-
-
 
     def receiveFromAlgo(self):
         while True:
             algoMsg = self.pcObject.receiveMsgFromAlgo()
             if algoMsg:
                 print("Message received from Algo: " + str(algoMsg))
-                if algoMsg[:7] == "TAKEPIC":
-                    self.snapPic()
-                    self.sendToImg(algoMsg[7:]) #Send the obstacle: XX YY
-
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
+        print("Send to Img in main.py called")
         if msgToImg:
+            self.snapPic()
             self.pcObject.sendMsgToImg(msgToImg)
             print("Message is sent to PC: " + str(msgToImg))
 
@@ -124,6 +114,7 @@ class RPI(threading.Thread):
             if androidMsg:
                 print("Message from android: " + androidMsg)
                 if androidMsg.upper() == "W":
+                    print("Move forward")
                     tmp = input("Message please: ")
                     self.sendToAndroid(tmp)
 
@@ -136,38 +127,27 @@ class RPI(threading.Thread):
     def sendToSTM(self, msgToSTM):
         if (msgToSTM):
             self.stm.sendMsg(msgToSTM)
-            print("Message send to STM is " + msgToSTM)
-        '''while True:
-            msgToSTM = input("Enter your msg: ")
-            self.stm.sendMsg(msgToSTM)'''
+            print("Message send to Arduino is " + msgToSTM)
 
     def receiveFromSTM(self):
         # Enclose in while loop
         while True:
             stmMsg = self.stm.receiveMsg()
-            if stmMsg is not None and ord(stmMsg[0]) != 0:
-                #print("Message from STM: " + stmMsg)       #Comment for debug
-
-                '''time.sleep(2)
+            if stmMsg:
+                print("Message from STM: " + stmMsg)
+                time.sleep(2)
                 msg = str(input("Message for STM: "))
                 if len(msg) < 6:
                     msg += " " * (6 - len(msg))
-                    self.sendToSTM(msg)'''
-                y1, y2 = int(stmMsg[:3]), int(stmMsg[4:])
-                rpi.y1.append(int(y1))
-                rpi.y2.append(int(y2))
-                rpi.x1.append(self.time)
-                self.time += 0.05
-
+                    self.sendToSTM(msg)
 
     def snapPic(self):
         try:
             self.camera.start_preview()
             self.camera.capture('a.jpeg')
             print("Captured image for sending")
-
         except Exception as e:
-            print("Error in taking picture...")
+            print("Error in taking picture...", e)
     
     def readUltra(self):
         ultrasonic = Ultrasonic()
@@ -181,8 +161,7 @@ class RPI(threading.Thread):
             except KeyboardInterrupt:
                 ultrasonic.cleanup()
             except Exception as e:
-                print("Error with Ultra: %s" % str(e))
-
+                print("Error with Ultra: %s" %str(e))
 
     def closeAll(self):
         self.pcObject.disconnect()
@@ -196,10 +175,14 @@ if __name__ == "__main__":
     try:
         rpi.camera = PiCamera()
         rpi.camera.resolution = (640, 480)
-
-        rpi.startThread()
+        # rpi.startThread()
+        # print("Gonna sleep first")
+        
+        # while True:
+        time.sleep(3)
+        rpi.sendToImg()
+        rpi.receiveFromImg()
         while True:
             pass
-
     except KeyboardInterrupt:
         rpi.closeAll()

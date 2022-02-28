@@ -1,5 +1,6 @@
 RPI/predictions/**/*
 RPI/weights/*
+RPI/images/**/*
 venv
 __pycache__/
 .DS_Store

@@ -9,9 +9,9 @@ import os
 WEIGHTS_PATH = 'Image Recognition/weights/best.pt' # Path to weights being used
 MODEL_PATH = 'Image Recognition' # Path to yolov5 repo locally
 PREDICTIONS_DIR = 'RPI/predictions' # Path to save predictions
+NO_PREDICTION_PREFIX = "NO_PREDICTION" # Prefix to images that do not have predictions in them
+STITCHED_IMAGE_PREFIX = "stitched" # Prefix to images that are stitches of the other predictions
 model = torch.hub.load(MODEL_PATH, 'custom', path=WEIGHTS_PATH, source='local')
-NO_PREDICTION_PREFIX = "NO_PREDICTION"
-STITCHED_IMAGE_PREFIX = "stitched"
 
 def predict(img_path: str):
     """
@@ -44,6 +44,10 @@ def predict(img_path: str):
 
         result = ["IMG {} {} {}".format(predicted_id, predicted_classname, predicted_location) for predicted_id, predicted_classname, predicted_location in list(zip(predicted_ids, predicted_classnames, predicted_locations))]
     
+    # Create PREDICTIONS_DIR if it does not exist
+    if not os.path.exists(PREDICTIONS_DIR):
+        os.makedirs(PREDICTIONS_DIR)
+
     # Save image to PREDICTIONS_DIR
     counter = len(os.listdir(PREDICTIONS_DIR))
     for img in results.imgs:

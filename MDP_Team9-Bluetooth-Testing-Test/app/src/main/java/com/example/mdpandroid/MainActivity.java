@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
         btnFastest.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                MessageBox.sendMessage("STM ", "START_FASTEST");
+                MessageBox.sendMessage("ALG ", "START_FASTEST");
                 //MessageFragment.sendMessage("LDRB -> RPI:\t\t", "START_FASTEST");
                 showBottomSheetDialog("fastest");
             }

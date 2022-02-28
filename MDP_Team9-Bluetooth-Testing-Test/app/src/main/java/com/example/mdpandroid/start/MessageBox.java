@@ -33,9 +33,9 @@ public class MessageBox extends Fragment {
     private static Context context;
     private static SharedPreferences.Editor editor;
     Button send,clear;
-    public static TextView messageSentTextView, messageReceivedTextView;
+    public static TextView messageSentTextView, messageReceivedTextView,receiveText;
     static EditText typeBoxEditText;
-    static ScrollView scrollView,scrollView_2;
+    static ScrollView scrollView,scrollView_2,scrollViewR;
     private static TimerDialogFragment timerDialog;
 
 
@@ -72,21 +72,18 @@ public class MessageBox extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.messagebox, container, false);
         send = (Button) rootview.findViewById(R.id.messageButton);
-        clear = (Button) rootview.findViewById(R.id.clearbutton);
+        receiveText = (TextView) rootview.findViewById(R.id.receivebox);
         messageSentTextView = (TextView) rootview.findViewById(R.id.messageSentTextView);
         messageReceivedTextView = (TextView) rootview.findViewById(R.id.editText);
         typeBoxEditText = (EditText) rootview.findViewById(R.id.typeBoxEditText);
         scrollView = (ScrollView) rootview.findViewById(R.id.scrollView2D);
         scrollView_2 = (ScrollView) rootview.findViewById(R.id.scrollView2);
 
+
         send.setOnClickListener(view -> {
             String input = "" + typeBoxEditText.getText().toString();
             sendMessage("ANDROID -> RPI:\t\t", input);
             typeBoxEditText.setText("");
-        });
-        clear.setOnClickListener(view -> {
-            StatusWindowTxt = "";
-            messageReceivedTextView.setText("");
         });
         return rootview;
     }
@@ -104,7 +101,7 @@ public class MessageBox extends Fragment {
     public static void receiveMessage(String txt) {
         String receivedText = txt;
         receiveWindowTxt+= "FROM RPI: " + receivedText + "\n";
-        messageSentTextView.setText(receiveWindowTxt);
+        receiveText.setText(receiveWindowTxt);
         System.out.println(receivedText);
     }
 

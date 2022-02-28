@@ -36,7 +36,7 @@ class RPI(threading.Thread):
 
         '''
         ANDROID (AND):
-        "ALG ROBOT XX YY D"  (X-COORDINDATE, Y-COORDINATE, DIRECTION)
+        "ALG ROBOT XX YY D"  
         "ALG OBS 1 XX YY D || OBS 2 X Y D" (OBSTACLE ID, X-COORDINDATE, Y-COORDINATE, DIRECTION)
         "ALG STARTPF" (WEEK 8)
         "ALG STARTPARKING" (WEEK 9)
@@ -45,26 +45,27 @@ class RPI(threading.Thread):
         ALG:
         "IMG TAKEPICTURE 1" (OBSTACLE NUMBER)
         "STM XXX F 10  " (XXX - COUNTER, DIRECTION, DIST/ANGLE) 
+        "AND ROBOT XX YY D" (X-COORDINDATE, Y-COORDINATE, DIRECTION)
         
         STM:
         "AND XXX DONE" (XXX - COUNTER)
         
         IMG: 
-        "RPI TARGET 1 22" (OBSTACLE ID, IMAGE ID)      
+        "IMG 12 Bulleyes 0 1" (IMAGE ID, CLASS_NAME, LOCATION, obstacle ID)      
         '''
 
     def startThread(self):
         # Read threads created
-        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread")
-        receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread")
-        receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread")
-        receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread")
+        receiveFromImgThread = threading.Thread(target=self.receiveFromImg, args=(), name="read_Img_Thread", daemon=True)
+        receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread", daemon=True)
+        receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread", daemon=True)
+        receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread", daemon=True)
 
         # Makes Threads run in the background
-        receiveFromImgThread.daemon = True
+        '''receiveFromImgThread.daemon = True
         receiveFromAlgoThread.daemon = True
         receiveFromAndroidThread.daemon = True
-        receiveFromSTMThread.daemon = True
+        receiveFromSTMThread.daemon = True'''
 
         receiveFromImgThread.start()
         receiveFromAlgoThread.start()
@@ -77,17 +78,21 @@ class RPI(threading.Thread):
             imgMsg = self.pcObject.receiveMsgFromImg()
             if imgMsg is not None:
                 print("Message received from Image: " + str(imgMsg))
-                predictions = imgMsg.split()
-                if not predictions:
-                    continue
-                if len(predictions) == 3:
+                predictions = imgMsg.split()        ## IMG id classname location
+                print(predictions)
+                '''if not predictions:
+                    continue'''
+                if len(predictions) > 1:
                     if int(predictions[1]) == 12:
+                        print("IN THE IF STATEMENT")
                         self.sendToAlgo("CONTINUE")
                     else:
                         self.sendToAlgo("STOP")
                 elif len(predictions) == 1:
                     if predictions[0] == "NOIMAGE":
                         print("Incorrect positioning of car...")
+                else:
+                    print("Empty prediction array...")
 
                 '''if imgMsg[:3] == "AND":
                     self.sendToAndroid(imgMsg[4:])'''
@@ -99,13 +104,16 @@ class RPI(threading.Thread):
                 print("Message received from Algo: " + str(algoMsg[2:]))  ## Start from index 2 to remove unknown symbol
                 commands = algoMsg.split("\n")
                 for c in commands:
-                    if c[2:5] == "IMG":
-                        print("Message sending to img server: " + str(c[6:] + "||"))
-                        self.sendToImg()            #Send the obstacle: XX YY
-                    if c[2:5] == "STM":
-                        print("Message sending to STM: " + str(c[6:] + "||"))
-                        self.sendToSTM(c[6:])
-                    time.sleep(0.5)
+                    if len(c) > 0:
+                        if c[2:5] == "IMG":
+                            print("Message sending to img server: " + str(c[6:] + "||"))
+                            #self.useUltra()
+                            self.sendToImg()            #Send the obstacle: XX YY
+                        if c[2:5] == "STM":
+                            print("Message sending to STM: " + str(c[6:] + "||"))
+
+                            self.sendToSTM(c[6:])
+                        time.sleep(0.5)
                 commands = None
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
@@ -194,9 +202,10 @@ class RPI(threading.Thread):
             self.camera.start_preview()
             self.camera.capture('a.jpeg')
             print("Captured image for sending")
+            self.camera.stop_preview()
 
         except Exception as e:
-            print("Error in taking picture...")
+            print("Error in taking picture..." + str(e))
 
     # Un-used function
     def readUltra(self):
@@ -224,7 +233,7 @@ class RPI(threading.Thread):
         plt.show()'''
 
     def closeAll(self):
-        GPIO.cleanup()
+
         self.camera.close()
         self.pcObject.disconnect()
         #self.androidObject.disconnect()
@@ -235,15 +244,28 @@ class RPI(threading.Thread):
         print("in closing....")'''
         self.stm.disconnect()
 
+    def useUltra(self, count=98):
+        ultrasonic = Ultrasonic()
+        dist = ultrasonic.distance()
+        print("Measured Distance = {:.1f} cm".format(dist))
+        if dist > 20:
+            self.sendToSTM("{:<3} F {:<4}".format(count, int(dist - 19)))
+        time.sleep(4)
+        dist = ultrasonic.distance()
+        print("Measured Distance = {:.1f} cm".format(dist))
+        count += 1
+        self.sendToSTM("{:<3} C {:<4}".format(count, ""))
+        GPIO.cleanup()
+
     def A5_TASK(self):
         ultrasonic = Ultrasonic()
         dist = ultrasonic.distance()
         print("Measured Distance = {:.1f} cm".format(dist))
         count = 0
         if dist > 20:
-            self.sendToSTM("{:<3} F {:<4}".format(count, dist-19))
+            self.sendToSTM("{:<3} F {:<4}".format(count, int(dist-19)))
         elif dist < 10:
-            self.sendToSTM("{:<3} B {:<4}".format(count, 20-dist))
+            self.sendToSTM("{:<3} B {:<4}".format(count, int(20-dist)))
         time.sleep(4)
         dist = ultrasonic.distance()
         print("Measured Distance = {:.1f} cm".format(dist))
@@ -259,6 +281,7 @@ class RPI(threading.Thread):
 
         time.sleep(0.05)
         self.sendToSTM("{:<3} C {:<4}".format(count, ""))
+        GPIO.cleanup()
 
 if __name__ == "__main__":
     rpi = RPI()

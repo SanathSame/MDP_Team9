@@ -8,6 +8,7 @@ import os
 WEIGHTS_PATH = 'Image Recognition/weights/best.pt' # Path to weights being used
 MODEL_PATH = 'Image Recognition' # Path to yolov5 repo locally
 PREDICTIONS_DIR = 'RPI/predictions' # Path to save predictions
+model = torch.hub.load(MODEL_PATH, 'custom', path=WEIGHTS_PATH, source='local')
 
 def predict(img_path: str):
     """
@@ -16,7 +17,6 @@ def predict(img_path: str):
     - ID is the ID of the class
     - CLASS is the name of the class
     """
-    model = torch.hub.load(MODEL_PATH, 'custom', path=WEIGHTS_PATH, source='local')
 
     img = cv2.imread(img_path)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -29,13 +29,42 @@ def predict(img_path: str):
         cv2.imwrite('{}/{}.jpeg'.format(PREDICTIONS_DIR, counter), img[...,::-1]) # Img in rgb, but cv2 expects bgr
         counter += 1
 
-    # Extract ids and classnames
+    #Extract ids, classnames and locations of the image
     # Note that results are sorted from highest confidence to lowest confidence
-    predicted_ids = results.pandas().xyxy[0][['class']].values.flatten()
-    predicted_classnames = results.pandas().xyxy[0][['name']].values.flatten()
+    df = results.pandas().xyxyn[0]
+    df['centerx'] = df[['xmin', 'xmax']].mean(axis=1)
+    df['location'] = df.apply(lambda x: get_location_of_center(x['centerx']), axis=1)
 
-    id_classname = ["IMG {} {}".format(predicted_id, predicted_classname) for predicted_id, predicted_classname in list(zip(predicted_ids, predicted_classnames))]
-    return id_classname
+    predicted_ids = df[['class']].values.flatten()
+    predicted_classnames = df[['name']].values.flatten()
+    predicted_locations = df[['location']].values.flatten()
+
+    result = ["IMG {} {} {}".format(predicted_id, predicted_classname, predicted_location) for
+              predicted_id, predicted_classname, predicted_location in
+              list(zip(predicted_ids, predicted_classnames, predicted_locations))]
+    return result
+
+
+def get_location_of_center(center_location):
+    """
+    Returns where the center is located in the image, in the range 0 <= location <= 1
+    0: "FAR_LEFT"
+    1: "LEFT"
+    2: "CENTER"
+    3: "RIGHT"
+    4: "FAR_RIGHT"
+    """
+
+    if center_location <= 0.2:
+        return 0
+    elif center_location <= 0.4:
+        return 1
+    elif center_location <= 0.6:
+        return 2
+    elif center_location <= 0.8:
+        return 3
+    else:
+        return 4
 
     
 if __name__ == "__main__":

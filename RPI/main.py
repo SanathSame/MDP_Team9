@@ -67,22 +67,20 @@ class RPI(threading.Thread):
         receiveFromAlgoThread.start()
         receiveFromAndroidThread.start()
         receiveFromSTMThread.start()
-        #self.A5_TASK()
 
     def receiveFromImg(self):
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
             if imgMsg is not None:
                 print("Message received from Image: " + str(imgMsg))
-                predictions = imgMsg.split()        ## IMG id classname location obstacleID
+                predictions = imgMsg.split()        ## IMG ImageID classname location ObstacleID
                 if len(predictions) > 1:
                     if int(predictions[1]) == 12:
                         self.sendToAlgo("STOP")
                         # TODO: robot recovery from detecting bullseye
                     else:
-                        #a = input()
                         self.sendToAlgo("NEXT")
-                        self.sendToAndroid("TARGET " + predictions[4] + "," + predictions[1]) # "TARGET obstacleID, IMAGEID"
+                        self.sendToAndroid("TARGET " + predictions[4] + "," + predictions[1]) # "TARGET ObstacleID, ImageID"
 
                 elif len(predictions) == 1:
                     if predictions[0] == "NOIMAGE":
@@ -119,34 +117,6 @@ class RPI(threading.Thread):
             self.pcObject.sendMsgToAlgo(msgToAlgo)
             print("Message is sent to Algo server: " + str(msgToAlgo))
 
-    '''def receiveFromPc(self):
-        while True:
-            self.pcObject.receiveMsg()
-            print("Message received from PC: " + str(self.pcObject.msgQueue))
-            while len(self.pcObject.msgQueue):
-                command = self.pcObject.dequeue()
-                print("Current command: " + command)
-                if command != "":
-                    if command.upper() == "P":
-                        self.snapPic()
-                        self.imgCount += 1
-                        print("Image taken!")
-                    if command.upper() == "S":
-                        #for i in range(1, 11):
-                        #fileName = "image" + "{:02d}".format(i) + ".jpg"
-                        fileName = "image01.jpg"
-                        fileSize = os.path.getsize(fileName)
-                        print("filename: " + str(fileName) +"\n, file size: "+ str(fileSize))
-                        #self.pcObject.serverSocket.send(f"{fileName}{self.SEPARATOR}{fileSize}".encode())
-
-                        time.sleep(1)
-                        print("after sleep")
-                        sendToPcThread = threading.Thread(target=self.pcObject.sendImage, args=(fileName, fileSize), name="send_Pc_Thread")
-                        sendToPcThread.daemon = True
-                        sendToPcThread.start()
-
-            break'''
-
     def sendToAndroid(self, msgToAndroid):
         if (msgToAndroid):
             self.androidObject.sendMsg(msgToAndroid)
@@ -173,17 +143,6 @@ class RPI(threading.Thread):
         while True:
             stmMsg = self.stm.receiveMsg()
             if stmMsg is not None and ord(stmMsg[0]) != 0:
-                '''time.sleep(2)
-                msg = str(input("Message for STM: "))
-                if len(msg) < 6:
-                    msg += " " * (6 - len(msg))
-                    self.sendToSTM(msg)'''
-                '''y1, y2 = int(stmMsg[:3]), int(stmMsg[4:])
-                rpi.y1.append(int(y1))
-                rpi.y2.append(int(y2))
-                rpi.x1.append(self.time)
-                self.time += 0.05'''
-
                 print("Message from STM: " + str(stmMsg))
                 if str(stmMsg[:6]) == "Done C":
                     self.sendToImg()
@@ -215,26 +174,11 @@ class RPI(threading.Thread):
             except Exception as e:
                 print("Error with Ultra: " + str(e))
 
-    '''def plot_values(self, x1, y1, y2):
-        plt.figure(1)
-        plt.plot(x1, y1, label="line 1")
-        plt.plot(x1, y2, label="line 2")
-        plt.xlabel('time/s')
-        plt.ylabel('distance')
-        plt.title('STM test')
-        plt.legend()
-        plt.show()'''
-
     def closeAll(self):
 
         self.camera.close()
         self.pcObject.disconnect()
         self.androidObject.disconnect()
-        '''with open("test1.csv", 'w') as f:
-            f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
-            f.write(str(rpi.y2[20:-10])[1:-1])
-            f.close()
-        print("in closing....")'''
         self.stm.disconnect()
 
     def useUltra(self, count=98):

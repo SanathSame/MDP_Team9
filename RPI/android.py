@@ -7,18 +7,17 @@ class Android():
         self.rfCommChannel = 1
         self.clientSock = None
         self.serverSock = None
-        self.uuid = "00001101-0000-1000-8000-00805F9B34FB" #"00001101-0000-1000-8000-00805F9B34FB"
+        self.uuid = "00001101-0000-1000-8000-00805F9B34FB"
         self.clientInfo = None
         self.BUFFER_SIZE = 2048
         os.system("sudo hciconfig hci0 piscan")
-        print("Finished BT initialising")
 
     def connect(self):
         try:
             self.serverSock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
             print("Bluetooth socket created!")
 
-            self.serverSock.bind(("", self.rfCommChannel))  # bluetooth.PORT_ANY)) #
+            self.serverSock.bind(("", self.rfCommChannel))
             print("Bluetooth binding completed!")
 
             self.serverSock.listen(self.rfCommChannel)
@@ -67,9 +66,3 @@ class Android():
         except Exception as e:
             print("Error in receving msg: " + str(e))
             self.connect()
-
-
-
-
-
-

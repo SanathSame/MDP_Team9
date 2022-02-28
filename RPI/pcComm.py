@@ -19,14 +19,6 @@ class PcComm():
 
         self.connect()
 
-    # Enqueue the commands
-    def enqueue(self, msg):
-        self.msgQueue.append(msg)
-
-    # Dequeue the commands stored inside the queue
-    def dequeue(self):
-        return self.msgQueue.pop(0)
-
     def connect(self):
         try:
             if not self.isConnected:
@@ -142,19 +134,3 @@ class PcComm():
             print("Error in receiving: " + str(e))
             self.connect()
             self.receiveMsgFromImg()
-
-    '''def sendImage(self, fileName, fileSize):
-        # start sending the file
-        #progress = tqdm.tqdm(range(fileSize), f"Sending {fileName}", unit="B", unit_scale=True, unit_divisor=1024)
-        with open(fileName, "rb") as f:
-            while True:
-                # read the bytes from the file
-                bytes_read = f.read(self.BUFFER_SIZE)
-                if not bytes_read:
-                    # file transmitting is done
-                    break
-                self.serverSocket.sendall(bytes_read)
-                # update the progress bar
-                #progress.update(len(bytes_read))'''
-
-

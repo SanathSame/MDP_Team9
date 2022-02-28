@@ -1,7 +1,6 @@
 import serial
 import time
 
-
 class STM():
     def __init__(self):
         self.BAUD_RATE = 115200

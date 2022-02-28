@@ -90,6 +90,8 @@ void Error_Handler(void);
 #define SW1_Pin GPIO_PIN_8
 #define SW1_GPIO_Port GPIOD
 #define SW1_EXTI_IRQn EXTI9_5_IRQn
+#define ULTRA_ECHO_Pin GPIO_PIN_14
+#define ULTRA_ECHO_GPIO_Port GPIOD
 #define PWMA_Pin GPIO_PIN_6
 #define PWMA_GPIO_Port GPIOC
 #define PWMB_Pin GPIO_PIN_7
@@ -102,6 +104,8 @@ void Error_Handler(void);
 #define RPI_RX_GPIO_Port GPIOC
 #define ENCODER_A2_Pin GPIO_PIN_3
 #define ENCODER_A2_GPIO_Port GPIOB
+#define ULTRA_TRIG_Pin GPIO_PIN_4
+#define ULTRA_TRIG_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

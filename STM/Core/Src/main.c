@@ -158,6 +158,7 @@ void led(void *argument);
 
 /* USER CODE BEGIN PFP */
 int irToDist();
+void changeProfile();
 void driveRobot(uint8_t *cmd);
 void stopRobot();
 void turnRobot(uint8_t *cmd);
@@ -180,9 +181,10 @@ int robotAngle;
 uint8_t cmds[1000][20], cmdState, prevCmd[20], rxBuffer[20], txBuffer[20];
 uint8_t driveACmd, driveBCmd, startDriving, startPID;
 uint8_t angleCmd, servoCmd;
+uint8_t profile;
 
 uint32_t servoCenter, servoLeft, servoRight, servoVal;
-uint32_t batteryCounter, batteryVal[5], irCounter, irVal[100];
+uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5];
 uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay;  // rpiDelay <= encoderDelay
 /* USER CODE END 0 */
 
@@ -227,27 +229,8 @@ int main(void)
   pi = 3.1415926536;
   radius = 3.35;
 
-  encoderGrad = 0.208211985127613;
-  encoderInt = 0.556356667437655;
-
-  kdb = 2;
-  kdf = 1.5;
-  kib = 1.5;
-  kif = 2;
-  kpb = 8;
-  kpf = 8.5;
-
-  distOffset = 5;
-  turnOffset = 0.5;
-
-  lbGrad = 0.406223321414319;
-  lbInt = -1.03827694476358;
-  lfGrad = 0.374241777484367;
-  lfInt = -0.80255211795561;
-  rbGrad = 0.390119353921512;
-  rbInt = 1.405188423049935;
-  rfGrad = 0.364677963587823;
-  rfInt = 1.011921094590065;
+  profile = 2;
+  changeProfile();
 
   actionCounter = 0;
   fillCounter = -1;
@@ -292,7 +275,7 @@ int main(void)
   motorDelay = 1;
   oledDelay = 10;
   rpiDelay = 10;
-  servoDelay = 1000;
+  servoDelay = 700;
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -839,6 +822,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == SW1_Pin)
   {
+	profile = (profile + 1) % 3;
+	changeProfile();
   }
 }
 
@@ -847,14 +832,34 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   UNUSED(huart);
 }
 
+void celibate(uint8_t *cmd)
+{
+	char distStr[5];
+	strncpy(distStr, (char*)(cmd + 6), 4);
+	int delay = atoi(distStr);
+
+	startDriving = 1;
+	tempA = 0;
+	tempB = 0;
+
+	motorAVal = driveMotorPWM;
+	motorBVal = motorAVal;
+
+	driveACmd = cmd[4];
+	driveBCmd = cmd[4];
+
+	osDelay(delay);
+	stopRobot();
+}
+
 int irToDist()
 {
   float avgIRVal = 0.0;
 
-  for (int counter = 0; counter < 100; ++counter)
+  for (int counter = 0; counter < 5; ++counter)
   	avgIRVal += irVal[counter];
 
-  avgIRVal /= 100;
+  avgIRVal /= 5;
 
   return (int)(avgIRVal + 0.5);
 }
@@ -868,11 +873,93 @@ uint8_t rxFilled(uint8_t size)
   return 1;
 }
 
+void changeProfile()
+{
+  switch (profile)
+  {
+  case 0: //TR
+    encoderGrad = 0.208211985127613;
+	encoderInt = 0.556356667437655;
+
+	kdb = 2;
+	kdf = 1.5;
+	kib = 1.5;
+	kif = 2;
+	kpb = 8;
+	kpf = 8.5;
+
+	distOffset = 5;
+	turnOffset = 0.5;
+
+	lbGrad = 0.406223321414319;
+	lbInt = -1.03827694476358;
+	lfGrad = 0.374241777484367;
+	lfInt = -0.80255211795561;
+	rbGrad = 0.390119353921512;
+	rbInt = 1.405188423049935;
+	rfGrad = 0.364677963587823;
+	rfInt = 1.011921094590065;
+
+	break;
+
+  case 1: //Lab
+	encoderGrad = 0.20959044667335;
+	encoderInt = 1.10778227509323;
+
+	kdb = 0;
+	kdf = 0;
+	kib = 0;
+	kif = 0;
+	kpb = 0;
+	kpf = 0;
+
+	distOffset = 5;
+	turnOffset = 0;
+
+	lbGrad = 1;
+	lbInt = 0;
+	lfGrad = 1;
+	lfInt = 0;
+	rbGrad = 1;
+	rbInt = 0;
+	rfGrad = 1;
+	rfInt = 0;
+
+	break;
+
+  case 2: //Outside Lab
+	encoderGrad = 0.208496572267945;
+	encoderInt = 1.08776618891631;
+
+	kdb = 0;
+	kdf = 0;
+	kib = 0;
+	kif = 0;
+	kpb = 0;
+	kpf = 0;
+
+	distOffset = 4;
+	turnOffset = 1;
+
+	lbGrad = 0.477744248433485;
+	lbInt = 2.02776765331444;
+	lfGrad = 0.425142145382334;
+	lfInt = 1.59811982955917;
+	rbGrad = 0.452958458665014;
+	rbInt = 3.65536165354082;
+	rfGrad = 0.381832587414008;
+	rfInt = 2.05906630142695;
+
+	break;
+  }
+}
+
 void driveRobot(uint8_t *cmd)
 {
   char distStr[5];
   strncpy(distStr, (char*)(cmd + 6), 4);
-  robotDist = (float)atoi(distStr);
+  if (angleCmd == 0)
+	robotDist = (float)atoi(distStr);
 
   driveACmd = cmd[4];
   driveBCmd = cmd[4];
@@ -938,18 +1025,16 @@ void turnRobot(uint8_t *cmd)
   driveACmd = cmd[5];
   driveBCmd = cmd[5];
 
-  float dist = 0.0;
-
   if (angleCmd == 'L' && driveACmd == 'B')
-  	dist = lbGrad * robotAngle + lbInt;
+  	robotDist = lbGrad * robotAngle + lbInt;
   else if (angleCmd == 'L' && driveACmd == 'F')
-  	dist = lfGrad * robotAngle + lfInt;
+	robotDist = lfGrad * robotAngle + lfInt;
   else if (angleCmd == 'R' && driveACmd == 'B')
-	dist = rbGrad * robotAngle + rbInt;
+	robotDist = rbGrad * robotAngle + rbInt;
   else if (angleCmd == 'R' && driveACmd == 'F')
-    dist = rfGrad * robotAngle + rfInt;
+	robotDist = rfGrad * robotAngle + rfInt;
 
-  if (dist > 0.0)
+  if (robotDist > 0.0)
   {
     servoVal = angleCmd == 'L' ? servoLeft : servoRight;
     servoCmd = 'T';
@@ -958,7 +1043,7 @@ void turnRobot(uint8_t *cmd)
 
     strncpy((char*)prevCmd, (char*)cmd, 20);
     strncpy((char*)cmds[actionCounter], (char*)cmd, 4);
-    sprintf((char*)(cmds[actionCounter] + 4), "%c %4d", (char)driveACmd, (int)dist);
+    sprintf((char*)(cmds[actionCounter] + 4), "%c %4d", (char)driveACmd, (int)(robotDist + 0.5));
   }
 }
 /* USER CODE END 4 */
@@ -978,34 +1063,37 @@ void oled(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	sprintf(strBuffer, "%d", profile);
+	OLED_ShowString(0, 0, (uint8_t*)strBuffer);
+
 	sprintf(strBuffer, "          ");
 	if (actionCounter <= fillCounter && cmds[actionCounter][0] != 0)
       strncpy(strBuffer, (char*)(angleCmd != 0 ? prevCmd : cmds[actionCounter]), 20);
 	OLED_ShowString(10, 0, (uint8_t*)strBuffer);
 
-	//sprintf(strBuffer, "DistA: %-5d", (int)distA);
+	//sprintf(strBuffer, "DistA: %-5d", (int)(distA + 0.5));
     //sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
 	//sprintf(strBuffer, "EncA: %-5d", (int)encoderAVal);
-	//sprintf(strBuffer, "IR: %-5d", irToDist());
+	sprintf(strBuffer, "IR: %-5d", irToDist());
 	//sprintf(strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
 	//sprintf(strBuffer, "Tick1: %-5d", (int)tick1);
-	sprintf(strBuffer, "TempA: %-5d", (int)tempA);
+	//sprintf(strBuffer, "TempA: %-5d", (int)tempA);
 	OLED_ShowString(10, 10, (uint8_t*)strBuffer);
 
-	//sprintf(strBuffer, "DistB: %-5d", (int)distB);
+	//sprintf(strBuffer, "DistB: %-5d", (int)(distB + 0.5));
 	//sprintf(strBuffer, "MotorB: %-5d", (int)motorBVal);
 	//sprintf(strBuffer, "EncB: %-5d", (int)encoderBVal);
 	//sprintf(strBuffer, "Tick2: %-5d", (int)tick2);
-	sprintf(strBuffer, "TempB: %-5d", (int)tempB);
-	OLED_ShowString(10, 20, (uint8_t*)strBuffer);
+	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
+	//OLED_ShowString(10, 20, (uint8_t*)strBuffer);
 
-	sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
-	//sprintf(strBuffer, "DistA: %-5d", (int)distA);
+	//sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
+	sprintf(strBuffer, "DistA: %-5d", (int)(distA + 0.5));
 	//sprintf(strBuffer, "TempA: %-5d", (int)tempA);
 	OLED_ShowString(10, 30, (uint8_t*)strBuffer);
 
-	sprintf(strBuffer, "Fill: %-5d", (int)fillCounter);
-	//sprintf(strBuffer, "DistB: %-5d", (int)distB);
+	//sprintf(strBuffer, "Fill: %-5d", (int)fillCounter);
+	sprintf(strBuffer, "DistB: %-5d", (int)(distB + 0.5));
 	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
 	OLED_ShowString(10, 40, (uint8_t*)strBuffer);
 
@@ -1038,16 +1126,13 @@ void ir(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	if (irCounter > 99)
-	  for (irCounter = 0; irCounter < 99; ++irCounter)
+	if (irCounter > 4)
+	  for (irCounter = 0; irCounter < 4; ++irCounter)
 	    irVal[irCounter] = irVal[irCounter + 1];
 
 	HAL_ADC_Start(&hadc1);
 	HAL_ADC_PollForConversion(&hadc1, 0xFFFF);
 	irVal[irCounter++] = HAL_ADC_GetValue(&hadc1);
-
-	//if (irCounter > 4)
-	  //dist = irToDist();
 
     osDelay(irDelay);
   }
@@ -1362,6 +1447,7 @@ void dispatch(void *argument)
 	  cmdType = cmds[actionCounter][4];
 
 	  if (cmdType == 'F' || cmdType == 'B')
+		//celibate(cmds[actionCounter]);
 	    driveRobot(cmds[actionCounter]);
 	  else if (cmdType == 'L' || cmdType == 'R')
 	    turnRobot(cmds[actionCounter]);

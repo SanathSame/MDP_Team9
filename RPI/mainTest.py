@@ -118,36 +118,37 @@ def TestImagePrediction():
     while True:
         try:
             commands = s.recv(1024).split()        # TAKEPICTURE OBSTACLE_ID
-            obsID = commands[1].decode('utf-8')        # Extract out the OBSTACLE_ID
-            if str(commands[0].decode('utf-8')) == "TAKEPICTURE":
-                data = s.recv(1024)
-                filesize = int(data.decode('utf-8'))
-                print("Filesize", filesize)
+            if len(commands) > 0:
+                obsID = commands[1].decode('utf-8')        # Extract out the OBSTACLE_ID
+                if str(commands[0].decode('utf-8')) == "TAKEPICTURE":
+                    data = s.recv(1024)
+                    filesize = int(data.decode('utf-8'))
+                    print("Filesize", filesize)
 
-                # Get image from RPI and save locally
-                SAVE_FILE = "RPI/images/to_predict.jpeg"
-                total_data_received = len(data)
-                with open(SAVE_FILE, "wb") as f:
-                    while True:
-                        data = s.recv(1024)
-                        if not data:
-                            break
+                    # Get image from RPI and save locally
+                    SAVE_FILE = "RPI/images/to_predict.jpeg"
+                    total_data_received = len(data)
+                    with open(SAVE_FILE, "wb") as f:
+                        while True:
+                            data = s.recv(1024)
+                            if not data:
+                                break
 
-                        total_data_received += len(data)
-                        if total_data_received >= filesize:
-                            break
-                        f.write(data)
-                    print("File done")
+                            total_data_received += len(data)
+                            if total_data_received >= filesize:
+                                break
+                            f.write(data)
+                        print("File done")
 
-                print("Received")
+                    print("Received")
 
-                predictions = predict(SAVE_FILE)
-                print("Predictions", predictions)
-                if len(predictions) == 0:
-                    s.send(bytes("NOIMAGE", "utf-8"))
-                else:
-                    s.send(bytes(str(predictions[0] + " " + obsID), "utf-8"))
-            commands = None
+                    predictions = predict(SAVE_FILE)
+                    print("Predictions", predictions)
+                    if len(predictions) == 0:
+                        s.send(bytes("NOIMAGE", "utf-8"))
+                    else:
+                        s.send(bytes(str(predictions[0] + " " + obsID), "utf-8"))
+                commands = None
         except KeyboardInterrupt:
             s.close()
 

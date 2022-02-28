@@ -111,46 +111,45 @@ def TestSTM():
         print("Terminating the program now...")
 
 def TestImagePrediction():
-    s = socket.socket()      
-    s.connect((IP_ADDRESS, PORT))
-    print("Connected")
+    # s = socket.socket()  
+    # s.connect((IP_ADDRESS, PORT))
+    # print("Connected")
 
-    while True:
-        try:
-            commands = s.recv(1024).split()        # TAKEPICTURE OBSTACLE_ID
-            if len(commands) > 0:
-                obsID = commands[1].decode('utf-8')        # Extract out the OBSTACLE_ID
-                if str(commands[0].decode('utf-8')) == "TAKEPICTURE":
-                    data = s.recv(1024)
-                    filesize = int(data.decode('utf-8'))
-                    print("Filesize", filesize)
+    # # Get filesize from the server
+    # data = s.recv(1024)
+    # filesize = int(data.decode('utf-8'))
+    # print("Filesize", filesize)
 
-                    # Get image from RPI and save locally
-                    SAVE_FILE = "RPI/images/to_predict.jpeg"
-                    total_data_received = len(data)
-                    with open(SAVE_FILE, "wb") as f:
-                        while True:
-                            data = s.recv(1024)
-                            if not data:
-                                break
+    SAVE_FILE = "RPI/images/to_predict.jpeg"
+    # # Get image from RPI and save locally
+    # total_data_received = len(data)
+    # with open(SAVE_FILE, "wb") as f:
+    #     while True:
+    #         data = s.recv(1024)
 
-                            total_data_received += len(data)
-                            if total_data_received >= filesize:
-                                break
-                            f.write(data)
-                        print("File done")
+    #         if not data:
+    #             break
+            
+    #         total_data_received += len(data)
+    #         if total_data_received >= filesize:
+    #             break
 
-                    print("Received")
+    #         f.write(data)
+    #     print("File done")
 
-                    predictions = predict(SAVE_FILE)
-                    print("Predictions", predictions)
-                    if len(predictions) == 0:
-                        s.send(bytes("NOIMAGE", "utf-8"))
-                    else:
-                        s.send(bytes(str(predictions[0] + " " + obsID), "utf-8"))
-                commands = None
-        except KeyboardInterrupt:
-            s.close()
+    # print("Received")
+
+    predictions = predict(SAVE_FILE)
+    print("Predictions", predictions)
+
+    if len(predictions) == 0:
+        print("NOIMAGE")
+        # s.send(bytes("NOIMAGE", "utf-8"))
+    else:
+        print(predictions[0])
+        # s.send(bytes(predictions[0], "utf-8"))
+    # s.close()
+
 
 def TestMultipleMessages():
     s = socket.socket()
@@ -175,6 +174,29 @@ def TestMultipleMessages():
 
     print("Data fully received:", data)
 
+
+def TestMultipleMessages():
+    s = socket.socket()  
+    s.connect((IP_ADDRESS, PORT))
+    print("Connected")
+
+    ending = "@.@"
+
+    str_received = ""
+
+    while True:
+        data = s.recv(1024)
+
+        if data.endswith(ending):
+            str_received += data.strip(ending)
+            break
+        
+        if not data:
+            break
+
+        str_received += data
+
+    print("Data fully received:", data)
 
 if __name__ == "__main__":
     TestImagePrediction()

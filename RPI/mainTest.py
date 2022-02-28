@@ -117,8 +117,9 @@ def TestImagePrediction():
 
     while True:
         try:
-            data1 = s.recv(1024)
-            if str(data1.decode('utf-8')) == "TAKEPICTURE":
+            commands = s.recv(1024).split()        # TAKEPICTURE OBSTACLE_ID
+            obsID = commands[1].decode('utf-8')        # Extract out the OBSTACLE_ID
+            if str(commands[0].decode('utf-8')) == "TAKEPICTURE":
                 data = s.recv(1024)
                 filesize = int(data.decode('utf-8'))
                 print("Filesize", filesize)
@@ -135,7 +136,6 @@ def TestImagePrediction():
                         total_data_received += len(data)
                         if total_data_received >= filesize:
                             break
-
                         f.write(data)
                     print("File done")
 
@@ -143,12 +143,11 @@ def TestImagePrediction():
 
                 predictions = predict(SAVE_FILE)
                 print("Predictions", predictions)
-
                 if len(predictions) == 0:
                     s.send(bytes("NOIMAGE", "utf-8"))
                 else:
-                    s.send(bytes(str(predictions[0]), "utf-8"))
-            data1 = None
+                    s.send(bytes(str(predictions[0] + " " + obsID), "utf-8"))
+            commands = None
         except KeyboardInterrupt:
             s.close()
 

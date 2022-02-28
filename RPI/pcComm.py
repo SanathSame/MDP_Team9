@@ -75,7 +75,7 @@ class PcComm():
         try:
             if msg != "":
                 if self.isConnected:
-                    self.imgClient.send(bytes("TAKEPICTURE", "utf-8"))
+                    self.imgClient.send(bytes(msg, "utf-8"))
                     FILE_TO_READ = "a.jpeg"
                     filesize = os.path.getsize(FILE_TO_READ)
                     self.imgClient.send(bytes(str(filesize), "utf-8"))

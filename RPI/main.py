@@ -14,12 +14,12 @@ class RPI(threading.Thread):
 
         # Creating subsystem objects
         self.pcObject = PcComm()
-        #self.androidObject = Android()
+        self.androidObject = Android()
         self.stm = STM()
 
         # Establish connection with other subsystems
         self.pcObject.connect()
-        #self.androidObject.connect()
+        self.androidObject.connect()
         self.stm.connect()
         print("Connection to devices completed...")
 
@@ -51,7 +51,8 @@ class RPI(threading.Thread):
         "AND XXX DONE" (XXX - COUNTER)
         
         IMG: 
-        "IMG 12 Bulleyes 0 1" (IMAGE ID, CLASS_NAME, LOCATION, obstacle ID)      
+        "IMG 12 Bulleyes 0 1" (IMAGE ID, CLASS_NAME, LOCATION, obstacle ID)
+        "AND TARGET 1,30" (OBSTACLE ID, IMAGE ID)      
         '''
 
     def startThread(self):
@@ -61,41 +62,33 @@ class RPI(threading.Thread):
         receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread", daemon=True)
         receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread", daemon=True)
 
-        # Makes Threads run in the background
-        '''receiveFromImgThread.daemon = True
-        receiveFromAlgoThread.daemon = True
-        receiveFromAndroidThread.daemon = True
-        receiveFromSTMThread.daemon = True'''
-
+        # Makes Threads start in the background
         receiveFromImgThread.start()
         receiveFromAlgoThread.start()
-        #receiveFromAndroidThread.start()
+        receiveFromAndroidThread.start()
         receiveFromSTMThread.start()
-        self.A5_TASK()
+        #self.A5_TASK()
 
     def receiveFromImg(self):
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
             if imgMsg is not None:
                 print("Message received from Image: " + str(imgMsg))
-                predictions = imgMsg.split()        ## IMG id classname location
-                print(predictions)
-                '''if not predictions:
-                    continue'''
+                predictions = imgMsg.split()        ## IMG id classname location obstacleID
                 if len(predictions) > 1:
                     if int(predictions[1]) == 12:
-                        print("IN THE IF STATEMENT")
-                        self.sendToAlgo("CONTINUE")
-                    else:
                         self.sendToAlgo("STOP")
+                        # TODO: robot recovery from detecting bullseye
+                    else:
+                        #a = input()
+                        self.sendToAlgo("NEXT")
+                        self.sendToAndroid("TARGET " + predictions[4] + "," + predictions[1]) # "TARGET obstacleID, IMAGEID"
+
                 elif len(predictions) == 1:
                     if predictions[0] == "NOIMAGE":
                         print("Incorrect positioning of car...")
                 else:
                     print("Empty prediction array...")
-
-                '''if imgMsg[:3] == "AND":
-                    self.sendToAndroid(imgMsg[4:])'''
 
     def receiveFromAlgo(self):
         while True:
@@ -108,10 +101,9 @@ class RPI(threading.Thread):
                         if c[2:5] == "IMG":
                             print("Message sending to img server: " + str(c[6:] + "||"))
                             #self.useUltra()
-                            self.sendToImg()            #Send the obstacle: XX YY
+                            self.sendToImg(c[6:])            #Send the obstacle: XX YY
                         if c[2:5] == "STM":
                             print("Message sending to STM: " + str(c[6:] + "||"))
-
                             self.sendToSTM(c[6:])
                         time.sleep(0.5)
                 commands = None
@@ -166,9 +158,10 @@ class RPI(threading.Thread):
             androidMsg = self.androidObject.receiveMsg()
             if androidMsg:
                 print("Message from android: " + androidMsg)
-                if androidMsg.upper() == "W":
-                    tmp = input("Message please: ")
-                    self.sendToAndroid(tmp)
+                if androidMsg[:3] == "ALG":
+                    self.sendToAlgo(androidMsg[4:])
+                elif androidMsg[:3] == "IMG":
+                    self.sendToImg(androidMsg[4:])
 
     def sendToSTM(self, msgToSTM):
         if (msgToSTM):
@@ -236,7 +229,7 @@ class RPI(threading.Thread):
 
         self.camera.close()
         self.pcObject.disconnect()
-        #self.androidObject.disconnect()
+        self.androidObject.disconnect()
         '''with open("test1.csv", 'w') as f:
             f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
             f.write(str(rpi.y2[20:-10])[1:-1])
@@ -270,14 +263,6 @@ class RPI(threading.Thread):
         dist = ultrasonic.distance()
         print("Measured Distance = {:.1f} cm".format(dist))
         count += 1
-        '''if (dist - 20) >= 100:
-            self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + " ")
-        else:
-            self.sendToSTM(str(count) + "   F " + str(int(dist - 20 + 1)) + "  ")
-            time.sleep(4)
-            dist = ultrasonic.distance()
-            print("Measured Distance = %.1f cm" % dist)
-            count += 1'''
 
         time.sleep(0.05)
         self.sendToSTM("{:<3} C {:<4}".format(count, ""))

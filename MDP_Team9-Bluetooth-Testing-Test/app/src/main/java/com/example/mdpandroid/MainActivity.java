@@ -318,6 +318,7 @@ public class MainActivity extends AppCompatActivity {
         btnImg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                MessageBox.sendMessage("ALG ", "START_IMG");
                 showBottomSheetDialog("img");
             }
         });

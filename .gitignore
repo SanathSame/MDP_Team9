@@ -10,6 +10,8 @@
 .DS_Store
 /build
 /captures
+RPI/
+Image Recognition/
 .externalNativeBuild
 .cxx
 local.properties

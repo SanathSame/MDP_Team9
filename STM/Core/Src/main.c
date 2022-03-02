@@ -169,12 +169,13 @@ void led(void *argument);
 void ultra(void *argument);
 
 /* USER CODE BEGIN PFP */
-int irToDist();
+float avgVal(uint32_t *val, uint32_t size, float grad, float inter);
 void changeProfile();
 void driveRobot(uint8_t *cmd);
 void microDelay(uint32_t us);
 void stopRobot();
 void turnRobot(uint8_t *cmd);
+void valShift(uint32_t *val, uint32_t size);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -184,7 +185,7 @@ float encoderGrad, encoderInt;
 float kdb, kdf, kib, kif, kpb, kpf;
 float distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
 float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
-float ultraDist;
+float irGrad, irInt, ultraGrad, ultraInt;
 
 int actionCounter, fillCounter;
 int driveMotorPWM, maxMotorPWM, motorAVal, motorBVal, turnMotorPWM;
@@ -199,7 +200,7 @@ uint8_t ultraCapture;
 uint8_t profile;
 
 uint32_t servoCenter, servoLeft, servoRight, servoVal;
-uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5], ultraVal;
+uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5], ultraCounter, ultraVal[5];
 uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay, ultraDelay;  // rpiDelay <= encoderDelay
 /* USER CODE END 0 */
 
@@ -250,7 +251,10 @@ int main(void)
   profile = 2;
   changeProfile();
 
-  ultraDist = 0;
+  irGrad = 1;
+  irInt = 0;
+  ultraGrad = 0.01715;
+  ultraInt = 0;
 
   actionCounter = 0;
   fillCounter = -1;
@@ -281,13 +285,13 @@ int main(void)
 
   batteryCounter = 0;
   irCounter = 0;
+  ultraCounter = 0;
   for (int counter = 0; counter < 5; ++counter)
   {
 	batteryVal[counter] = 0;
 	irVal[counter] = 0;
+	ultraVal[counter] = 0;
   }
-
-  ultraVal = 0;
 
   batteryDelay = 2000;
   dispatchDelay = 1;
@@ -298,7 +302,7 @@ int main(void)
   oledDelay = 10;
   rpiDelay = 10;
   servoDelay = 700;
-  ultraDelay = 300;
+  ultraDelay = 50;
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -969,12 +973,16 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
     }
     else
     {
-      ultraVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+      uint32_t tempVal = HAL_TIM_ReadCapturedValue(htim, TIM_CHANNEL_3);
+
+      if (ultraCounter > 4)
+    	valShift(ultraVal, 5);
+
+      ultraVal[ultraCounter == 5 ? 4 : ultraCounter++] = tempVal;
       __HAL_TIM_SET_CAPTUREPOLARITY(htim, TIM_CHANNEL_3, TIM_INPUTCHANNELPOLARITY_RISING);
       __HAL_TIM_DISABLE_IT(&htim4, TIM_IT_CC3);
 
       ultraCapture = 0;
-      ultraDist = 0.01715 * ultraVal;
     }
   }
 }
@@ -984,36 +992,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   UNUSED(huart);
 }
 
-void celibate(uint8_t *cmd)
+float avgVal(uint32_t *val, uint32_t size, float grad, float inter)
 {
-	char distStr[5];
-	strncpy(distStr, (char*)(cmd + 6), 4);
-	int delay = atoi(distStr);
+  float totalVal = 0.0;
 
-	startDriving = 1;
-	tempA = 0;
-	tempB = 0;
+  for (int counter = 0; counter < size; ++counter)
+	totalVal += val[counter];
 
-	motorAVal = driveMotorPWM;
-	motorBVal = motorAVal;
-
-	driveACmd = cmd[4];
-	driveBCmd = cmd[4];
-
-	osDelay(delay);
-	stopRobot();
-}
-
-int irToDist()
-{
-  float avgIRVal = 0.0;
-
-  for (int counter = 0; counter < 5; ++counter)
-  	avgIRVal += irVal[counter];
-
-  avgIRVal /= 5;
-
-  return (int)(avgIRVal + 0.5);
+  return size == 0 ? 0 : totalVal / size * grad + inter;
 }
 
 uint8_t rxFilled(uint8_t size)
@@ -1101,22 +1087,24 @@ void changeProfile()
 	rbInt = 3.65536165354082;
 	rfGrad = 0.381832587414008;
 	rfInt = 2.05906630142695;
-
-	break;
   }
 }
 
 void driveRobot(uint8_t *cmd)
 {
-  char distStr[5];
-  strncpy(distStr, (char*)(cmd + 6), 4);
+  driveACmd = cmd[4];
+  driveBCmd = driveACmd;
+
+  distBuffer = turnOffset;
+
   if (angleCmd == 0)
+  {
+    char distStr[5];
+    strncpy(distStr, (char*)(cmd + 6), 4);
 	robotDist = (float)atoi(distStr);
 
-  driveACmd = cmd[4];
-  driveBCmd = cmd[4];
-
-  distBuffer = angleCmd == 0 ? distOffset : turnOffset;
+	distBuffer = distOffset;
+  }
 
   if (startDriving == 0)
   {
@@ -1201,8 +1189,14 @@ void turnRobot(uint8_t *cmd)
 
     strncpy((char*)prevCmd, (char*)cmd, 20);
     strncpy((char*)cmds[actionCounter], (char*)cmd, 4);
-    sprintf((char*)(cmds[actionCounter] + 4), "%c %4d", (char)driveACmd, (int)(robotDist + 0.5));
+    sprintf((char*)(cmds[actionCounter] + 4), "%c     ", (char)driveACmd);
   }
+}
+
+void valShift(uint32_t *val, uint32_t size)
+{
+  for (int counter = 0; counter < size - 1; ++counter)
+	val[counter] = val[counter + 1];
 }
 /* USER CODE END 4 */
 
@@ -1217,7 +1211,6 @@ void oled(void *argument)
 {
   /* USER CODE BEGIN 5 */
   char strBuffer[20];
-  float avgBatteryVal;
   /* Infinite loop */
   for(;;)
   {
@@ -1232,7 +1225,7 @@ void oled(void *argument)
 	//sprintf(strBuffer, "DistA: %-5d", (int)(distA + 0.5));
     //sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
 	//sprintf(strBuffer, "EncA: %-5d", (int)encoderAVal);
-	sprintf(strBuffer, "IR: %-5d", irToDist());
+	sprintf(strBuffer, "IR: %-5d", (int)(avgVal(irVal, irCounter, irGrad, irInt) + 0.5));
 	//sprintf(strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
 	//sprintf(strBuffer, "Tick1: %-5d", (int)tick1);
 	//sprintf(strBuffer, "TempA: %-5d", (int)tempA);
@@ -1243,7 +1236,7 @@ void oled(void *argument)
 	//sprintf(strBuffer, "EncB: %-5d", (int)encoderBVal);
 	//sprintf(strBuffer, "Tick2: %-5d", (int)tick2);
 	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
-	sprintf(strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
+	sprintf(strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
 	OLED_ShowString(10, 20, (uint8_t*)strBuffer);
 
 	//sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
@@ -1258,13 +1251,7 @@ void oled(void *argument)
 	//sprintf(strBuffer, "TempA: %-5d", (int)ultraCount2);
 	OLED_ShowString(10, 40, (uint8_t*)strBuffer);
 
-	avgBatteryVal = 0.0;
-	for (int counter = 0; counter < 5; ++counter)
-	  avgBatteryVal += batteryVal[counter];
-
-	avgBatteryVal /= 5;
-
-	sprintf(strBuffer, "Battery: %d", (int)(avgBatteryVal + 0.5));
+	sprintf(strBuffer, "Batt: %-5d", (int)(avgVal(batteryVal, batteryCounter, 1.0, 0.0) + 0.5));
 	OLED_ShowString(10, 50, (uint8_t*)strBuffer);
 
 	OLED_Refresh_Gram();
@@ -1283,17 +1270,15 @@ void oled(void *argument)
 void ir(void *argument)
 {
   /* USER CODE BEGIN ir */
-  //int dist;
   /* Infinite loop */
   for(;;)
   {
 	if (irCounter > 4)
-	  for (irCounter = 0; irCounter < 4; ++irCounter)
-	    irVal[irCounter] = irVal[irCounter + 1];
+	  valShift(irVal, 5);
 
 	HAL_ADC_Start(&hadc1);
 	HAL_ADC_PollForConversion(&hadc1, 0xFFFF);
-	irVal[irCounter++] = HAL_ADC_GetValue(&hadc1);
+	irVal[irCounter == 5 ? 4 : irCounter++] = HAL_ADC_GetValue(&hadc1);
 
     osDelay(irDelay);
   }
@@ -1483,6 +1468,7 @@ void motorB(void *argument)
 void encoderA(void *argument)
 {
   /* USER CODE BEGIN encoderA */
+  float kd, ki, kp;
   uint32_t cnt1, cnt2, diff1, diff2, tick;
 
   HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
@@ -1516,8 +1502,12 @@ void encoderA(void *argument)
 		  encoderTarget = encoderAVal <= encoderBVal ? encoderAVal : encoderBVal;
 		else if (angleCmd == 0 && encoderTarget != 0)
 		{
+		  kd = driveACmd == 'F' ? kdf : kdb;
+		  ki = driveACmd == 'F' ? kif : kib;
+		  kp = driveACmd == 'F' ? kpf : kpb;
+
 		  errorA = encoderTarget - encoderAVal;
-		  motorAVal += (int)(driveACmd == 'F' ? kpf * errorA + kdf * prevErrorA + kif * sumErrorA : kpb * errorA + kdb * prevErrorA + kib * sumErrorA);
+		  motorAVal += (int)(kp * errorA + kd * prevErrorA + ki * sumErrorA);
 		  prevErrorA = errorA;
 		  sumErrorA += errorA;
 		}
@@ -1540,6 +1530,7 @@ void encoderA(void *argument)
 void encoderB(void *argument)
 {
   /* USER CODE BEGIN encoderB */
+  float kd, ki, kp;
   uint32_t cnt1, cnt2, diff1, diff2, tick;
 
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
@@ -1573,8 +1564,12 @@ void encoderB(void *argument)
 		  encoderTarget = encoderAVal <= encoderBVal ? encoderAVal : encoderBVal;
 		else if (angleCmd == 0 && encoderTarget != 0)
 	    {
+	      kd = driveACmd == 'F' ? kdf : kdb;
+		  ki = driveACmd == 'F' ? kif : kib;
+		  kp = driveACmd == 'F' ? kpf : kpb;
+
 	      errorB = encoderTarget - encoderBVal;
-	  	  motorBVal += (int)(int)(driveACmd == 'F' ? kpf * errorB + kdf * prevErrorB + kif * sumErrorB : kpb * errorB + kdb * prevErrorB + kib * sumErrorB);
+	  	  motorBVal += (int)(kp * errorB + kd * prevErrorB + ki * sumErrorB);
 	  	  prevErrorB = errorB;
 	  	  sumErrorB += errorB;
 	    }
@@ -1597,35 +1592,30 @@ void encoderB(void *argument)
 void dispatch(void *argument)
 {
   /* USER CODE BEGIN dispatch */
-  char strCounter[5];
-  int cmdCounter;
-  uint8_t cmdType;
   /* Infinite loop */
   for(;;)
   {
 	if (cmdState == 1 && actionCounter <= fillCounter)
 	{
-	  cmdType = cmds[actionCounter][4];
-
-	  if (cmdType == 'F' || cmdType == 'B')
-		//celibate(cmds[actionCounter]);
-	    driveRobot(cmds[actionCounter]);
-	  else if (cmdType == 'L' || cmdType == 'R')
-	    turnRobot(cmds[actionCounter]);
-	  else if (cmdType == 'S')
-	    stopRobot();
-	  else if (cmdType == 'J')
+	  switch (cmds[actionCounter][4])
 	  {
-		strncpy(strCounter, (char*)(cmds[actionCounter] + 6), 4);
-		cmdCounter = atoi(strCounter);
+	  case 'F':
+	  case 'B':
+		driveRobot(cmds[actionCounter]);
+		break;
 
-		if (cmdCounter >= 0 && cmdCounter < 1000 && cmdCounter <= fillCounter)
-		  actionCounter = cmdCounter;
-	  }
-	  else if (cmdType == 'C')
+	  case 'L':
+	  case 'R':
+		turnRobot(cmds[actionCounter]);
+		break;
+
+	  case 'C':
 		cmdState = 2;
-	  else
+		break;
+
+	  default:
 		++actionCounter;
+	  }
 	}
 
 	osDelay(dispatchDelay);
@@ -1647,12 +1637,11 @@ void battery(void *argument)
   for(;;)
   {
 	if (batteryCounter > 4)
-	  for (batteryCounter = 0; batteryCounter < 4; ++batteryCounter)
-		batteryVal[batteryCounter] = batteryVal[batteryCounter + 1];
+	  valShift(batteryVal, 5);
 
 	HAL_ADC_Start(&hadc2);
 	HAL_ADC_PollForConversion(&hadc2, 0xFFFF);
-	batteryVal[batteryCounter++] = HAL_ADC_GetValue(&hadc2);
+	batteryVal[batteryCounter == 5 ? 4 : batteryCounter++] = HAL_ADC_GetValue(&hadc2);
 
 	osDelay(batteryDelay);
   }

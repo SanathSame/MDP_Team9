@@ -106,6 +106,8 @@ void Error_Handler(void);
 #define ENCODER_A2_GPIO_Port GPIOB
 #define ULTRA_TRIG_Pin GPIO_PIN_4
 #define ULTRA_TRIG_GPIO_Port GPIOB
+#define ENABLE_Pin GPIO_PIN_0
+#define ENABLE_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

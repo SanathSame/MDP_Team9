@@ -176,13 +176,13 @@ float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
 float irGrad, irInt, ultraGrad, ultraInt;
 
 int actionCounter, fillCounter;
-int maxMotorPWM, motorAVal, motorBVal, turnMotorPWM;
+int driveMotorPWM, maxMotorPWM, motorAVal, motorBVal, turnMotorPWM;
 int encoderAVal, encoderBVal, encoderTarget;
 int errorA, errorB, prevEncoderA, prevEncoderB;
 int robotAngle;
 
 uint8_t cmds[1000][20], cmdState, rxBuffer[20], txBuffer[20];
-uint8_t angleCmd, driveCmd, startDriving, startPID;
+uint8_t angleCmd, driveCmd, enablePID, startDriving, startPID;
 uint8_t batteryState[11];
 uint8_t ultraCapture;
 uint8_t profile;
@@ -247,6 +247,7 @@ int main(void)
   actionCounter = 0;
   fillCounter = -1;
 
+  driveMotorPWM = 9000;
   maxMotorPWM = 10000;
   turnMotorPWM = 3500;
 
@@ -260,6 +261,7 @@ int main(void)
 
   angleCmd = 0;
   driveCmd = 0;
+  enablePID = 0;
   startDriving = 0;
   startPID = 0;
 
@@ -929,6 +931,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(ULTRA_TRIG_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : ENABLE_Pin */
+  GPIO_InitStruct.Pin = ENABLE_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ENABLE_GPIO_Port, &GPIO_InitStruct);
+
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
@@ -1035,7 +1043,7 @@ void changeProfile()
 	rfGrad = 0.364677963587823;
 	rfInt = 1.011921094590065;
 
-	encoderTarget = 200;
+	encoderTarget = 130;
 
 	break;
 
@@ -1062,7 +1070,7 @@ void changeProfile()
 	rfGrad = 1;
 	rfInt = 0;
 
-	encoderTarget = 200;
+	encoderTarget = 130;
 
 	break;
 
@@ -1089,7 +1097,7 @@ void changeProfile()
 	rfGrad = 0.381832587414008;
 	rfInt = 2.05906630142695;
 
-	encoderTarget = 200;
+	encoderTarget = 130;
   }
 }
 
@@ -1121,10 +1129,10 @@ void driveRobot(uint8_t *cmd)
 	  iTermA = 0.0;
 	  iTermB = 0.0;
 
-	  startPID = 0; //1;
+	  startPID = HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin);
 
-	  motorAVal = 9000; //0;
-	  motorBVal = 9000; //0;
+	  motorAVal = startPID == 1 ? 0 : driveMotorPWM;
+	  motorBVal = motorAVal;
 	}
 	else
 	{
@@ -1227,48 +1235,51 @@ void turnRobot(uint8_t *cmd)
 void oled(void *argument)
 {
   /* USER CODE BEGIN 5 */
-  char strBuffer[20];
+  uint8_t strBuffer[20];
   /* Infinite loop */
   for(;;)
   {
-	sprintf(strBuffer, "%d", profile);
-	OLED_ShowString(0, 0, (uint8_t*)strBuffer);
+	sprintf((char*)strBuffer, "%d", profile);
+	OLED_ShowString(0, 0, strBuffer);
 
-	sprintf(strBuffer, "          ");
+	sprintf((char*)strBuffer, "%d", (int)HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin));
+	OLED_ShowString(0, 10, strBuffer);
+
+	sprintf((char*)strBuffer, "          ");
 
 	if (actionCounter <= fillCounter && bufferFilled(cmds[actionCounter], 10) == 1)
-      strncpy(strBuffer, (char*)cmds[actionCounter], 20);
+      strncpy((char*)strBuffer, (char*)cmds[actionCounter], 20);
 
-	OLED_ShowString(10, 0, (uint8_t*)strBuffer);
+	OLED_ShowString(10, 0, strBuffer);
 
-	//sprintf(strBuffer, "DistA: %-5d", (int)(distA + 0.5));
-    //sprintf(strBuffer, "MotorA: %-5d", (int)motorAVal);
-	sprintf(strBuffer, "EncA: %-5d", (int)encoderAVal);
-	//sprintf(strBuffer, "IR: %-5d", (int)(avgVal(irVal, irCounter, irGrad, irInt) + 0.5));
-	//sprintf(strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
-	//sprintf(strBuffer, "Tick1: %-5d", (int)tick1);
-	//sprintf(strBuffer, "TempA: %-5d", (int)tempA);
-	OLED_ShowString(10, 10, (uint8_t*)strBuffer);
+	//sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
+    //sprintf((char*)strBuffer, "MotorA: %-5d", (int)motorAVal);
+	sprintf((char*)strBuffer, "EncA: %-5d", (int)encoderAVal);
+	//sprintf((char*)strBuffer, "IR: %-5d", (int)(avgVal(irVal, irCounter, irGrad, irInt) + 0.5));
+	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
+	//sprintf((char*)strBuffer, "Tick1: %-5d", (int)tick1);
+	//sprintf((char*)strBuffer, "TempA: %-5d", (int)tempA);
+	OLED_ShowString(10, 10, strBuffer);
 
-	//sprintf(strBuffer, "DistB: %-5d", (int)(distB + 0.5));
-	//sprintf(strBuffer, "MotorB: %-5d", (int)motorBVal);
-	sprintf(strBuffer, "EncB: %-5d", (int)encoderBVal);
-	//sprintf(strBuffer, "Tick2: %-5d", (int)tick2);
-	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
-	//sprintf(strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
-	OLED_ShowString(10, 20, (uint8_t*)strBuffer);
+	//sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
+	//sprintf((char*)strBuffer, "MotorB: %-5d", (int)motorBVal);
+	sprintf((char*)strBuffer, "EncB: %-5d", (int)encoderBVal);
+	//sprintf((char*)strBuffer, "Tick2: %-5d", (int)tick2);
+	//sprintf((char*)strBuffer, "TempB: %-5d", (int)tempB);
+	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
+	OLED_ShowString(10, 20, strBuffer);
 
-	//sprintf(strBuffer, "Action: %-5d", (int)actionCounter);
-	sprintf(strBuffer, "DistA: %-5d", (int)(distA + 0.5));
-	//sprintf(strBuffer, "TempA: %-5d", (int)tempA);
-	//sprintf(strBuffer, "TempA: %-5d", (int)ultraCount1);
-	OLED_ShowString(10, 30, (uint8_t*)strBuffer);
+	//sprintf((char*)strBuffer, "Action: %-5d", (int)actionCounter);
+	sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
+	//sprintf((char*)strBuffer, "TempA: %-5d", (int)tempA);
+	//sprintf((char*)strBuffer, "TempA: %-5d", (int)ultraCount1);
+	OLED_ShowString(10, 30, strBuffer);
 
-	//sprintf(strBuffer, "Fill: %-5d", (int)fillCounter);
-	sprintf(strBuffer, "DistB: %-5d", (int)(distB + 0.5));
-	//sprintf(strBuffer, "TempB: %-5d", (int)tempB);
-	//sprintf(strBuffer, "TempA: %-5d", (int)ultraCount2);
-	OLED_ShowString(10, 40, (uint8_t*)strBuffer);
+	//sprintf((char*)strBuffer, "Fill: %-5d", (int)fillCounter);
+	sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
+	//sprintf((char*)strBuffer, "TempB: %-5d", (int)tempB);
+	//sprintf((char*)strBuffer, "TempA: %-5d", (int)ultraCount2);
+	OLED_ShowString(10, 40, strBuffer);
 
 	OLED_ShowString(10, 50, batteryState);
 
@@ -1463,8 +1474,11 @@ void battery(void *argument)
 	  sprintf((char*)batteryState, "Batt: Full");
 	else if (avgBattery > 1310)
 	  sprintf((char*)batteryState, "Batt: Norm");
-	else
+	else if (avgBattery > 1000)
 	  sprintf((char*)batteryState, "Batt: Chrg");
+	else
+	  sprintf((char*)batteryState, "Batt: Off");
+
 
 	osDelay(batteryDelay);
   }

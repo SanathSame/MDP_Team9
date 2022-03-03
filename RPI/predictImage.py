@@ -26,7 +26,7 @@ def predict(img_path: str):
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = cv2.GaussianBlur(img, (5, 5), 1)
     results = model(img)
-    results.render()
+    # results.render()
 
     # Extract ids, classnames and locations of the image
     # Note that results are sorted from highest confidence to lowest confidence
@@ -42,6 +42,42 @@ def predict(img_path: str):
         predicted_classnames = df[['name']].values.flatten()
         predicted_locations = df[['location']].values.flatten()
 
+        for index, row in results.pandas().xyxy[0].iterrows():
+            bounding_box_upper_left = (int(row['xmin']), int(row['ymin']))
+            bounding_box_lower_right = (int(row['xmax']), int(row['ymax']))
+            bounding_box_color = (255, 0, 0)
+            bounding_box_thickness = 3
+
+            text = "{} {}".format(predicted_ids[index], predicted_classnames[index])
+            text_position = bounding_box_upper_left
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 1
+            text_color = (255, 255, 255)
+            text_color_bg = bounding_box_color
+            font_thickness = 2
+
+            # Draw the bounding box onto the image
+            img = cv2.rectangle(img, bounding_box_upper_left, bounding_box_lower_right, bounding_box_color, bounding_box_thickness)
+            
+            text_size, _ = cv2.getTextSize(text, font, font_scale, font_thickness)
+            text_width, text_height = text_size
+            padding = 5 # Padding of text background box
+            img = cv2.rectangle(img, # Draw the background of the text
+                (text_position[0] - padding, text_position[1] - text_height - padding), 
+                (text_position[0] + text_width + padding, text_position[1] + padding), 
+                text_color_bg, -1
+            )
+            img = cv2.putText( # Write the label on the image
+                img,
+                text, 
+                text_position, 
+                font, 
+                font_scale, 
+                text_color, 
+                font_thickness
+            )
+
+        cv2.imwrite("RPI/images/a.jpeg", cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         result = ["IMG {} {} {}".format(predicted_id, predicted_classname, predicted_location) for predicted_id, predicted_classname, predicted_location in list(zip(predicted_ids, predicted_classnames, predicted_locations))]
     
     # Create PREDICTIONS_DIR if it does not exist
@@ -50,16 +86,17 @@ def predict(img_path: str):
 
     # Save image to PREDICTIONS_DIR
     counter = len(os.listdir(PREDICTIONS_DIR))
-    for img in results.imgs:
-        if len(result) == 0: 
-            # If image has no predictions, we append a NO_PREDICTION_PREFIX to 
-            # separate from images with predictions
-            image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, NO_PREDICTION_PREFIX, counter)
-        else:
-            image_name = '{}/{}.jpeg'.format(PREDICTIONS_DIR, counter)
-        
-        cv2.imwrite(image_name, img[...,::-1]) # Img in rgb, but cv2 expects bgr
-        counter += 1
+
+    # for img in results.imgs:
+    if len(result) == 0: 
+        # If image has no predictions, we append a NO_PREDICTION_PREFIX to 
+        # separate from images with predictions
+        image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, NO_PREDICTION_PREFIX, counter)
+    else:
+        image_name = '{}/{}.jpeg'.format(PREDICTIONS_DIR, counter)
+    
+    cv2.imwrite(image_name, cv2.cvtColor(img, cv2.COLOR_BGR2RGB)) # Img in rgb, but cv2 expects bgr
+    counter += 1
     
     # Any image that does not contain NO_PREDICTION_PREFIX or STITCHED_IMAGE_PREFIX and is not hidden (starts with .)
     images_to_stitch = [cv2.imread(os.path.join(PREDICTIONS_DIR, img)) for img in os.listdir(PREDICTIONS_DIR) if 
@@ -67,8 +104,6 @@ def predict(img_path: str):
         not img.startswith(".") and 
         not img.startswith(NO_PREDICTION_PREFIX)
     )]
-
-    print(len(images_to_stitch))
 
     # Stitch images and save the result
     stitch_images_and_save(images_to_stitch)

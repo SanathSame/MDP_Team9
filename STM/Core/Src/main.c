@@ -1079,11 +1079,11 @@ void changeProfile()
 	encoderInt = 1.08776618891631;
 
 	kdb = 0;
-	kdf = 0;
+	kdf = 2;
 	kib = 0;
-	kif = 0;
+	kif = 1;
 	kpb = 0;
-	kpf = 0;
+	kpf = 10;
 
 	distOffset = 4;
 	turnOffset = 1;
@@ -1174,6 +1174,10 @@ void pid(uint32_t dur)
 
 	motorAVal = (int)(kp * errorA - kd * (encoderAVal - prevEncoderA) + iTermA);
 	motorBVal = (int)(kp * errorB - kd * (encoderBVal - prevEncoderB) + iTermB);
+
+	uint8_t strBuffer[20];
+	sprintf((char*)strBuffer, "%-4d %-4d", motorAVal, motorBVal);
+	HAL_UART_Transmit(&huart3, strBuffer, 20, 0xFFFF);
 
 	prevEncoderA = encoderAVal;
 	prevEncoderB = encoderBVal;
@@ -1355,8 +1359,8 @@ void rpi(void *argument)
 
       strncpy(strCounter, (char*)cmds[actionCounter], 3);
       //sprintf((char*)txBuffer, "%d %d", (int)tempA, (int)tempB);
-      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C" : "Done %d", atoi(strCounter));
-      HAL_UART_Transmit(&huart3, txBuffer, 20, 0xFFFF);
+      //sprintf((char*)txBuffer, cmdType == 'C' ? "Done C" : "Done %d", atoi(strCounter));
+      //HAL_UART_Transmit(&huart3, txBuffer, 20, 0xFFFF);
 
       if (cmdType == 'C')
       {

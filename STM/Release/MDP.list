@@ -7,19 +7,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         00006d08  08000190  08000190  00010190  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       00000e08  08006e98  08006e98  00016e98  2**2
+  2 .rodata       00000e04  08006e98  08006e98  00016e98  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  08007ca0  08007ca0  00020074  2**0
+  3 .ARM.extab    00000000  08007c9c  08007c9c  00020074  2**0
                   CONTENTS
-  4 .ARM          00000008  08007ca0  08007ca0  00017ca0  2**2
+  4 .ARM          00000008  08007c9c  08007c9c  00017c9c  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  08007ca8  08007ca8  00020074  2**0
+  5 .preinit_array 00000000  08007ca4  08007ca4  00020074  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08007ca8  08007ca8  00017ca8  2**2
+  6 .init_array   00000004  08007ca4  08007ca4  00017ca4  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08007cac  08007cac  00017cac  2**2
+  7 .fini_array   00000004  08007ca8  08007ca8  00017ca8  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000074  20000000  08007cb0  00020000  2**2
+  8 .data         00000074  20000000  08007cac  00020000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
   9 .ccmram       00000000  10000000  10000000  00020074  2**0
                   CONTENTS
@@ -1069,1438 +1069,1439 @@ Disassembly of section .text:
  8000c58:	6818      	ldr	r0, [r3, #0]
  8000c5a:	f003 fdec 	bl	8004836 <osDelay>
  8000c5e:	e77f      	b.n	8000b60 <oled+0x8>
- 8000c60:	08006edd 	.word	0x08006edd
+ 8000c60:	08006e98 	.word	0x08006e98
  8000c64:	3fe00000 	.word	0x3fe00000
  8000c68:	20004c9a 	.word	0x20004c9a
  8000c6c:	40021000 	.word	0x40021000
- 8000c70:	08006e98 	.word	0x08006e98
+ 8000c70:	08006e9b 	.word	0x08006e9b
  8000c74:	20004c8c 	.word	0x20004c8c
  8000c78:	200049a8 	.word	0x200049a8
  8000c7c:	20004dc4 	.word	0x20004dc4
  8000c80:	20004d34 	.word	0x20004d34
- 8000c84:	08006ea3 	.word	0x08006ea3
+ 8000c84:	08006ea6 	.word	0x08006ea6
  8000c88:	20004b50 	.word	0x20004b50
- 8000c8c:	08006eae 	.word	0x08006eae
+ 8000c8c:	08006eb1 	.word	0x08006eb1
  8000c90:	20004c88 	.word	0x20004c88
- 8000c94:	08006eb9 	.word	0x08006eb9
+ 8000c94:	08006ebc 	.word	0x08006ebc
  8000c98:	20004d3c 	.word	0x20004d3c
- 8000c9c:	08006ec5 	.word	0x08006ec5
+ 8000c9c:	08006ec8 	.word	0x08006ec8
  8000ca0:	20004b40 	.word	0x20004b40
  8000ca4:	20004d2c 	.word	0x20004d2c
 
 08000ca8 <rpi>:
- 8000ca8:	e92d 4ff0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, fp, lr}
- 8000cac:	4f40      	ldr	r7, [pc, #256]	; (8000db0 <rpi+0x108>)
- 8000cae:	4e41      	ldr	r6, [pc, #260]	; (8000db4 <rpi+0x10c>)
- 8000cb0:	b085      	sub	sp, #20
- 8000cb2:	46b8      	mov	r8, r7
- 8000cb4:	220a      	movs	r2, #10
- 8000cb6:	4631      	mov	r1, r6
- 8000cb8:	483f      	ldr	r0, [pc, #252]	; (8000db8 <rpi+0x110>)
- 8000cba:	f003 fd2e 	bl	800471a <HAL_UART_Receive_IT>
- 8000cbe:	210a      	movs	r1, #10
- 8000cc0:	4630      	mov	r0, r6
- 8000cc2:	f7ff ff3d 	bl	8000b40 <bufferFilled>
- 8000cc6:	2801      	cmp	r0, #1
- 8000cc8:	d11c      	bne.n	8000d04 <rpi+0x5c>
- 8000cca:	2203      	movs	r2, #3
- 8000ccc:	4631      	mov	r1, r6
- 8000cce:	a803      	add	r0, sp, #12
- 8000cd0:	f005 fc34 	bl	800653c <strncpy>
- 8000cd4:	a803      	add	r0, sp, #12
- 8000cd6:	f005 fbc5 	bl	8006464 <atoi>
- 8000cda:	f5b0 7f7a 	cmp.w	r0, #1000	; 0x3e8
- 8000cde:	4604      	mov	r4, r0
- 8000ce0:	d20b      	bcs.n	8000cfa <rpi+0x52>
- 8000ce2:	4836      	ldr	r0, [pc, #216]	; (8000dbc <rpi+0x114>)
- 8000ce4:	2214      	movs	r2, #20
- 8000ce6:	fb02 0004 	mla	r0, r2, r4, r0
- 8000cea:	4631      	mov	r1, r6
- 8000cec:	f005 fc26 	bl	800653c <strncpy>
- 8000cf0:	4b33      	ldr	r3, [pc, #204]	; (8000dc0 <rpi+0x118>)
- 8000cf2:	681a      	ldr	r2, [r3, #0]
- 8000cf4:	42a2      	cmp	r2, r4
- 8000cf6:	bfb8      	it	lt
- 8000cf8:	601c      	strlt	r4, [r3, #0]
- 8000cfa:	2214      	movs	r2, #20
- 8000cfc:	2100      	movs	r1, #0
- 8000cfe:	4630      	mov	r0, r6
- 8000d00:	f005 fbec 	bl	80064dc <memset>
- 8000d04:	783b      	ldrb	r3, [r7, #0]
- 8000d06:	2b02      	cmp	r3, #2
- 8000d08:	d142      	bne.n	8000d90 <rpi+0xe8>
- 8000d0a:	f8df 90c8 	ldr.w	r9, [pc, #200]	; 8000dd4 <rpi+0x12c>
- 8000d0e:	4d2b      	ldr	r5, [pc, #172]	; (8000dbc <rpi+0x114>)
- 8000d10:	f8d9 1000 	ldr.w	r1, [r9]
- 8000d14:	f04f 0b14 	mov.w	fp, #20
- 8000d18:	fb0b 5101 	mla	r1, fp, r1, r5
- 8000d1c:	2203      	movs	r2, #3
- 8000d1e:	2400      	movs	r4, #0
- 8000d20:	a803      	add	r0, sp, #12
- 8000d22:	f891 a004 	ldrb.w	sl, [r1, #4]
- 8000d26:	703c      	strb	r4, [r7, #0]
- 8000d28:	f005 fc08 	bl	800653c <strncpy>
- 8000d2c:	4b25      	ldr	r3, [pc, #148]	; (8000dc4 <rpi+0x11c>)
- 8000d2e:	4926      	ldr	r1, [pc, #152]	; (8000dc8 <rpi+0x120>)
- 8000d30:	a803      	add	r0, sp, #12
- 8000d32:	f1ba 0f43 	cmp.w	sl, #67	; 0x43
- 8000d36:	bf18      	it	ne
- 8000d38:	4619      	movne	r1, r3
- 8000d3a:	9101      	str	r1, [sp, #4]
- 8000d3c:	f005 fb92 	bl	8006464 <atoi>
- 8000d40:	9901      	ldr	r1, [sp, #4]
- 8000d42:	4602      	mov	r2, r0
- 8000d44:	4821      	ldr	r0, [pc, #132]	; (8000dcc <rpi+0x124>)
- 8000d46:	f005 fbd1 	bl	80064ec <siprintf>
- 8000d4a:	4920      	ldr	r1, [pc, #128]	; (8000dcc <rpi+0x124>)
- 8000d4c:	481a      	ldr	r0, [pc, #104]	; (8000db8 <rpi+0x110>)
- 8000d4e:	f64f 73ff 	movw	r3, #65535	; 0xffff
- 8000d52:	465a      	mov	r2, fp
- 8000d54:	f003 fac4 	bl	80042e0 <HAL_UART_Transmit>
- 8000d58:	f1ba 0f43 	cmp.w	sl, #67	; 0x43
- 8000d5c:	d118      	bne.n	8000d90 <rpi+0xe8>
- 8000d5e:	4b18      	ldr	r3, [pc, #96]	; (8000dc0 <rpi+0x118>)
- 8000d60:	f8c9 4000 	str.w	r4, [r9]
- 8000d64:	f04f 32ff 	mov.w	r2, #4294967295
- 8000d68:	601a      	str	r2, [r3, #0]
- 8000d6a:	2301      	movs	r3, #1
- 8000d6c:	f888 3000 	strb.w	r3, [r8]
- 8000d70:	4628      	mov	r0, r5
- 8000d72:	2214      	movs	r2, #20
- 8000d74:	2100      	movs	r1, #0
- 8000d76:	3401      	adds	r4, #1
- 8000d78:	f005 fbb0 	bl	80064dc <memset>
- 8000d7c:	f5b4 7f7a 	cmp.w	r4, #1000	; 0x3e8
- 8000d80:	f105 0514 	add.w	r5, r5, #20
- 8000d84:	d1f4      	bne.n	8000d70 <rpi+0xc8>
- 8000d86:	4b12      	ldr	r3, [pc, #72]	; (8000dd0 <rpi+0x128>)
- 8000d88:	6818      	ldr	r0, [r3, #0]
- 8000d8a:	f003 fd54 	bl	8004836 <osDelay>
- 8000d8e:	e791      	b.n	8000cb4 <rpi+0xc>
- 8000d90:	f898 3000 	ldrb.w	r3, [r8]
- 8000d94:	2b00      	cmp	r3, #0
- 8000d96:	d1f6      	bne.n	8000d86 <rpi+0xde>
- 8000d98:	4a0e      	ldr	r2, [pc, #56]	; (8000dd4 <rpi+0x12c>)
- 8000d9a:	4909      	ldr	r1, [pc, #36]	; (8000dc0 <rpi+0x118>)
- 8000d9c:	6813      	ldr	r3, [r2, #0]
- 8000d9e:	6809      	ldr	r1, [r1, #0]
- 8000da0:	428b      	cmp	r3, r1
- 8000da2:	bfdf      	itttt	le
- 8000da4:	2101      	movle	r1, #1
- 8000da6:	185b      	addle	r3, r3, r1
- 8000da8:	f888 1000 	strble.w	r1, [r8]
- 8000dac:	6013      	strle	r3, [r2, #0]
- 8000dae:	e7ea      	b.n	8000d86 <rpi+0xde>
- 8000db0:	20004dac 	.word	0x20004dac
- 8000db4:	20004cac 	.word	0x20004cac
- 8000db8:	20004a98 	.word	0x20004a98
- 8000dbc:	20004dc4 	.word	0x20004dc4
- 8000dc0:	200049a8 	.word	0x200049a8
- 8000dc4:	08006ed8 	.word	0x08006ed8
- 8000dc8:	08006ed1 	.word	0x08006ed1
- 8000dcc:	20004d10 	.word	0x20004d10
- 8000dd0:	20004adc 	.word	0x20004adc
- 8000dd4:	20004c8c 	.word	0x20004c8c
+ 8000ca8:	e92d 47f3 	stmdb	sp!, {r0, r1, r4, r5, r6, r7, r8, r9, sl, lr}
+ 8000cac:	4f34      	ldr	r7, [pc, #208]	; (8000d80 <rpi+0xd8>)
+ 8000cae:	4e35      	ldr	r6, [pc, #212]	; (8000d84 <rpi+0xdc>)
+ 8000cb0:	46b8      	mov	r8, r7
+ 8000cb2:	220a      	movs	r2, #10
+ 8000cb4:	4631      	mov	r1, r6
+ 8000cb6:	4834      	ldr	r0, [pc, #208]	; (8000d88 <rpi+0xe0>)
+ 8000cb8:	f003 fd2f 	bl	800471a <HAL_UART_Receive_IT>
+ 8000cbc:	210a      	movs	r1, #10
+ 8000cbe:	4630      	mov	r0, r6
+ 8000cc0:	f7ff ff3e 	bl	8000b40 <bufferFilled>
+ 8000cc4:	2801      	cmp	r0, #1
+ 8000cc6:	d11c      	bne.n	8000d02 <rpi+0x5a>
+ 8000cc8:	2203      	movs	r2, #3
+ 8000cca:	4631      	mov	r1, r6
+ 8000ccc:	a801      	add	r0, sp, #4
+ 8000cce:	f005 fc35 	bl	800653c <strncpy>
+ 8000cd2:	a801      	add	r0, sp, #4
+ 8000cd4:	f005 fbc6 	bl	8006464 <atoi>
+ 8000cd8:	f5b0 7f7a 	cmp.w	r0, #1000	; 0x3e8
+ 8000cdc:	4604      	mov	r4, r0
+ 8000cde:	d20b      	bcs.n	8000cf8 <rpi+0x50>
+ 8000ce0:	482a      	ldr	r0, [pc, #168]	; (8000d8c <rpi+0xe4>)
+ 8000ce2:	2214      	movs	r2, #20
+ 8000ce4:	fb02 0004 	mla	r0, r2, r4, r0
+ 8000ce8:	4631      	mov	r1, r6
+ 8000cea:	f005 fc27 	bl	800653c <strncpy>
+ 8000cee:	4b28      	ldr	r3, [pc, #160]	; (8000d90 <rpi+0xe8>)
+ 8000cf0:	681a      	ldr	r2, [r3, #0]
+ 8000cf2:	42a2      	cmp	r2, r4
+ 8000cf4:	bfb8      	it	lt
+ 8000cf6:	601c      	strlt	r4, [r3, #0]
+ 8000cf8:	2214      	movs	r2, #20
+ 8000cfa:	2100      	movs	r1, #0
+ 8000cfc:	4630      	mov	r0, r6
+ 8000cfe:	f005 fbed 	bl	80064dc <memset>
+ 8000d02:	783b      	ldrb	r3, [r7, #0]
+ 8000d04:	2b02      	cmp	r3, #2
+ 8000d06:	d131      	bne.n	8000d6c <rpi+0xc4>
+ 8000d08:	f8df 9088 	ldr.w	r9, [pc, #136]	; 8000d94 <rpi+0xec>
+ 8000d0c:	4d1f      	ldr	r5, [pc, #124]	; (8000d8c <rpi+0xe4>)
+ 8000d0e:	f8d9 1000 	ldr.w	r1, [r9]
+ 8000d12:	2314      	movs	r3, #20
+ 8000d14:	fb03 5101 	mla	r1, r3, r1, r5
+ 8000d18:	2400      	movs	r4, #0
+ 8000d1a:	f891 a004 	ldrb.w	sl, [r1, #4]
+ 8000d1e:	703c      	strb	r4, [r7, #0]
+ 8000d20:	2203      	movs	r2, #3
+ 8000d22:	a801      	add	r0, sp, #4
+ 8000d24:	f005 fc0a 	bl	800653c <strncpy>
+ 8000d28:	f1ba 0f43 	cmp.w	sl, #67	; 0x43
+ 8000d2c:	d00a      	beq.n	8000d44 <rpi+0x9c>
+ 8000d2e:	4a19      	ldr	r2, [pc, #100]	; (8000d94 <rpi+0xec>)
+ 8000d30:	4917      	ldr	r1, [pc, #92]	; (8000d90 <rpi+0xe8>)
+ 8000d32:	6813      	ldr	r3, [r2, #0]
+ 8000d34:	6809      	ldr	r1, [r1, #0]
+ 8000d36:	428b      	cmp	r3, r1
+ 8000d38:	dd1b      	ble.n	8000d72 <rpi+0xca>
+ 8000d3a:	4b17      	ldr	r3, [pc, #92]	; (8000d98 <rpi+0xf0>)
+ 8000d3c:	6818      	ldr	r0, [r3, #0]
+ 8000d3e:	f003 fd7a 	bl	8004836 <osDelay>
+ 8000d42:	e7b6      	b.n	8000cb2 <rpi+0xa>
+ 8000d44:	4b12      	ldr	r3, [pc, #72]	; (8000d90 <rpi+0xe8>)
+ 8000d46:	f8c9 4000 	str.w	r4, [r9]
+ 8000d4a:	f04f 32ff 	mov.w	r2, #4294967295
+ 8000d4e:	601a      	str	r2, [r3, #0]
+ 8000d50:	2301      	movs	r3, #1
+ 8000d52:	703b      	strb	r3, [r7, #0]
+ 8000d54:	4628      	mov	r0, r5
+ 8000d56:	2214      	movs	r2, #20
+ 8000d58:	2100      	movs	r1, #0
+ 8000d5a:	3401      	adds	r4, #1
+ 8000d5c:	f005 fbbe 	bl	80064dc <memset>
+ 8000d60:	f5b4 7f7a 	cmp.w	r4, #1000	; 0x3e8
+ 8000d64:	f105 0514 	add.w	r5, r5, #20
+ 8000d68:	d1f4      	bne.n	8000d54 <rpi+0xac>
+ 8000d6a:	e7e6      	b.n	8000d3a <rpi+0x92>
+ 8000d6c:	2b00      	cmp	r3, #0
+ 8000d6e:	d0de      	beq.n	8000d2e <rpi+0x86>
+ 8000d70:	e7e3      	b.n	8000d3a <rpi+0x92>
+ 8000d72:	2101      	movs	r1, #1
+ 8000d74:	440b      	add	r3, r1
+ 8000d76:	f888 1000 	strb.w	r1, [r8]
+ 8000d7a:	6013      	str	r3, [r2, #0]
+ 8000d7c:	e7dd      	b.n	8000d3a <rpi+0x92>
+ 8000d7e:	bf00      	nop
+ 8000d80:	20004dac 	.word	0x20004dac
+ 8000d84:	20004cac 	.word	0x20004cac
+ 8000d88:	20004a98 	.word	0x20004a98
+ 8000d8c:	20004dc4 	.word	0x20004dc4
+ 8000d90:	200049a8 	.word	0x200049a8
+ 8000d94:	20004c8c 	.word	0x20004c8c
+ 8000d98:	20004adc 	.word	0x20004adc
 
-08000dd8 <microDelay>:
- 8000dd8:	4b03      	ldr	r3, [pc, #12]	; (8000de8 <microDelay+0x10>)
- 8000dda:	681b      	ldr	r3, [r3, #0]
- 8000ddc:	2200      	movs	r2, #0
- 8000dde:	625a      	str	r2, [r3, #36]	; 0x24
- 8000de0:	6a5a      	ldr	r2, [r3, #36]	; 0x24
- 8000de2:	4282      	cmp	r2, r0
- 8000de4:	d3fc      	bcc.n	8000de0 <microDelay+0x8>
- 8000de6:	4770      	bx	lr
- 8000de8:	20004b60 	.word	0x20004b60
+08000d9c <microDelay>:
+ 8000d9c:	4b03      	ldr	r3, [pc, #12]	; (8000dac <microDelay+0x10>)
+ 8000d9e:	681b      	ldr	r3, [r3, #0]
+ 8000da0:	2200      	movs	r2, #0
+ 8000da2:	625a      	str	r2, [r3, #36]	; 0x24
+ 8000da4:	6a5a      	ldr	r2, [r3, #36]	; 0x24
+ 8000da6:	4282      	cmp	r2, r0
+ 8000da8:	d3fc      	bcc.n	8000da4 <microDelay+0x8>
+ 8000daa:	4770      	bx	lr
+ 8000dac:	20004b60 	.word	0x20004b60
 
-08000dec <ultra>:
- 8000dec:	b508      	push	{r3, lr}
- 8000dee:	2108      	movs	r1, #8
- 8000df0:	480f      	ldr	r0, [pc, #60]	; (8000e30 <ultra+0x44>)
- 8000df2:	4c10      	ldr	r4, [pc, #64]	; (8000e34 <ultra+0x48>)
- 8000df4:	4d0e      	ldr	r5, [pc, #56]	; (8000e30 <ultra+0x44>)
- 8000df6:	f003 f899 	bl	8003f2c <HAL_TIM_IC_Start_IT>
- 8000dfa:	480f      	ldr	r0, [pc, #60]	; (8000e38 <ultra+0x4c>)
- 8000dfc:	f002 fb0e 	bl	800341c <HAL_TIM_Base_Start>
- 8000e00:	2201      	movs	r2, #1
- 8000e02:	2110      	movs	r1, #16
- 8000e04:	4620      	mov	r0, r4
- 8000e06:	f001 ffaf 	bl	8002d68 <HAL_GPIO_WritePin>
- 8000e0a:	200a      	movs	r0, #10
- 8000e0c:	f7ff ffe4 	bl	8000dd8 <microDelay>
- 8000e10:	4620      	mov	r0, r4
- 8000e12:	2200      	movs	r2, #0
- 8000e14:	2110      	movs	r1, #16
- 8000e16:	f001 ffa7 	bl	8002d68 <HAL_GPIO_WritePin>
- 8000e1a:	682a      	ldr	r2, [r5, #0]
- 8000e1c:	68d3      	ldr	r3, [r2, #12]
- 8000e1e:	f043 0308 	orr.w	r3, r3, #8
- 8000e22:	60d3      	str	r3, [r2, #12]
- 8000e24:	4b05      	ldr	r3, [pc, #20]	; (8000e3c <ultra+0x50>)
- 8000e26:	6818      	ldr	r0, [r3, #0]
- 8000e28:	f003 fd05 	bl	8004836 <osDelay>
- 8000e2c:	e7e8      	b.n	8000e00 <ultra+0x14>
- 8000e2e:	bf00      	nop
- 8000e30:	20004a44 	.word	0x20004a44
- 8000e34:	40020400 	.word	0x40020400
- 8000e38:	20004b60 	.word	0x20004b60
- 8000e3c:	20004dc0 	.word	0x20004dc0
+08000db0 <ultra>:
+ 8000db0:	b508      	push	{r3, lr}
+ 8000db2:	2108      	movs	r1, #8
+ 8000db4:	480f      	ldr	r0, [pc, #60]	; (8000df4 <ultra+0x44>)
+ 8000db6:	4c10      	ldr	r4, [pc, #64]	; (8000df8 <ultra+0x48>)
+ 8000db8:	4d0e      	ldr	r5, [pc, #56]	; (8000df4 <ultra+0x44>)
+ 8000dba:	f003 f8b7 	bl	8003f2c <HAL_TIM_IC_Start_IT>
+ 8000dbe:	480f      	ldr	r0, [pc, #60]	; (8000dfc <ultra+0x4c>)
+ 8000dc0:	f002 fb2c 	bl	800341c <HAL_TIM_Base_Start>
+ 8000dc4:	2201      	movs	r2, #1
+ 8000dc6:	2110      	movs	r1, #16
+ 8000dc8:	4620      	mov	r0, r4
+ 8000dca:	f001 ffcd 	bl	8002d68 <HAL_GPIO_WritePin>
+ 8000dce:	200a      	movs	r0, #10
+ 8000dd0:	f7ff ffe4 	bl	8000d9c <microDelay>
+ 8000dd4:	4620      	mov	r0, r4
+ 8000dd6:	2200      	movs	r2, #0
+ 8000dd8:	2110      	movs	r1, #16
+ 8000dda:	f001 ffc5 	bl	8002d68 <HAL_GPIO_WritePin>
+ 8000dde:	682a      	ldr	r2, [r5, #0]
+ 8000de0:	68d3      	ldr	r3, [r2, #12]
+ 8000de2:	f043 0308 	orr.w	r3, r3, #8
+ 8000de6:	60d3      	str	r3, [r2, #12]
+ 8000de8:	4b05      	ldr	r3, [pc, #20]	; (8000e00 <ultra+0x50>)
+ 8000dea:	6818      	ldr	r0, [r3, #0]
+ 8000dec:	f003 fd23 	bl	8004836 <osDelay>
+ 8000df0:	e7e8      	b.n	8000dc4 <ultra+0x14>
+ 8000df2:	bf00      	nop
+ 8000df4:	20004a44 	.word	0x20004a44
+ 8000df8:	40020400 	.word	0x40020400
+ 8000dfc:	20004b60 	.word	0x20004b60
+ 8000e00:	20004dc0 	.word	0x20004dc0
 
-08000e40 <valShift>:
- 8000e40:	1d03      	adds	r3, r0, #4
- 8000e42:	eb00 0181 	add.w	r1, r0, r1, lsl #2
- 8000e46:	428b      	cmp	r3, r1
- 8000e48:	d100      	bne.n	8000e4c <valShift+0xc>
- 8000e4a:	4770      	bx	lr
- 8000e4c:	f853 2b04 	ldr.w	r2, [r3], #4
- 8000e50:	f843 2c08 	str.w	r2, [r3, #-8]
- 8000e54:	e7f7      	b.n	8000e46 <valShift+0x6>
+08000e04 <valShift>:
+ 8000e04:	1d03      	adds	r3, r0, #4
+ 8000e06:	eb00 0181 	add.w	r1, r0, r1, lsl #2
+ 8000e0a:	428b      	cmp	r3, r1
+ 8000e0c:	d100      	bne.n	8000e10 <valShift+0xc>
+ 8000e0e:	4770      	bx	lr
+ 8000e10:	f853 2b04 	ldr.w	r2, [r3], #4
+ 8000e14:	f843 2c08 	str.w	r2, [r3, #-8]
+ 8000e18:	e7f7      	b.n	8000e0a <valShift+0x6>
 	...
 
-08000e58 <HAL_TIM_IC_CaptureCallback>:
- 8000e58:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 8000e5a:	4a1e      	ldr	r2, [pc, #120]	; (8000ed4 <HAL_TIM_IC_CaptureCallback+0x7c>)
- 8000e5c:	6803      	ldr	r3, [r0, #0]
- 8000e5e:	4293      	cmp	r3, r2
- 8000e60:	4604      	mov	r4, r0
- 8000e62:	d111      	bne.n	8000e88 <HAL_TIM_IC_CaptureCallback+0x30>
- 8000e64:	7f02      	ldrb	r2, [r0, #28]
- 8000e66:	2a04      	cmp	r2, #4
- 8000e68:	d10e      	bne.n	8000e88 <HAL_TIM_IC_CaptureCallback+0x30>
- 8000e6a:	4a1b      	ldr	r2, [pc, #108]	; (8000ed8 <HAL_TIM_IC_CaptureCallback+0x80>)
- 8000e6c:	7811      	ldrb	r1, [r2, #0]
- 8000e6e:	4616      	mov	r6, r2
- 8000e70:	b959      	cbnz	r1, 8000e8a <HAL_TIM_IC_CaptureCallback+0x32>
- 8000e72:	6259      	str	r1, [r3, #36]	; 0x24
- 8000e74:	6a19      	ldr	r1, [r3, #32]
- 8000e76:	f421 6120 	bic.w	r1, r1, #2560	; 0xa00
- 8000e7a:	6219      	str	r1, [r3, #32]
- 8000e7c:	6a19      	ldr	r1, [r3, #32]
- 8000e7e:	f441 7100 	orr.w	r1, r1, #512	; 0x200
- 8000e82:	6219      	str	r1, [r3, #32]
- 8000e84:	2301      	movs	r3, #1
- 8000e86:	7013      	strb	r3, [r2, #0]
- 8000e88:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
- 8000e8a:	4d14      	ldr	r5, [pc, #80]	; (8000edc <HAL_TIM_IC_CaptureCallback+0x84>)
- 8000e8c:	2108      	movs	r1, #8
- 8000e8e:	f002 fb56 	bl	800353e <HAL_TIM_ReadCapturedValue>
- 8000e92:	682b      	ldr	r3, [r5, #0]
- 8000e94:	2b04      	cmp	r3, #4
- 8000e96:	4607      	mov	r7, r0
- 8000e98:	d903      	bls.n	8000ea2 <HAL_TIM_IC_CaptureCallback+0x4a>
- 8000e9a:	4811      	ldr	r0, [pc, #68]	; (8000ee0 <HAL_TIM_IC_CaptureCallback+0x88>)
- 8000e9c:	2105      	movs	r1, #5
- 8000e9e:	f7ff ffcf 	bl	8000e40 <valShift>
- 8000ea2:	682b      	ldr	r3, [r5, #0]
- 8000ea4:	2b05      	cmp	r3, #5
- 8000ea6:	bf16      	itet	ne
- 8000ea8:	1c5a      	addne	r2, r3, #1
- 8000eaa:	2304      	moveq	r3, #4
- 8000eac:	602a      	strne	r2, [r5, #0]
- 8000eae:	4a0c      	ldr	r2, [pc, #48]	; (8000ee0 <HAL_TIM_IC_CaptureCallback+0x88>)
- 8000eb0:	f842 7023 	str.w	r7, [r2, r3, lsl #2]
- 8000eb4:	6823      	ldr	r3, [r4, #0]
- 8000eb6:	6a1a      	ldr	r2, [r3, #32]
- 8000eb8:	f422 6220 	bic.w	r2, r2, #2560	; 0xa00
- 8000ebc:	621a      	str	r2, [r3, #32]
- 8000ebe:	6a1a      	ldr	r2, [r3, #32]
- 8000ec0:	621a      	str	r2, [r3, #32]
- 8000ec2:	4b08      	ldr	r3, [pc, #32]	; (8000ee4 <HAL_TIM_IC_CaptureCallback+0x8c>)
- 8000ec4:	681a      	ldr	r2, [r3, #0]
- 8000ec6:	68d3      	ldr	r3, [r2, #12]
- 8000ec8:	f023 0308 	bic.w	r3, r3, #8
- 8000ecc:	60d3      	str	r3, [r2, #12]
- 8000ece:	2300      	movs	r3, #0
- 8000ed0:	7033      	strb	r3, [r6, #0]
- 8000ed2:	e7d9      	b.n	8000e88 <HAL_TIM_IC_CaptureCallback+0x30>
- 8000ed4:	40000800 	.word	0x40000800
- 8000ed8:	20004c99 	.word	0x20004c99
- 8000edc:	200049c8 	.word	0x200049c8
- 8000ee0:	20004ba8 	.word	0x20004ba8
- 8000ee4:	20004a44 	.word	0x20004a44
+08000e1c <HAL_TIM_IC_CaptureCallback>:
+ 8000e1c:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000e1e:	4a1e      	ldr	r2, [pc, #120]	; (8000e98 <HAL_TIM_IC_CaptureCallback+0x7c>)
+ 8000e20:	6803      	ldr	r3, [r0, #0]
+ 8000e22:	4293      	cmp	r3, r2
+ 8000e24:	4604      	mov	r4, r0
+ 8000e26:	d111      	bne.n	8000e4c <HAL_TIM_IC_CaptureCallback+0x30>
+ 8000e28:	7f02      	ldrb	r2, [r0, #28]
+ 8000e2a:	2a04      	cmp	r2, #4
+ 8000e2c:	d10e      	bne.n	8000e4c <HAL_TIM_IC_CaptureCallback+0x30>
+ 8000e2e:	4a1b      	ldr	r2, [pc, #108]	; (8000e9c <HAL_TIM_IC_CaptureCallback+0x80>)
+ 8000e30:	7811      	ldrb	r1, [r2, #0]
+ 8000e32:	4616      	mov	r6, r2
+ 8000e34:	b959      	cbnz	r1, 8000e4e <HAL_TIM_IC_CaptureCallback+0x32>
+ 8000e36:	6259      	str	r1, [r3, #36]	; 0x24
+ 8000e38:	6a19      	ldr	r1, [r3, #32]
+ 8000e3a:	f421 6120 	bic.w	r1, r1, #2560	; 0xa00
+ 8000e3e:	6219      	str	r1, [r3, #32]
+ 8000e40:	6a19      	ldr	r1, [r3, #32]
+ 8000e42:	f441 7100 	orr.w	r1, r1, #512	; 0x200
+ 8000e46:	6219      	str	r1, [r3, #32]
+ 8000e48:	2301      	movs	r3, #1
+ 8000e4a:	7013      	strb	r3, [r2, #0]
+ 8000e4c:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
+ 8000e4e:	4d14      	ldr	r5, [pc, #80]	; (8000ea0 <HAL_TIM_IC_CaptureCallback+0x84>)
+ 8000e50:	2108      	movs	r1, #8
+ 8000e52:	f002 fb74 	bl	800353e <HAL_TIM_ReadCapturedValue>
+ 8000e56:	682b      	ldr	r3, [r5, #0]
+ 8000e58:	2b04      	cmp	r3, #4
+ 8000e5a:	4607      	mov	r7, r0
+ 8000e5c:	d903      	bls.n	8000e66 <HAL_TIM_IC_CaptureCallback+0x4a>
+ 8000e5e:	4811      	ldr	r0, [pc, #68]	; (8000ea4 <HAL_TIM_IC_CaptureCallback+0x88>)
+ 8000e60:	2105      	movs	r1, #5
+ 8000e62:	f7ff ffcf 	bl	8000e04 <valShift>
+ 8000e66:	682b      	ldr	r3, [r5, #0]
+ 8000e68:	2b05      	cmp	r3, #5
+ 8000e6a:	bf16      	itet	ne
+ 8000e6c:	1c5a      	addne	r2, r3, #1
+ 8000e6e:	2304      	moveq	r3, #4
+ 8000e70:	602a      	strne	r2, [r5, #0]
+ 8000e72:	4a0c      	ldr	r2, [pc, #48]	; (8000ea4 <HAL_TIM_IC_CaptureCallback+0x88>)
+ 8000e74:	f842 7023 	str.w	r7, [r2, r3, lsl #2]
+ 8000e78:	6823      	ldr	r3, [r4, #0]
+ 8000e7a:	6a1a      	ldr	r2, [r3, #32]
+ 8000e7c:	f422 6220 	bic.w	r2, r2, #2560	; 0xa00
+ 8000e80:	621a      	str	r2, [r3, #32]
+ 8000e82:	6a1a      	ldr	r2, [r3, #32]
+ 8000e84:	621a      	str	r2, [r3, #32]
+ 8000e86:	4b08      	ldr	r3, [pc, #32]	; (8000ea8 <HAL_TIM_IC_CaptureCallback+0x8c>)
+ 8000e88:	681a      	ldr	r2, [r3, #0]
+ 8000e8a:	68d3      	ldr	r3, [r2, #12]
+ 8000e8c:	f023 0308 	bic.w	r3, r3, #8
+ 8000e90:	60d3      	str	r3, [r2, #12]
+ 8000e92:	2300      	movs	r3, #0
+ 8000e94:	7033      	strb	r3, [r6, #0]
+ 8000e96:	e7d9      	b.n	8000e4c <HAL_TIM_IC_CaptureCallback+0x30>
+ 8000e98:	40000800 	.word	0x40000800
+ 8000e9c:	20004c99 	.word	0x20004c99
+ 8000ea0:	200049c8 	.word	0x200049c8
+ 8000ea4:	20004ba8 	.word	0x20004ba8
+ 8000ea8:	20004a44 	.word	0x20004a44
 
-08000ee8 <ir>:
- 8000ee8:	b580      	push	{r7, lr}
- 8000eea:	4e11      	ldr	r6, [pc, #68]	; (8000f30 <ir+0x48>)
- 8000eec:	4f11      	ldr	r7, [pc, #68]	; (8000f34 <ir+0x4c>)
- 8000eee:	4d12      	ldr	r5, [pc, #72]	; (8000f38 <ir+0x50>)
- 8000ef0:	6833      	ldr	r3, [r6, #0]
- 8000ef2:	2b04      	cmp	r3, #4
- 8000ef4:	d903      	bls.n	8000efe <ir+0x16>
- 8000ef6:	2105      	movs	r1, #5
- 8000ef8:	4638      	mov	r0, r7
- 8000efa:	f7ff ffa1 	bl	8000e40 <valShift>
- 8000efe:	4628      	mov	r0, r5
- 8000f00:	f001 fc28 	bl	8002754 <HAL_ADC_Start>
- 8000f04:	f64f 71ff 	movw	r1, #65535	; 0xffff
- 8000f08:	4628      	mov	r0, r5
- 8000f0a:	f001 fca7 	bl	800285c <HAL_ADC_PollForConversion>
- 8000f0e:	6834      	ldr	r4, [r6, #0]
- 8000f10:	2c05      	cmp	r4, #5
- 8000f12:	bf18      	it	ne
- 8000f14:	1c63      	addne	r3, r4, #1
- 8000f16:	4628      	mov	r0, r5
- 8000f18:	bf14      	ite	ne
- 8000f1a:	6033      	strne	r3, [r6, #0]
- 8000f1c:	2404      	moveq	r4, #4
- 8000f1e:	f001 fcf0 	bl	8002902 <HAL_ADC_GetValue>
- 8000f22:	4b06      	ldr	r3, [pc, #24]	; (8000f3c <ir+0x54>)
- 8000f24:	f847 0024 	str.w	r0, [r7, r4, lsl #2]
- 8000f28:	6818      	ldr	r0, [r3, #0]
- 8000f2a:	f003 fc84 	bl	8004836 <osDelay>
- 8000f2e:	e7df      	b.n	8000ef0 <ir+0x8>
- 8000f30:	20004d44 	.word	0x20004d44
- 8000f34:	200049dc 	.word	0x200049dc
- 8000f38:	20004c20 	.word	0x20004c20
- 8000f3c:	20004c7c 	.word	0x20004c7c
+08000eac <ir>:
+ 8000eac:	b580      	push	{r7, lr}
+ 8000eae:	4e11      	ldr	r6, [pc, #68]	; (8000ef4 <ir+0x48>)
+ 8000eb0:	4f11      	ldr	r7, [pc, #68]	; (8000ef8 <ir+0x4c>)
+ 8000eb2:	4d12      	ldr	r5, [pc, #72]	; (8000efc <ir+0x50>)
+ 8000eb4:	6833      	ldr	r3, [r6, #0]
+ 8000eb6:	2b04      	cmp	r3, #4
+ 8000eb8:	d903      	bls.n	8000ec2 <ir+0x16>
+ 8000eba:	2105      	movs	r1, #5
+ 8000ebc:	4638      	mov	r0, r7
+ 8000ebe:	f7ff ffa1 	bl	8000e04 <valShift>
+ 8000ec2:	4628      	mov	r0, r5
+ 8000ec4:	f001 fc46 	bl	8002754 <HAL_ADC_Start>
+ 8000ec8:	f64f 71ff 	movw	r1, #65535	; 0xffff
+ 8000ecc:	4628      	mov	r0, r5
+ 8000ece:	f001 fcc5 	bl	800285c <HAL_ADC_PollForConversion>
+ 8000ed2:	6834      	ldr	r4, [r6, #0]
+ 8000ed4:	2c05      	cmp	r4, #5
+ 8000ed6:	bf18      	it	ne
+ 8000ed8:	1c63      	addne	r3, r4, #1
+ 8000eda:	4628      	mov	r0, r5
+ 8000edc:	bf14      	ite	ne
+ 8000ede:	6033      	strne	r3, [r6, #0]
+ 8000ee0:	2404      	moveq	r4, #4
+ 8000ee2:	f001 fd0e 	bl	8002902 <HAL_ADC_GetValue>
+ 8000ee6:	4b06      	ldr	r3, [pc, #24]	; (8000f00 <ir+0x54>)
+ 8000ee8:	f847 0024 	str.w	r0, [r7, r4, lsl #2]
+ 8000eec:	6818      	ldr	r0, [r3, #0]
+ 8000eee:	f003 fca2 	bl	8004836 <osDelay>
+ 8000ef2:	e7df      	b.n	8000eb4 <ir+0x8>
+ 8000ef4:	20004d44 	.word	0x20004d44
+ 8000ef8:	200049dc 	.word	0x200049dc
+ 8000efc:	20004c20 	.word	0x20004c20
+ 8000f00:	20004c7c 	.word	0x20004c7c
 
-08000f40 <battery>:
- 8000f40:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
- 8000f42:	4c24      	ldr	r4, [pc, #144]	; (8000fd4 <battery+0x94>)
- 8000f44:	4f24      	ldr	r7, [pc, #144]	; (8000fd8 <battery+0x98>)
- 8000f46:	4e25      	ldr	r6, [pc, #148]	; (8000fdc <battery+0x9c>)
- 8000f48:	6823      	ldr	r3, [r4, #0]
- 8000f4a:	2b04      	cmp	r3, #4
- 8000f4c:	d903      	bls.n	8000f56 <battery+0x16>
- 8000f4e:	2105      	movs	r1, #5
- 8000f50:	4638      	mov	r0, r7
- 8000f52:	f7ff ff75 	bl	8000e40 <valShift>
- 8000f56:	4630      	mov	r0, r6
- 8000f58:	f001 fbfc 	bl	8002754 <HAL_ADC_Start>
- 8000f5c:	f64f 71ff 	movw	r1, #65535	; 0xffff
- 8000f60:	4630      	mov	r0, r6
- 8000f62:	f001 fc7b 	bl	800285c <HAL_ADC_PollForConversion>
- 8000f66:	6825      	ldr	r5, [r4, #0]
- 8000f68:	2d05      	cmp	r5, #5
- 8000f6a:	bf18      	it	ne
- 8000f6c:	1c6b      	addne	r3, r5, #1
- 8000f6e:	4630      	mov	r0, r6
- 8000f70:	bf0c      	ite	eq
- 8000f72:	2504      	moveq	r5, #4
- 8000f74:	6023      	strne	r3, [r4, #0]
- 8000f76:	f001 fcc4 	bl	8002902 <HAL_ADC_GetValue>
- 8000f7a:	eddf 0a19 	vldr	s1, [pc, #100]	; 8000fe0 <battery+0xa0>
- 8000f7e:	f847 0025 	str.w	r0, [r7, r5, lsl #2]
- 8000f82:	6821      	ldr	r1, [r4, #0]
- 8000f84:	4814      	ldr	r0, [pc, #80]	; (8000fd8 <battery+0x98>)
- 8000f86:	eeb7 0a00 	vmov.f32	s0, #112	; 0x3f800000  1.0
- 8000f8a:	f7ff fdbb 	bl	8000b04 <avgVal>
- 8000f8e:	eddf 7a15 	vldr	s15, [pc, #84]	; 8000fe4 <battery+0xa4>
- 8000f92:	eeb4 0ae7 	vcmpe.f32	s0, s15
- 8000f96:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8000f9a:	dd08      	ble.n	8000fae <battery+0x6e>
- 8000f9c:	4912      	ldr	r1, [pc, #72]	; (8000fe8 <battery+0xa8>)
- 8000f9e:	4813      	ldr	r0, [pc, #76]	; (8000fec <battery+0xac>)
- 8000fa0:	f005 fac4 	bl	800652c <strcpy>
- 8000fa4:	4b12      	ldr	r3, [pc, #72]	; (8000ff0 <battery+0xb0>)
- 8000fa6:	6818      	ldr	r0, [r3, #0]
- 8000fa8:	f003 fc45 	bl	8004836 <osDelay>
- 8000fac:	e7cc      	b.n	8000f48 <battery+0x8>
- 8000fae:	eddf 7a11 	vldr	s15, [pc, #68]	; 8000ff4 <battery+0xb4>
- 8000fb2:	eeb4 0ae7 	vcmpe.f32	s0, s15
- 8000fb6:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8000fba:	dd01      	ble.n	8000fc0 <battery+0x80>
- 8000fbc:	490e      	ldr	r1, [pc, #56]	; (8000ff8 <battery+0xb8>)
- 8000fbe:	e7ee      	b.n	8000f9e <battery+0x5e>
- 8000fc0:	eddf 7a0e 	vldr	s15, [pc, #56]	; 8000ffc <battery+0xbc>
- 8000fc4:	eeb4 0ae7 	vcmpe.f32	s0, s15
- 8000fc8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8000fcc:	bfcc      	ite	gt
- 8000fce:	490c      	ldrgt	r1, [pc, #48]	; (8001000 <battery+0xc0>)
- 8000fd0:	490c      	ldrle	r1, [pc, #48]	; (8001004 <battery+0xc4>)
- 8000fd2:	e7e4      	b.n	8000f9e <battery+0x5e>
- 8000fd4:	20004c9c 	.word	0x20004c9c
- 8000fd8:	20004d50 	.word	0x20004d50
- 8000fdc:	20004ae0 	.word	0x20004ae0
- 8000fe0:	00000000 	.word	0x00000000
- 8000fe4:	44aa0000 	.word	0x44aa0000
- 8000fe8:	08006ee0 	.word	0x08006ee0
- 8000fec:	20004b40 	.word	0x20004b40
- 8000ff0:	20004d08 	.word	0x20004d08
- 8000ff4:	44a3c000 	.word	0x44a3c000
- 8000ff8:	08006eeb 	.word	0x08006eeb
- 8000ffc:	447a0000 	.word	0x447a0000
- 8001000:	08006ef6 	.word	0x08006ef6
- 8001004:	08006f01 	.word	0x08006f01
+08000f04 <battery>:
+ 8000f04:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000f06:	4c24      	ldr	r4, [pc, #144]	; (8000f98 <battery+0x94>)
+ 8000f08:	4f24      	ldr	r7, [pc, #144]	; (8000f9c <battery+0x98>)
+ 8000f0a:	4e25      	ldr	r6, [pc, #148]	; (8000fa0 <battery+0x9c>)
+ 8000f0c:	6823      	ldr	r3, [r4, #0]
+ 8000f0e:	2b04      	cmp	r3, #4
+ 8000f10:	d903      	bls.n	8000f1a <battery+0x16>
+ 8000f12:	2105      	movs	r1, #5
+ 8000f14:	4638      	mov	r0, r7
+ 8000f16:	f7ff ff75 	bl	8000e04 <valShift>
+ 8000f1a:	4630      	mov	r0, r6
+ 8000f1c:	f001 fc1a 	bl	8002754 <HAL_ADC_Start>
+ 8000f20:	f64f 71ff 	movw	r1, #65535	; 0xffff
+ 8000f24:	4630      	mov	r0, r6
+ 8000f26:	f001 fc99 	bl	800285c <HAL_ADC_PollForConversion>
+ 8000f2a:	6825      	ldr	r5, [r4, #0]
+ 8000f2c:	2d05      	cmp	r5, #5
+ 8000f2e:	bf18      	it	ne
+ 8000f30:	1c6b      	addne	r3, r5, #1
+ 8000f32:	4630      	mov	r0, r6
+ 8000f34:	bf0c      	ite	eq
+ 8000f36:	2504      	moveq	r5, #4
+ 8000f38:	6023      	strne	r3, [r4, #0]
+ 8000f3a:	f001 fce2 	bl	8002902 <HAL_ADC_GetValue>
+ 8000f3e:	eddf 0a19 	vldr	s1, [pc, #100]	; 8000fa4 <battery+0xa0>
+ 8000f42:	f847 0025 	str.w	r0, [r7, r5, lsl #2]
+ 8000f46:	6821      	ldr	r1, [r4, #0]
+ 8000f48:	4814      	ldr	r0, [pc, #80]	; (8000f9c <battery+0x98>)
+ 8000f4a:	eeb7 0a00 	vmov.f32	s0, #112	; 0x3f800000  1.0
+ 8000f4e:	f7ff fdd9 	bl	8000b04 <avgVal>
+ 8000f52:	eddf 7a15 	vldr	s15, [pc, #84]	; 8000fa8 <battery+0xa4>
+ 8000f56:	eeb4 0ae7 	vcmpe.f32	s0, s15
+ 8000f5a:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8000f5e:	dd08      	ble.n	8000f72 <battery+0x6e>
+ 8000f60:	4912      	ldr	r1, [pc, #72]	; (8000fac <battery+0xa8>)
+ 8000f62:	4813      	ldr	r0, [pc, #76]	; (8000fb0 <battery+0xac>)
+ 8000f64:	f005 fae2 	bl	800652c <strcpy>
+ 8000f68:	4b12      	ldr	r3, [pc, #72]	; (8000fb4 <battery+0xb0>)
+ 8000f6a:	6818      	ldr	r0, [r3, #0]
+ 8000f6c:	f003 fc63 	bl	8004836 <osDelay>
+ 8000f70:	e7cc      	b.n	8000f0c <battery+0x8>
+ 8000f72:	eddf 7a11 	vldr	s15, [pc, #68]	; 8000fb8 <battery+0xb4>
+ 8000f76:	eeb4 0ae7 	vcmpe.f32	s0, s15
+ 8000f7a:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8000f7e:	dd01      	ble.n	8000f84 <battery+0x80>
+ 8000f80:	490e      	ldr	r1, [pc, #56]	; (8000fbc <battery+0xb8>)
+ 8000f82:	e7ee      	b.n	8000f62 <battery+0x5e>
+ 8000f84:	eddf 7a0e 	vldr	s15, [pc, #56]	; 8000fc0 <battery+0xbc>
+ 8000f88:	eeb4 0ae7 	vcmpe.f32	s0, s15
+ 8000f8c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8000f90:	bfcc      	ite	gt
+ 8000f92:	490c      	ldrgt	r1, [pc, #48]	; (8000fc4 <battery+0xc0>)
+ 8000f94:	490c      	ldrle	r1, [pc, #48]	; (8000fc8 <battery+0xc4>)
+ 8000f96:	e7e4      	b.n	8000f62 <battery+0x5e>
+ 8000f98:	20004c9c 	.word	0x20004c9c
+ 8000f9c:	20004d50 	.word	0x20004d50
+ 8000fa0:	20004ae0 	.word	0x20004ae0
+ 8000fa4:	00000000 	.word	0x00000000
+ 8000fa8:	44aa0000 	.word	0x44aa0000
+ 8000fac:	08006ed4 	.word	0x08006ed4
+ 8000fb0:	20004b40 	.word	0x20004b40
+ 8000fb4:	20004d08 	.word	0x20004d08
+ 8000fb8:	44a3c000 	.word	0x44a3c000
+ 8000fbc:	08006edf 	.word	0x08006edf
+ 8000fc0:	447a0000 	.word	0x447a0000
+ 8000fc4:	08006eea 	.word	0x08006eea
+ 8000fc8:	08006ef5 	.word	0x08006ef5
 
-08001008 <changeProfile>:
- 8001008:	4b50      	ldr	r3, [pc, #320]	; (800114c <changeProfile+0x144>)
- 800100a:	781b      	ldrb	r3, [r3, #0]
- 800100c:	2b01      	cmp	r3, #1
- 800100e:	d03c      	beq.n	800108a <changeProfile+0x82>
- 8001010:	2b02      	cmp	r3, #2
- 8001012:	d068      	beq.n	80010e6 <changeProfile+0xde>
- 8001014:	2b00      	cmp	r3, #0
- 8001016:	d165      	bne.n	80010e4 <changeProfile+0xdc>
- 8001018:	4b4d      	ldr	r3, [pc, #308]	; (8001150 <changeProfile+0x148>)
- 800101a:	4a4e      	ldr	r2, [pc, #312]	; (8001154 <changeProfile+0x14c>)
- 800101c:	601a      	str	r2, [r3, #0]
- 800101e:	4b4e      	ldr	r3, [pc, #312]	; (8001158 <changeProfile+0x150>)
- 8001020:	4a4e      	ldr	r2, [pc, #312]	; (800115c <changeProfile+0x154>)
- 8001022:	601a      	str	r2, [r3, #0]
- 8001024:	4a4e      	ldr	r2, [pc, #312]	; (8001160 <changeProfile+0x158>)
- 8001026:	494f      	ldr	r1, [pc, #316]	; (8001164 <changeProfile+0x15c>)
- 8001028:	f04f 4380 	mov.w	r3, #1073741824	; 0x40000000
- 800102c:	6013      	str	r3, [r2, #0]
- 800102e:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
- 8001032:	600a      	str	r2, [r1, #0]
- 8001034:	494c      	ldr	r1, [pc, #304]	; (8001168 <changeProfile+0x160>)
- 8001036:	600a      	str	r2, [r1, #0]
- 8001038:	4a4c      	ldr	r2, [pc, #304]	; (800116c <changeProfile+0x164>)
- 800103a:	6013      	str	r3, [r2, #0]
- 800103c:	4b4c      	ldr	r3, [pc, #304]	; (8001170 <changeProfile+0x168>)
- 800103e:	f04f 4282 	mov.w	r2, #1090519040	; 0x41000000
- 8001042:	601a      	str	r2, [r3, #0]
- 8001044:	4b4b      	ldr	r3, [pc, #300]	; (8001174 <changeProfile+0x16c>)
- 8001046:	4a4c      	ldr	r2, [pc, #304]	; (8001178 <changeProfile+0x170>)
- 8001048:	601a      	str	r2, [r3, #0]
- 800104a:	4b4c      	ldr	r3, [pc, #304]	; (800117c <changeProfile+0x174>)
- 800104c:	4a4c      	ldr	r2, [pc, #304]	; (8001180 <changeProfile+0x178>)
- 800104e:	601a      	str	r2, [r3, #0]
- 8001050:	4b4c      	ldr	r3, [pc, #304]	; (8001184 <changeProfile+0x17c>)
- 8001052:	f04f 527c 	mov.w	r2, #1056964608	; 0x3f000000
- 8001056:	601a      	str	r2, [r3, #0]
- 8001058:	4b4b      	ldr	r3, [pc, #300]	; (8001188 <changeProfile+0x180>)
- 800105a:	4a4c      	ldr	r2, [pc, #304]	; (800118c <changeProfile+0x184>)
- 800105c:	601a      	str	r2, [r3, #0]
- 800105e:	4b4c      	ldr	r3, [pc, #304]	; (8001190 <changeProfile+0x188>)
- 8001060:	4a4c      	ldr	r2, [pc, #304]	; (8001194 <changeProfile+0x18c>)
- 8001062:	601a      	str	r2, [r3, #0]
- 8001064:	4b4c      	ldr	r3, [pc, #304]	; (8001198 <changeProfile+0x190>)
- 8001066:	4a4d      	ldr	r2, [pc, #308]	; (800119c <changeProfile+0x194>)
- 8001068:	601a      	str	r2, [r3, #0]
- 800106a:	4b4d      	ldr	r3, [pc, #308]	; (80011a0 <changeProfile+0x198>)
- 800106c:	4a4d      	ldr	r2, [pc, #308]	; (80011a4 <changeProfile+0x19c>)
- 800106e:	601a      	str	r2, [r3, #0]
- 8001070:	4b4d      	ldr	r3, [pc, #308]	; (80011a8 <changeProfile+0x1a0>)
- 8001072:	4a4e      	ldr	r2, [pc, #312]	; (80011ac <changeProfile+0x1a4>)
- 8001074:	601a      	str	r2, [r3, #0]
- 8001076:	4b4e      	ldr	r3, [pc, #312]	; (80011b0 <changeProfile+0x1a8>)
- 8001078:	4a4e      	ldr	r2, [pc, #312]	; (80011b4 <changeProfile+0x1ac>)
- 800107a:	601a      	str	r2, [r3, #0]
- 800107c:	4b4e      	ldr	r3, [pc, #312]	; (80011b8 <changeProfile+0x1b0>)
- 800107e:	4a4f      	ldr	r2, [pc, #316]	; (80011bc <changeProfile+0x1b4>)
- 8001080:	601a      	str	r2, [r3, #0]
- 8001082:	4b4f      	ldr	r3, [pc, #316]	; (80011c0 <changeProfile+0x1b8>)
- 8001084:	4a4f      	ldr	r2, [pc, #316]	; (80011c4 <changeProfile+0x1bc>)
- 8001086:	601a      	str	r2, [r3, #0]
- 8001088:	e029      	b.n	80010de <changeProfile+0xd6>
- 800108a:	4b31      	ldr	r3, [pc, #196]	; (8001150 <changeProfile+0x148>)
- 800108c:	4a4e      	ldr	r2, [pc, #312]	; (80011c8 <changeProfile+0x1c0>)
- 800108e:	601a      	str	r2, [r3, #0]
- 8001090:	4b31      	ldr	r3, [pc, #196]	; (8001158 <changeProfile+0x150>)
- 8001092:	4a4e      	ldr	r2, [pc, #312]	; (80011cc <changeProfile+0x1c4>)
- 8001094:	601a      	str	r2, [r3, #0]
- 8001096:	4a32      	ldr	r2, [pc, #200]	; (8001160 <changeProfile+0x158>)
- 8001098:	4939      	ldr	r1, [pc, #228]	; (8001180 <changeProfile+0x178>)
- 800109a:	2300      	movs	r3, #0
- 800109c:	6013      	str	r3, [r2, #0]
- 800109e:	4a31      	ldr	r2, [pc, #196]	; (8001164 <changeProfile+0x15c>)
+08000fcc <changeProfile>:
+ 8000fcc:	4b52      	ldr	r3, [pc, #328]	; (8001118 <changeProfile+0x14c>)
+ 8000fce:	781b      	ldrb	r3, [r3, #0]
+ 8000fd0:	2b01      	cmp	r3, #1
+ 8000fd2:	d03c      	beq.n	800104e <changeProfile+0x82>
+ 8000fd4:	2b02      	cmp	r3, #2
+ 8000fd6:	d068      	beq.n	80010aa <changeProfile+0xde>
+ 8000fd8:	2b00      	cmp	r3, #0
+ 8000fda:	d165      	bne.n	80010a8 <changeProfile+0xdc>
+ 8000fdc:	4b4f      	ldr	r3, [pc, #316]	; (800111c <changeProfile+0x150>)
+ 8000fde:	4a50      	ldr	r2, [pc, #320]	; (8001120 <changeProfile+0x154>)
+ 8000fe0:	601a      	str	r2, [r3, #0]
+ 8000fe2:	4b50      	ldr	r3, [pc, #320]	; (8001124 <changeProfile+0x158>)
+ 8000fe4:	4a50      	ldr	r2, [pc, #320]	; (8001128 <changeProfile+0x15c>)
+ 8000fe6:	601a      	str	r2, [r3, #0]
+ 8000fe8:	4a50      	ldr	r2, [pc, #320]	; (800112c <changeProfile+0x160>)
+ 8000fea:	4951      	ldr	r1, [pc, #324]	; (8001130 <changeProfile+0x164>)
+ 8000fec:	f04f 4380 	mov.w	r3, #1073741824	; 0x40000000
+ 8000ff0:	6013      	str	r3, [r2, #0]
+ 8000ff2:	f04f 527f 	mov.w	r2, #1069547520	; 0x3fc00000
+ 8000ff6:	600a      	str	r2, [r1, #0]
+ 8000ff8:	494e      	ldr	r1, [pc, #312]	; (8001134 <changeProfile+0x168>)
+ 8000ffa:	600a      	str	r2, [r1, #0]
+ 8000ffc:	4a4e      	ldr	r2, [pc, #312]	; (8001138 <changeProfile+0x16c>)
+ 8000ffe:	6013      	str	r3, [r2, #0]
+ 8001000:	4b4e      	ldr	r3, [pc, #312]	; (800113c <changeProfile+0x170>)
+ 8001002:	f04f 4282 	mov.w	r2, #1090519040	; 0x41000000
+ 8001006:	601a      	str	r2, [r3, #0]
+ 8001008:	4b4d      	ldr	r3, [pc, #308]	; (8001140 <changeProfile+0x174>)
+ 800100a:	4a4e      	ldr	r2, [pc, #312]	; (8001144 <changeProfile+0x178>)
+ 800100c:	601a      	str	r2, [r3, #0]
+ 800100e:	4b4e      	ldr	r3, [pc, #312]	; (8001148 <changeProfile+0x17c>)
+ 8001010:	4a4e      	ldr	r2, [pc, #312]	; (800114c <changeProfile+0x180>)
+ 8001012:	601a      	str	r2, [r3, #0]
+ 8001014:	4b4e      	ldr	r3, [pc, #312]	; (8001150 <changeProfile+0x184>)
+ 8001016:	f04f 527c 	mov.w	r2, #1056964608	; 0x3f000000
+ 800101a:	601a      	str	r2, [r3, #0]
+ 800101c:	4b4d      	ldr	r3, [pc, #308]	; (8001154 <changeProfile+0x188>)
+ 800101e:	4a4e      	ldr	r2, [pc, #312]	; (8001158 <changeProfile+0x18c>)
+ 8001020:	601a      	str	r2, [r3, #0]
+ 8001022:	4b4e      	ldr	r3, [pc, #312]	; (800115c <changeProfile+0x190>)
+ 8001024:	4a4e      	ldr	r2, [pc, #312]	; (8001160 <changeProfile+0x194>)
+ 8001026:	601a      	str	r2, [r3, #0]
+ 8001028:	4b4e      	ldr	r3, [pc, #312]	; (8001164 <changeProfile+0x198>)
+ 800102a:	4a4f      	ldr	r2, [pc, #316]	; (8001168 <changeProfile+0x19c>)
+ 800102c:	601a      	str	r2, [r3, #0]
+ 800102e:	4b4f      	ldr	r3, [pc, #316]	; (800116c <changeProfile+0x1a0>)
+ 8001030:	4a4f      	ldr	r2, [pc, #316]	; (8001170 <changeProfile+0x1a4>)
+ 8001032:	601a      	str	r2, [r3, #0]
+ 8001034:	4b4f      	ldr	r3, [pc, #316]	; (8001174 <changeProfile+0x1a8>)
+ 8001036:	4a50      	ldr	r2, [pc, #320]	; (8001178 <changeProfile+0x1ac>)
+ 8001038:	601a      	str	r2, [r3, #0]
+ 800103a:	4b50      	ldr	r3, [pc, #320]	; (800117c <changeProfile+0x1b0>)
+ 800103c:	4a50      	ldr	r2, [pc, #320]	; (8001180 <changeProfile+0x1b4>)
+ 800103e:	601a      	str	r2, [r3, #0]
+ 8001040:	4b50      	ldr	r3, [pc, #320]	; (8001184 <changeProfile+0x1b8>)
+ 8001042:	4a51      	ldr	r2, [pc, #324]	; (8001188 <changeProfile+0x1bc>)
+ 8001044:	601a      	str	r2, [r3, #0]
+ 8001046:	4b51      	ldr	r3, [pc, #324]	; (800118c <changeProfile+0x1c0>)
+ 8001048:	4a51      	ldr	r2, [pc, #324]	; (8001190 <changeProfile+0x1c4>)
+ 800104a:	601a      	str	r2, [r3, #0]
+ 800104c:	e029      	b.n	80010a2 <changeProfile+0xd6>
+ 800104e:	4b33      	ldr	r3, [pc, #204]	; (800111c <changeProfile+0x150>)
+ 8001050:	4a50      	ldr	r2, [pc, #320]	; (8001194 <changeProfile+0x1c8>)
+ 8001052:	601a      	str	r2, [r3, #0]
+ 8001054:	4b33      	ldr	r3, [pc, #204]	; (8001124 <changeProfile+0x158>)
+ 8001056:	4a50      	ldr	r2, [pc, #320]	; (8001198 <changeProfile+0x1cc>)
+ 8001058:	601a      	str	r2, [r3, #0]
+ 800105a:	4a34      	ldr	r2, [pc, #208]	; (800112c <changeProfile+0x160>)
+ 800105c:	493b      	ldr	r1, [pc, #236]	; (800114c <changeProfile+0x180>)
+ 800105e:	2300      	movs	r3, #0
+ 8001060:	6013      	str	r3, [r2, #0]
+ 8001062:	4a33      	ldr	r2, [pc, #204]	; (8001130 <changeProfile+0x164>)
+ 8001064:	6013      	str	r3, [r2, #0]
+ 8001066:	4a33      	ldr	r2, [pc, #204]	; (8001134 <changeProfile+0x168>)
+ 8001068:	6013      	str	r3, [r2, #0]
+ 800106a:	4a33      	ldr	r2, [pc, #204]	; (8001138 <changeProfile+0x16c>)
+ 800106c:	6013      	str	r3, [r2, #0]
+ 800106e:	4a33      	ldr	r2, [pc, #204]	; (800113c <changeProfile+0x170>)
+ 8001070:	6013      	str	r3, [r2, #0]
+ 8001072:	4a33      	ldr	r2, [pc, #204]	; (8001140 <changeProfile+0x174>)
+ 8001074:	6013      	str	r3, [r2, #0]
+ 8001076:	4a34      	ldr	r2, [pc, #208]	; (8001148 <changeProfile+0x17c>)
+ 8001078:	6011      	str	r1, [r2, #0]
+ 800107a:	4a35      	ldr	r2, [pc, #212]	; (8001150 <changeProfile+0x184>)
+ 800107c:	4935      	ldr	r1, [pc, #212]	; (8001154 <changeProfile+0x188>)
+ 800107e:	6013      	str	r3, [r2, #0]
+ 8001080:	f04f 527e 	mov.w	r2, #1065353216	; 0x3f800000
+ 8001084:	600a      	str	r2, [r1, #0]
+ 8001086:	4935      	ldr	r1, [pc, #212]	; (800115c <changeProfile+0x190>)
+ 8001088:	600b      	str	r3, [r1, #0]
+ 800108a:	4936      	ldr	r1, [pc, #216]	; (8001164 <changeProfile+0x198>)
+ 800108c:	600a      	str	r2, [r1, #0]
+ 800108e:	4937      	ldr	r1, [pc, #220]	; (800116c <changeProfile+0x1a0>)
+ 8001090:	600b      	str	r3, [r1, #0]
+ 8001092:	4938      	ldr	r1, [pc, #224]	; (8001174 <changeProfile+0x1a8>)
+ 8001094:	600a      	str	r2, [r1, #0]
+ 8001096:	4939      	ldr	r1, [pc, #228]	; (800117c <changeProfile+0x1b0>)
+ 8001098:	600b      	str	r3, [r1, #0]
+ 800109a:	493a      	ldr	r1, [pc, #232]	; (8001184 <changeProfile+0x1b8>)
+ 800109c:	600a      	str	r2, [r1, #0]
+ 800109e:	4a3b      	ldr	r2, [pc, #236]	; (800118c <changeProfile+0x1c0>)
  80010a0:	6013      	str	r3, [r2, #0]
- 80010a2:	4a31      	ldr	r2, [pc, #196]	; (8001168 <changeProfile+0x160>)
- 80010a4:	6013      	str	r3, [r2, #0]
- 80010a6:	4a31      	ldr	r2, [pc, #196]	; (800116c <changeProfile+0x164>)
- 80010a8:	6013      	str	r3, [r2, #0]
- 80010aa:	4a31      	ldr	r2, [pc, #196]	; (8001170 <changeProfile+0x168>)
- 80010ac:	6013      	str	r3, [r2, #0]
- 80010ae:	4a31      	ldr	r2, [pc, #196]	; (8001174 <changeProfile+0x16c>)
- 80010b0:	6013      	str	r3, [r2, #0]
- 80010b2:	4a32      	ldr	r2, [pc, #200]	; (800117c <changeProfile+0x174>)
- 80010b4:	6011      	str	r1, [r2, #0]
- 80010b6:	4a33      	ldr	r2, [pc, #204]	; (8001184 <changeProfile+0x17c>)
- 80010b8:	4933      	ldr	r1, [pc, #204]	; (8001188 <changeProfile+0x180>)
+ 80010a2:	4b3e      	ldr	r3, [pc, #248]	; (800119c <changeProfile+0x1d0>)
+ 80010a4:	2282      	movs	r2, #130	; 0x82
+ 80010a6:	601a      	str	r2, [r3, #0]
+ 80010a8:	4770      	bx	lr
+ 80010aa:	4b1c      	ldr	r3, [pc, #112]	; (800111c <changeProfile+0x150>)
+ 80010ac:	4a3c      	ldr	r2, [pc, #240]	; (80011a0 <changeProfile+0x1d4>)
+ 80010ae:	601a      	str	r2, [r3, #0]
+ 80010b0:	4b1c      	ldr	r3, [pc, #112]	; (8001124 <changeProfile+0x158>)
+ 80010b2:	4a3c      	ldr	r2, [pc, #240]	; (80011a4 <changeProfile+0x1d8>)
+ 80010b4:	601a      	str	r2, [r3, #0]
+ 80010b6:	4a1d      	ldr	r2, [pc, #116]	; (800112c <changeProfile+0x160>)
+ 80010b8:	2300      	movs	r3, #0
  80010ba:	6013      	str	r3, [r2, #0]
- 80010bc:	f04f 527e 	mov.w	r2, #1065353216	; 0x3f800000
- 80010c0:	600a      	str	r2, [r1, #0]
- 80010c2:	4933      	ldr	r1, [pc, #204]	; (8001190 <changeProfile+0x188>)
- 80010c4:	600b      	str	r3, [r1, #0]
- 80010c6:	4934      	ldr	r1, [pc, #208]	; (8001198 <changeProfile+0x190>)
- 80010c8:	600a      	str	r2, [r1, #0]
- 80010ca:	4935      	ldr	r1, [pc, #212]	; (80011a0 <changeProfile+0x198>)
- 80010cc:	600b      	str	r3, [r1, #0]
- 80010ce:	4936      	ldr	r1, [pc, #216]	; (80011a8 <changeProfile+0x1a0>)
- 80010d0:	600a      	str	r2, [r1, #0]
- 80010d2:	4937      	ldr	r1, [pc, #220]	; (80011b0 <changeProfile+0x1a8>)
- 80010d4:	600b      	str	r3, [r1, #0]
- 80010d6:	4938      	ldr	r1, [pc, #224]	; (80011b8 <changeProfile+0x1b0>)
- 80010d8:	600a      	str	r2, [r1, #0]
- 80010da:	4a39      	ldr	r2, [pc, #228]	; (80011c0 <changeProfile+0x1b8>)
- 80010dc:	6013      	str	r3, [r2, #0]
- 80010de:	4b3c      	ldr	r3, [pc, #240]	; (80011d0 <changeProfile+0x1c8>)
- 80010e0:	22c8      	movs	r2, #200	; 0xc8
- 80010e2:	601a      	str	r2, [r3, #0]
- 80010e4:	4770      	bx	lr
- 80010e6:	4b1a      	ldr	r3, [pc, #104]	; (8001150 <changeProfile+0x148>)
- 80010e8:	4a3a      	ldr	r2, [pc, #232]	; (80011d4 <changeProfile+0x1cc>)
+ 80010bc:	4a1c      	ldr	r2, [pc, #112]	; (8001130 <changeProfile+0x164>)
+ 80010be:	f04f 4180 	mov.w	r1, #1073741824	; 0x40000000
+ 80010c2:	6011      	str	r1, [r2, #0]
+ 80010c4:	4a1b      	ldr	r2, [pc, #108]	; (8001134 <changeProfile+0x168>)
+ 80010c6:	491c      	ldr	r1, [pc, #112]	; (8001138 <changeProfile+0x16c>)
+ 80010c8:	6013      	str	r3, [r2, #0]
+ 80010ca:	f04f 527e 	mov.w	r2, #1065353216	; 0x3f800000
+ 80010ce:	600a      	str	r2, [r1, #0]
+ 80010d0:	491a      	ldr	r1, [pc, #104]	; (800113c <changeProfile+0x170>)
+ 80010d2:	600b      	str	r3, [r1, #0]
+ 80010d4:	4b1a      	ldr	r3, [pc, #104]	; (8001140 <changeProfile+0x174>)
+ 80010d6:	4934      	ldr	r1, [pc, #208]	; (80011a8 <changeProfile+0x1dc>)
+ 80010d8:	6019      	str	r1, [r3, #0]
+ 80010da:	4b1b      	ldr	r3, [pc, #108]	; (8001148 <changeProfile+0x17c>)
+ 80010dc:	f04f 4181 	mov.w	r1, #1082130432	; 0x40800000
+ 80010e0:	6019      	str	r1, [r3, #0]
+ 80010e2:	4b1b      	ldr	r3, [pc, #108]	; (8001150 <changeProfile+0x184>)
+ 80010e4:	601a      	str	r2, [r3, #0]
+ 80010e6:	4b1b      	ldr	r3, [pc, #108]	; (8001154 <changeProfile+0x188>)
+ 80010e8:	4a30      	ldr	r2, [pc, #192]	; (80011ac <changeProfile+0x1e0>)
  80010ea:	601a      	str	r2, [r3, #0]
- 80010ec:	4b1a      	ldr	r3, [pc, #104]	; (8001158 <changeProfile+0x150>)
- 80010ee:	4a3a      	ldr	r2, [pc, #232]	; (80011d8 <changeProfile+0x1d0>)
+ 80010ec:	4b1b      	ldr	r3, [pc, #108]	; (800115c <changeProfile+0x190>)
+ 80010ee:	4a30      	ldr	r2, [pc, #192]	; (80011b0 <changeProfile+0x1e4>)
  80010f0:	601a      	str	r2, [r3, #0]
- 80010f2:	4a1b      	ldr	r2, [pc, #108]	; (8001160 <changeProfile+0x158>)
- 80010f4:	2300      	movs	r3, #0
- 80010f6:	6013      	str	r3, [r2, #0]
- 80010f8:	4a1a      	ldr	r2, [pc, #104]	; (8001164 <changeProfile+0x15c>)
- 80010fa:	6013      	str	r3, [r2, #0]
- 80010fc:	4a1a      	ldr	r2, [pc, #104]	; (8001168 <changeProfile+0x160>)
- 80010fe:	6013      	str	r3, [r2, #0]
- 8001100:	4a1a      	ldr	r2, [pc, #104]	; (800116c <changeProfile+0x164>)
- 8001102:	6013      	str	r3, [r2, #0]
- 8001104:	4a1a      	ldr	r2, [pc, #104]	; (8001170 <changeProfile+0x168>)
- 8001106:	6013      	str	r3, [r2, #0]
- 8001108:	4a1a      	ldr	r2, [pc, #104]	; (8001174 <changeProfile+0x16c>)
- 800110a:	6013      	str	r3, [r2, #0]
- 800110c:	4b1b      	ldr	r3, [pc, #108]	; (800117c <changeProfile+0x174>)
- 800110e:	f04f 4281 	mov.w	r2, #1082130432	; 0x40800000
- 8001112:	601a      	str	r2, [r3, #0]
- 8001114:	4b1b      	ldr	r3, [pc, #108]	; (8001184 <changeProfile+0x17c>)
- 8001116:	f04f 527e 	mov.w	r2, #1065353216	; 0x3f800000
- 800111a:	601a      	str	r2, [r3, #0]
- 800111c:	4b1a      	ldr	r3, [pc, #104]	; (8001188 <changeProfile+0x180>)
- 800111e:	4a2f      	ldr	r2, [pc, #188]	; (80011dc <changeProfile+0x1d4>)
- 8001120:	601a      	str	r2, [r3, #0]
- 8001122:	4b1b      	ldr	r3, [pc, #108]	; (8001190 <changeProfile+0x188>)
- 8001124:	4a2e      	ldr	r2, [pc, #184]	; (80011e0 <changeProfile+0x1d8>)
- 8001126:	601a      	str	r2, [r3, #0]
- 8001128:	4b1b      	ldr	r3, [pc, #108]	; (8001198 <changeProfile+0x190>)
- 800112a:	4a2e      	ldr	r2, [pc, #184]	; (80011e4 <changeProfile+0x1dc>)
- 800112c:	601a      	str	r2, [r3, #0]
- 800112e:	4b1c      	ldr	r3, [pc, #112]	; (80011a0 <changeProfile+0x198>)
- 8001130:	4a2d      	ldr	r2, [pc, #180]	; (80011e8 <changeProfile+0x1e0>)
- 8001132:	601a      	str	r2, [r3, #0]
- 8001134:	4b1c      	ldr	r3, [pc, #112]	; (80011a8 <changeProfile+0x1a0>)
- 8001136:	4a2d      	ldr	r2, [pc, #180]	; (80011ec <changeProfile+0x1e4>)
- 8001138:	601a      	str	r2, [r3, #0]
- 800113a:	4b1d      	ldr	r3, [pc, #116]	; (80011b0 <changeProfile+0x1a8>)
- 800113c:	4a2c      	ldr	r2, [pc, #176]	; (80011f0 <changeProfile+0x1e8>)
- 800113e:	601a      	str	r2, [r3, #0]
- 8001140:	4b1d      	ldr	r3, [pc, #116]	; (80011b8 <changeProfile+0x1b0>)
- 8001142:	4a2c      	ldr	r2, [pc, #176]	; (80011f4 <changeProfile+0x1ec>)
- 8001144:	601a      	str	r2, [r3, #0]
- 8001146:	4b1e      	ldr	r3, [pc, #120]	; (80011c0 <changeProfile+0x1b8>)
- 8001148:	4a2b      	ldr	r2, [pc, #172]	; (80011f8 <changeProfile+0x1f0>)
- 800114a:	e79c      	b.n	8001086 <changeProfile+0x7e>
- 800114c:	20004c9a 	.word	0x20004c9a
- 8001150:	20004dbc 	.word	0x20004dbc
- 8001154:	3e553586 	.word	0x3e553586
- 8001158:	20004c68 	.word	0x20004c68
- 800115c:	3f0e6d64 	.word	0x3f0e6d64
- 8001160:	200049ac 	.word	0x200049ac
- 8001164:	20004c10 	.word	0x20004c10
- 8001168:	20004b34 	.word	0x20004b34
- 800116c:	20004db0 	.word	0x20004db0
- 8001170:	200049bc 	.word	0x200049bc
- 8001174:	20004bc0 	.word	0x20004bc0
- 8001178:	41080000 	.word	0x41080000
- 800117c:	20004c74 	.word	0x20004c74
- 8001180:	40a00000 	.word	0x40a00000
- 8001184:	20004b5c 	.word	0x20004b5c
- 8001188:	20004a90 	.word	0x20004a90
- 800118c:	3ecffc81 	.word	0x3ecffc81
- 8001190:	20004d30 	.word	0x20004d30
- 8001194:	bf84e642 	.word	0xbf84e642
- 8001198:	20004d28 	.word	0x20004d28
- 800119c:	3ebf9c9e 	.word	0x3ebf9c9e
- 80011a0:	20004d24 	.word	0x20004d24
- 80011a4:	bf4d740e 	.word	0xbf4d740e
- 80011a8:	20009be8 	.word	0x20009be8
- 80011ac:	3ec7bdb9 	.word	0x3ec7bdb9
- 80011b0:	20009bf4 	.word	0x20009bf4
- 80011b4:	3fb3dd37 	.word	0x3fb3dd37
- 80011b8:	20004a8c 	.word	0x20004a8c
- 80011bc:	3ebab712 	.word	0x3ebab712
- 80011c0:	200049cc 	.word	0x200049cc
- 80011c4:	3f8186a1 	.word	0x3f8186a1
- 80011c8:	3e569ee1 	.word	0x3e569ee1
- 80011cc:	3f8dcbcf 	.word	0x3f8dcbcf
- 80011d0:	200049b0 	.word	0x200049b0
- 80011d4:	3e558020 	.word	0x3e558020
- 80011d8:	3f8b3bec 	.word	0x3f8b3bec
- 80011dc:	3ef49ae5 	.word	0x3ef49ae5
- 80011e0:	4001c6f2 	.word	0x4001c6f2
- 80011e4:	3ed9ac3b 	.word	0x3ed9ac3b
- 80011e8:	3fcc8f31 	.word	0x3fcc8f31
- 80011ec:	3ee7ea2c 	.word	0x3ee7ea2c
- 80011f0:	4069f172 	.word	0x4069f172
- 80011f4:	3ec37f90 	.word	0x3ec37f90
- 80011f8:	4003c7be 	.word	0x4003c7be
+ 80010f2:	4b1c      	ldr	r3, [pc, #112]	; (8001164 <changeProfile+0x198>)
+ 80010f4:	4a2f      	ldr	r2, [pc, #188]	; (80011b4 <changeProfile+0x1e8>)
+ 80010f6:	601a      	str	r2, [r3, #0]
+ 80010f8:	4b1c      	ldr	r3, [pc, #112]	; (800116c <changeProfile+0x1a0>)
+ 80010fa:	4a2f      	ldr	r2, [pc, #188]	; (80011b8 <changeProfile+0x1ec>)
+ 80010fc:	601a      	str	r2, [r3, #0]
+ 80010fe:	4b1d      	ldr	r3, [pc, #116]	; (8001174 <changeProfile+0x1a8>)
+ 8001100:	4a2e      	ldr	r2, [pc, #184]	; (80011bc <changeProfile+0x1f0>)
+ 8001102:	601a      	str	r2, [r3, #0]
+ 8001104:	4b1d      	ldr	r3, [pc, #116]	; (800117c <changeProfile+0x1b0>)
+ 8001106:	4a2e      	ldr	r2, [pc, #184]	; (80011c0 <changeProfile+0x1f4>)
+ 8001108:	601a      	str	r2, [r3, #0]
+ 800110a:	4b1e      	ldr	r3, [pc, #120]	; (8001184 <changeProfile+0x1b8>)
+ 800110c:	4a2d      	ldr	r2, [pc, #180]	; (80011c4 <changeProfile+0x1f8>)
+ 800110e:	601a      	str	r2, [r3, #0]
+ 8001110:	4b1e      	ldr	r3, [pc, #120]	; (800118c <changeProfile+0x1c0>)
+ 8001112:	4a2d      	ldr	r2, [pc, #180]	; (80011c8 <changeProfile+0x1fc>)
+ 8001114:	e799      	b.n	800104a <changeProfile+0x7e>
+ 8001116:	bf00      	nop
+ 8001118:	20004c9a 	.word	0x20004c9a
+ 800111c:	20004dbc 	.word	0x20004dbc
+ 8001120:	3e553586 	.word	0x3e553586
+ 8001124:	20004c68 	.word	0x20004c68
+ 8001128:	3f0e6d64 	.word	0x3f0e6d64
+ 800112c:	200049ac 	.word	0x200049ac
+ 8001130:	20004c10 	.word	0x20004c10
+ 8001134:	20004b34 	.word	0x20004b34
+ 8001138:	20004db0 	.word	0x20004db0
+ 800113c:	200049bc 	.word	0x200049bc
+ 8001140:	20004bc0 	.word	0x20004bc0
+ 8001144:	41080000 	.word	0x41080000
+ 8001148:	20004c74 	.word	0x20004c74
+ 800114c:	40a00000 	.word	0x40a00000
+ 8001150:	20004b5c 	.word	0x20004b5c
+ 8001154:	20004a90 	.word	0x20004a90
+ 8001158:	3ecffc81 	.word	0x3ecffc81
+ 800115c:	20004d30 	.word	0x20004d30
+ 8001160:	bf84e642 	.word	0xbf84e642
+ 8001164:	20004d28 	.word	0x20004d28
+ 8001168:	3ebf9c9e 	.word	0x3ebf9c9e
+ 800116c:	20004d24 	.word	0x20004d24
+ 8001170:	bf4d740e 	.word	0xbf4d740e
+ 8001174:	20009be8 	.word	0x20009be8
+ 8001178:	3ec7bdb9 	.word	0x3ec7bdb9
+ 800117c:	20009bf4 	.word	0x20009bf4
+ 8001180:	3fb3dd37 	.word	0x3fb3dd37
+ 8001184:	20004a8c 	.word	0x20004a8c
+ 8001188:	3ebab712 	.word	0x3ebab712
+ 800118c:	200049cc 	.word	0x200049cc
+ 8001190:	3f8186a1 	.word	0x3f8186a1
+ 8001194:	3e569ee1 	.word	0x3e569ee1
+ 8001198:	3f8dcbcf 	.word	0x3f8dcbcf
+ 800119c:	200049b0 	.word	0x200049b0
+ 80011a0:	3e558020 	.word	0x3e558020
+ 80011a4:	3f8b3bec 	.word	0x3f8b3bec
+ 80011a8:	41200000 	.word	0x41200000
+ 80011ac:	3ef49ae5 	.word	0x3ef49ae5
+ 80011b0:	4001c6f2 	.word	0x4001c6f2
+ 80011b4:	3ed9ac3b 	.word	0x3ed9ac3b
+ 80011b8:	3fcc8f31 	.word	0x3fcc8f31
+ 80011bc:	3ee7ea2c 	.word	0x3ee7ea2c
+ 80011c0:	4069f172 	.word	0x4069f172
+ 80011c4:	3ec37f90 	.word	0x3ec37f90
+ 80011c8:	4003c7be 	.word	0x4003c7be
 
-080011fc <HAL_GPIO_EXTI_Callback>:
- 80011fc:	f5b0 7f80 	cmp.w	r0, #256	; 0x100
- 8001200:	d10b      	bne.n	800121a <HAL_GPIO_EXTI_Callback+0x1e>
- 8001202:	4906      	ldr	r1, [pc, #24]	; (800121c <HAL_GPIO_EXTI_Callback+0x20>)
- 8001204:	780b      	ldrb	r3, [r1, #0]
- 8001206:	2203      	movs	r2, #3
- 8001208:	3301      	adds	r3, #1
- 800120a:	fbb3 f2f2 	udiv	r2, r3, r2
- 800120e:	eb02 0242 	add.w	r2, r2, r2, lsl #1
- 8001212:	1a9b      	subs	r3, r3, r2
- 8001214:	700b      	strb	r3, [r1, #0]
- 8001216:	f7ff bef7 	b.w	8001008 <changeProfile>
- 800121a:	4770      	bx	lr
- 800121c:	20004c9a 	.word	0x20004c9a
+080011cc <HAL_GPIO_EXTI_Callback>:
+ 80011cc:	f5b0 7f80 	cmp.w	r0, #256	; 0x100
+ 80011d0:	d10b      	bne.n	80011ea <HAL_GPIO_EXTI_Callback+0x1e>
+ 80011d2:	4906      	ldr	r1, [pc, #24]	; (80011ec <HAL_GPIO_EXTI_Callback+0x20>)
+ 80011d4:	780b      	ldrb	r3, [r1, #0]
+ 80011d6:	2203      	movs	r2, #3
+ 80011d8:	3301      	adds	r3, #1
+ 80011da:	fbb3 f2f2 	udiv	r2, r3, r2
+ 80011de:	eb02 0242 	add.w	r2, r2, r2, lsl #1
+ 80011e2:	1a9b      	subs	r3, r3, r2
+ 80011e4:	700b      	strb	r3, [r1, #0]
+ 80011e6:	f7ff bef1 	b.w	8000fcc <changeProfile>
+ 80011ea:	4770      	bx	lr
+ 80011ec:	20004c9a 	.word	0x20004c9a
 
-08001220 <main>:
- 8001220:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
- 8001224:	b09c      	sub	sp, #112	; 0x70
- 8001226:	f001 f9af 	bl	8002588 <HAL_Init>
- 800122a:	f7ff fc25 	bl	8000a78 <SystemClock_Config>
- 800122e:	2214      	movs	r2, #20
- 8001230:	2100      	movs	r1, #0
- 8001232:	a813      	add	r0, sp, #76	; 0x4c
- 8001234:	f005 f952 	bl	80064dc <memset>
- 8001238:	2400      	movs	r4, #0
- 800123a:	4bb2      	ldr	r3, [pc, #712]	; (8001504 <main+0x2e4>)
- 800123c:	9401      	str	r4, [sp, #4]
- 800123e:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 8001240:	48b1      	ldr	r0, [pc, #708]	; (8001508 <main+0x2e8>)
- 8001242:	4eb2      	ldr	r6, [pc, #712]	; (800150c <main+0x2ec>)
- 8001244:	f042 0210 	orr.w	r2, r2, #16
- 8001248:	631a      	str	r2, [r3, #48]	; 0x30
- 800124a:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 800124c:	f002 0210 	and.w	r2, r2, #16
- 8001250:	9201      	str	r2, [sp, #4]
- 8001252:	9a01      	ldr	r2, [sp, #4]
- 8001254:	9402      	str	r4, [sp, #8]
+080011f0 <main>:
+ 80011f0:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
+ 80011f4:	b09c      	sub	sp, #112	; 0x70
+ 80011f6:	f001 f9c7 	bl	8002588 <HAL_Init>
+ 80011fa:	f7ff fc3d 	bl	8000a78 <SystemClock_Config>
+ 80011fe:	2214      	movs	r2, #20
+ 8001200:	2100      	movs	r1, #0
+ 8001202:	a813      	add	r0, sp, #76	; 0x4c
+ 8001204:	f005 f96a 	bl	80064dc <memset>
+ 8001208:	2400      	movs	r4, #0
+ 800120a:	4bb2      	ldr	r3, [pc, #712]	; (80014d4 <main+0x2e4>)
+ 800120c:	9401      	str	r4, [sp, #4]
+ 800120e:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 8001210:	48b1      	ldr	r0, [pc, #708]	; (80014d8 <main+0x2e8>)
+ 8001212:	4eb2      	ldr	r6, [pc, #712]	; (80014dc <main+0x2ec>)
+ 8001214:	f042 0210 	orr.w	r2, r2, #16
+ 8001218:	631a      	str	r2, [r3, #48]	; 0x30
+ 800121a:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 800121c:	f002 0210 	and.w	r2, r2, #16
+ 8001220:	9201      	str	r2, [sp, #4]
+ 8001222:	9a01      	ldr	r2, [sp, #4]
+ 8001224:	9402      	str	r4, [sp, #8]
+ 8001226:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 8001228:	f042 0204 	orr.w	r2, r2, #4
+ 800122c:	631a      	str	r2, [r3, #48]	; 0x30
+ 800122e:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 8001230:	f002 0204 	and.w	r2, r2, #4
+ 8001234:	9202      	str	r2, [sp, #8]
+ 8001236:	9a02      	ldr	r2, [sp, #8]
+ 8001238:	9403      	str	r4, [sp, #12]
+ 800123a:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 800123c:	f042 0201 	orr.w	r2, r2, #1
+ 8001240:	631a      	str	r2, [r3, #48]	; 0x30
+ 8001242:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 8001244:	f002 0201 	and.w	r2, r2, #1
+ 8001248:	9203      	str	r2, [sp, #12]
+ 800124a:	9a03      	ldr	r2, [sp, #12]
+ 800124c:	9404      	str	r4, [sp, #16]
+ 800124e:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 8001250:	f042 0208 	orr.w	r2, r2, #8
+ 8001254:	631a      	str	r2, [r3, #48]	; 0x30
  8001256:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 8001258:	f042 0204 	orr.w	r2, r2, #4
- 800125c:	631a      	str	r2, [r3, #48]	; 0x30
- 800125e:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 8001260:	f002 0204 	and.w	r2, r2, #4
- 8001264:	9202      	str	r2, [sp, #8]
- 8001266:	9a02      	ldr	r2, [sp, #8]
- 8001268:	9403      	str	r4, [sp, #12]
- 800126a:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 800126c:	f042 0201 	orr.w	r2, r2, #1
- 8001270:	631a      	str	r2, [r3, #48]	; 0x30
- 8001272:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 8001274:	f002 0201 	and.w	r2, r2, #1
- 8001278:	9203      	str	r2, [sp, #12]
- 800127a:	9a03      	ldr	r2, [sp, #12]
- 800127c:	9404      	str	r4, [sp, #16]
- 800127e:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 8001280:	f042 0208 	orr.w	r2, r2, #8
- 8001284:	631a      	str	r2, [r3, #48]	; 0x30
- 8001286:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 8001288:	f002 0208 	and.w	r2, r2, #8
- 800128c:	9204      	str	r2, [sp, #16]
- 800128e:	9a04      	ldr	r2, [sp, #16]
- 8001290:	9405      	str	r4, [sp, #20]
- 8001292:	6b1a      	ldr	r2, [r3, #48]	; 0x30
- 8001294:	f042 0202 	orr.w	r2, r2, #2
- 8001298:	631a      	str	r2, [r3, #48]	; 0x30
- 800129a:	6b1b      	ldr	r3, [r3, #48]	; 0x30
- 800129c:	f003 0302 	and.w	r3, r3, #2
- 80012a0:	9305      	str	r3, [sp, #20]
- 80012a2:	4622      	mov	r2, r4
- 80012a4:	f44f 61bc 	mov.w	r1, #1504	; 0x5e0
- 80012a8:	9b05      	ldr	r3, [sp, #20]
- 80012aa:	f001 fd5d 	bl	8002d68 <HAL_GPIO_WritePin>
- 80012ae:	4898      	ldr	r0, [pc, #608]	; (8001510 <main+0x2f0>)
- 80012b0:	4622      	mov	r2, r4
- 80012b2:	213c      	movs	r1, #60	; 0x3c
- 80012b4:	f001 fd58 	bl	8002d68 <HAL_GPIO_WritePin>
- 80012b8:	4622      	mov	r2, r4
- 80012ba:	4896      	ldr	r0, [pc, #600]	; (8001514 <main+0x2f4>)
- 80012bc:	2110      	movs	r1, #16
- 80012be:	f001 fd53 	bl	8002d68 <HAL_GPIO_WritePin>
- 80012c2:	2701      	movs	r7, #1
- 80012c4:	f44f 63bc 	mov.w	r3, #1504	; 0x5e0
- 80012c8:	488f      	ldr	r0, [pc, #572]	; (8001508 <main+0x2e8>)
- 80012ca:	a913      	add	r1, sp, #76	; 0x4c
- 80012cc:	e9cd 3713 	strd	r3, r7, [sp, #76]	; 0x4c
- 80012d0:	e9cd 4415 	strd	r4, r4, [sp, #84]	; 0x54
- 80012d4:	f001 fc68 	bl	8002ba8 <HAL_GPIO_Init>
- 80012d8:	233c      	movs	r3, #60	; 0x3c
- 80012da:	e9cd 3713 	strd	r3, r7, [sp, #76]	; 0x4c
- 80012de:	488c      	ldr	r0, [pc, #560]	; (8001510 <main+0x2f0>)
- 80012e0:	9415      	str	r4, [sp, #84]	; 0x54
- 80012e2:	2302      	movs	r3, #2
- 80012e4:	a913      	add	r1, sp, #76	; 0x4c
- 80012e6:	9316      	str	r3, [sp, #88]	; 0x58
- 80012e8:	f001 fc5e 	bl	8002ba8 <HAL_GPIO_Init>
- 80012ec:	f44f 1304 	mov.w	r3, #2162688	; 0x210000
- 80012f0:	f44f 7080 	mov.w	r0, #256	; 0x100
- 80012f4:	e9cd 0313 	strd	r0, r3, [sp, #76]	; 0x4c
- 80012f8:	a913      	add	r1, sp, #76	; 0x4c
- 80012fa:	4887      	ldr	r0, [pc, #540]	; (8001518 <main+0x2f8>)
- 80012fc:	9415      	str	r4, [sp, #84]	; 0x54
- 80012fe:	2510      	movs	r5, #16
- 8001300:	f001 fc52 	bl	8002ba8 <HAL_GPIO_Init>
- 8001304:	4883      	ldr	r0, [pc, #524]	; (8001514 <main+0x2f4>)
- 8001306:	a913      	add	r1, sp, #76	; 0x4c
- 8001308:	e9cd 5713 	strd	r5, r7, [sp, #76]	; 0x4c
- 800130c:	e9cd 4415 	strd	r4, r4, [sp, #84]	; 0x54
- 8001310:	f001 fc4a 	bl	8002ba8 <HAL_GPIO_Init>
- 8001314:	487c      	ldr	r0, [pc, #496]	; (8001508 <main+0x2e8>)
- 8001316:	9415      	str	r4, [sp, #84]	; 0x54
- 8001318:	a913      	add	r1, sp, #76	; 0x4c
- 800131a:	e9cd 7413 	strd	r7, r4, [sp, #76]	; 0x4c
- 800131e:	f001 fc43 	bl	8002ba8 <HAL_GPIO_Init>
- 8001322:	4622      	mov	r2, r4
- 8001324:	2105      	movs	r1, #5
- 8001326:	2017      	movs	r0, #23
- 8001328:	f001 fb92 	bl	8002a50 <HAL_NVIC_SetPriority>
- 800132c:	2017      	movs	r0, #23
- 800132e:	f001 fbc1 	bl	8002ab4 <HAL_NVIC_EnableIRQ>
- 8001332:	221c      	movs	r2, #28
- 8001334:	4621      	mov	r1, r4
- 8001336:	a80c      	add	r0, sp, #48	; 0x30
- 8001338:	e9cd 4408 	strd	r4, r4, [sp, #32]
- 800133c:	f005 f8ce 	bl	80064dc <memset>
- 8001340:	2220      	movs	r2, #32
- 8001342:	4621      	mov	r1, r4
- 8001344:	a813      	add	r0, sp, #76	; 0x4c
- 8001346:	f005 f8c9 	bl	80064dc <memset>
- 800134a:	f8df c1e0 	ldr.w	ip, [pc, #480]	; 800152c <main+0x30c>
- 800134e:	60b4      	str	r4, [r6, #8]
- 8001350:	f44f 73a0 	mov.w	r3, #320	; 0x140
- 8001354:	e9c6 c300 	strd	ip, r3, [r6]
- 8001358:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
- 800135c:	e9c6 3403 	strd	r3, r4, [r6, #12]
- 8001360:	4630      	mov	r0, r6
- 8001362:	2380      	movs	r3, #128	; 0x80
- 8001364:	6174      	str	r4, [r6, #20]
- 8001366:	61b3      	str	r3, [r6, #24]
- 8001368:	f002 fa38 	bl	80037dc <HAL_TIM_PWM_Init>
- 800136c:	b108      	cbz	r0, 8001372 <main+0x152>
+ 8001258:	f002 0208 	and.w	r2, r2, #8
+ 800125c:	9204      	str	r2, [sp, #16]
+ 800125e:	9a04      	ldr	r2, [sp, #16]
+ 8001260:	9405      	str	r4, [sp, #20]
+ 8001262:	6b1a      	ldr	r2, [r3, #48]	; 0x30
+ 8001264:	f042 0202 	orr.w	r2, r2, #2
+ 8001268:	631a      	str	r2, [r3, #48]	; 0x30
+ 800126a:	6b1b      	ldr	r3, [r3, #48]	; 0x30
+ 800126c:	f003 0302 	and.w	r3, r3, #2
+ 8001270:	9305      	str	r3, [sp, #20]
+ 8001272:	4622      	mov	r2, r4
+ 8001274:	f44f 61bc 	mov.w	r1, #1504	; 0x5e0
+ 8001278:	9b05      	ldr	r3, [sp, #20]
+ 800127a:	f001 fd75 	bl	8002d68 <HAL_GPIO_WritePin>
+ 800127e:	4898      	ldr	r0, [pc, #608]	; (80014e0 <main+0x2f0>)
+ 8001280:	4622      	mov	r2, r4
+ 8001282:	213c      	movs	r1, #60	; 0x3c
+ 8001284:	f001 fd70 	bl	8002d68 <HAL_GPIO_WritePin>
+ 8001288:	4622      	mov	r2, r4
+ 800128a:	4896      	ldr	r0, [pc, #600]	; (80014e4 <main+0x2f4>)
+ 800128c:	2110      	movs	r1, #16
+ 800128e:	f001 fd6b 	bl	8002d68 <HAL_GPIO_WritePin>
+ 8001292:	2701      	movs	r7, #1
+ 8001294:	f44f 63bc 	mov.w	r3, #1504	; 0x5e0
+ 8001298:	488f      	ldr	r0, [pc, #572]	; (80014d8 <main+0x2e8>)
+ 800129a:	a913      	add	r1, sp, #76	; 0x4c
+ 800129c:	e9cd 3713 	strd	r3, r7, [sp, #76]	; 0x4c
+ 80012a0:	e9cd 4415 	strd	r4, r4, [sp, #84]	; 0x54
+ 80012a4:	f001 fc80 	bl	8002ba8 <HAL_GPIO_Init>
+ 80012a8:	233c      	movs	r3, #60	; 0x3c
+ 80012aa:	e9cd 3713 	strd	r3, r7, [sp, #76]	; 0x4c
+ 80012ae:	488c      	ldr	r0, [pc, #560]	; (80014e0 <main+0x2f0>)
+ 80012b0:	9415      	str	r4, [sp, #84]	; 0x54
+ 80012b2:	2302      	movs	r3, #2
+ 80012b4:	a913      	add	r1, sp, #76	; 0x4c
+ 80012b6:	9316      	str	r3, [sp, #88]	; 0x58
+ 80012b8:	f001 fc76 	bl	8002ba8 <HAL_GPIO_Init>
+ 80012bc:	f44f 1304 	mov.w	r3, #2162688	; 0x210000
+ 80012c0:	f44f 7080 	mov.w	r0, #256	; 0x100
+ 80012c4:	e9cd 0313 	strd	r0, r3, [sp, #76]	; 0x4c
+ 80012c8:	a913      	add	r1, sp, #76	; 0x4c
+ 80012ca:	4887      	ldr	r0, [pc, #540]	; (80014e8 <main+0x2f8>)
+ 80012cc:	9415      	str	r4, [sp, #84]	; 0x54
+ 80012ce:	2510      	movs	r5, #16
+ 80012d0:	f001 fc6a 	bl	8002ba8 <HAL_GPIO_Init>
+ 80012d4:	4883      	ldr	r0, [pc, #524]	; (80014e4 <main+0x2f4>)
+ 80012d6:	a913      	add	r1, sp, #76	; 0x4c
+ 80012d8:	e9cd 5713 	strd	r5, r7, [sp, #76]	; 0x4c
+ 80012dc:	e9cd 4415 	strd	r4, r4, [sp, #84]	; 0x54
+ 80012e0:	f001 fc62 	bl	8002ba8 <HAL_GPIO_Init>
+ 80012e4:	487c      	ldr	r0, [pc, #496]	; (80014d8 <main+0x2e8>)
+ 80012e6:	9415      	str	r4, [sp, #84]	; 0x54
+ 80012e8:	a913      	add	r1, sp, #76	; 0x4c
+ 80012ea:	e9cd 7413 	strd	r7, r4, [sp, #76]	; 0x4c
+ 80012ee:	f001 fc5b 	bl	8002ba8 <HAL_GPIO_Init>
+ 80012f2:	4622      	mov	r2, r4
+ 80012f4:	2105      	movs	r1, #5
+ 80012f6:	2017      	movs	r0, #23
+ 80012f8:	f001 fbaa 	bl	8002a50 <HAL_NVIC_SetPriority>
+ 80012fc:	2017      	movs	r0, #23
+ 80012fe:	f001 fbd9 	bl	8002ab4 <HAL_NVIC_EnableIRQ>
+ 8001302:	221c      	movs	r2, #28
+ 8001304:	4621      	mov	r1, r4
+ 8001306:	a80c      	add	r0, sp, #48	; 0x30
+ 8001308:	e9cd 4408 	strd	r4, r4, [sp, #32]
+ 800130c:	f005 f8e6 	bl	80064dc <memset>
+ 8001310:	2220      	movs	r2, #32
+ 8001312:	4621      	mov	r1, r4
+ 8001314:	a813      	add	r0, sp, #76	; 0x4c
+ 8001316:	f005 f8e1 	bl	80064dc <memset>
+ 800131a:	f8df c1e0 	ldr.w	ip, [pc, #480]	; 80014fc <main+0x30c>
+ 800131e:	60b4      	str	r4, [r6, #8]
+ 8001320:	f44f 73a0 	mov.w	r3, #320	; 0x140
+ 8001324:	e9c6 c300 	strd	ip, r3, [r6]
+ 8001328:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
+ 800132c:	e9c6 3403 	strd	r3, r4, [r6, #12]
+ 8001330:	4630      	mov	r0, r6
+ 8001332:	2380      	movs	r3, #128	; 0x80
+ 8001334:	6174      	str	r4, [r6, #20]
+ 8001336:	61b3      	str	r3, [r6, #24]
+ 8001338:	f002 fa50 	bl	80037dc <HAL_TIM_PWM_Init>
+ 800133c:	b108      	cbz	r0, 8001342 <main+0x152>
+ 800133e:	b672      	cpsid	i
+ 8001340:	e7fe      	b.n	8001340 <main+0x150>
+ 8001342:	e9cd 0008 	strd	r0, r0, [sp, #32]
+ 8001346:	a908      	add	r1, sp, #32
+ 8001348:	4630      	mov	r0, r6
+ 800134a:	f002 fe73 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
+ 800134e:	b108      	cbz	r0, 8001354 <main+0x164>
+ 8001350:	b672      	cpsid	i
+ 8001352:	e7fe      	b.n	8001352 <main+0x162>
+ 8001354:	2360      	movs	r3, #96	; 0x60
+ 8001356:	e9cd 300c 	strd	r3, r0, [sp, #48]	; 0x30
+ 800135a:	e9cd 0010 	strd	r0, r0, [sp, #64]	; 0x40
+ 800135e:	900e      	str	r0, [sp, #56]	; 0x38
+ 8001360:	9012      	str	r0, [sp, #72]	; 0x48
+ 8001362:	220c      	movs	r2, #12
+ 8001364:	a90c      	add	r1, sp, #48	; 0x30
+ 8001366:	4630      	mov	r0, r6
+ 8001368:	f002 fb1c 	bl	80039a4 <HAL_TIM_PWM_ConfigChannel>
+ 800136c:	b108      	cbz	r0, 8001372 <main+0x182>
  800136e:	b672      	cpsid	i
- 8001370:	e7fe      	b.n	8001370 <main+0x150>
- 8001372:	e9cd 0008 	strd	r0, r0, [sp, #32]
- 8001376:	a908      	add	r1, sp, #32
- 8001378:	4630      	mov	r0, r6
- 800137a:	f002 fe5b 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
- 800137e:	b108      	cbz	r0, 8001384 <main+0x164>
- 8001380:	b672      	cpsid	i
- 8001382:	e7fe      	b.n	8001382 <main+0x162>
- 8001384:	2360      	movs	r3, #96	; 0x60
- 8001386:	e9cd 300c 	strd	r3, r0, [sp, #48]	; 0x30
- 800138a:	e9cd 0010 	strd	r0, r0, [sp, #64]	; 0x40
- 800138e:	900e      	str	r0, [sp, #56]	; 0x38
- 8001390:	9012      	str	r0, [sp, #72]	; 0x48
- 8001392:	220c      	movs	r2, #12
- 8001394:	a90c      	add	r1, sp, #48	; 0x30
- 8001396:	4630      	mov	r0, r6
- 8001398:	f002 fb04 	bl	80039a4 <HAL_TIM_PWM_ConfigChannel>
- 800139c:	b108      	cbz	r0, 80013a2 <main+0x182>
- 800139e:	b672      	cpsid	i
- 80013a0:	e7fe      	b.n	80013a0 <main+0x180>
- 80013a2:	e9cd 0013 	strd	r0, r0, [sp, #76]	; 0x4c
- 80013a6:	e9cd 0015 	strd	r0, r0, [sp, #84]	; 0x54
- 80013aa:	9017      	str	r0, [sp, #92]	; 0x5c
- 80013ac:	f44f 5300 	mov.w	r3, #8192	; 0x2000
- 80013b0:	901a      	str	r0, [sp, #104]	; 0x68
- 80013b2:	a913      	add	r1, sp, #76	; 0x4c
- 80013b4:	4630      	mov	r0, r6
- 80013b6:	9318      	str	r3, [sp, #96]	; 0x60
- 80013b8:	f002 fe7a 	bl	80040b0 <HAL_TIMEx_ConfigBreakDeadTime>
- 80013bc:	4604      	mov	r4, r0
- 80013be:	b108      	cbz	r0, 80013c4 <main+0x1a4>
- 80013c0:	b672      	cpsid	i
- 80013c2:	e7fe      	b.n	80013c2 <main+0x1a2>
- 80013c4:	f8df 9168 	ldr.w	r9, [pc, #360]	; 8001530 <main+0x310>
- 80013c8:	4630      	mov	r0, r6
- 80013ca:	f000 ffd5 	bl	8002378 <HAL_TIM_MspPostInit>
- 80013ce:	f04f 0a0a 	mov.w	sl, #10
- 80013d2:	f04f 4380 	mov.w	r3, #1073741824	; 0x40000000
- 80013d6:	f64f 78ff 	movw	r8, #65535	; 0xffff
- 80013da:	2603      	movs	r6, #3
- 80013dc:	a913      	add	r1, sp, #76	; 0x4c
- 80013de:	4648      	mov	r0, r9
- 80013e0:	e9cd 440c 	strd	r4, r4, [sp, #48]	; 0x30
- 80013e4:	e9c9 3400 	strd	r3, r4, [r9]
- 80013e8:	e9c9 8403 	strd	r8, r4, [r9, #12]
- 80013ec:	e9cd 6413 	strd	r6, r4, [sp, #76]	; 0x4c
- 80013f0:	e9cd 7415 	strd	r7, r4, [sp, #84]	; 0x54
- 80013f4:	e9cd a417 	strd	sl, r4, [sp, #92]	; 0x5c
- 80013f8:	e9cd 7419 	strd	r7, r4, [sp, #100]	; 0x64
- 80013fc:	f8c9 4008 	str.w	r4, [r9, #8]
- 8001400:	f8c9 4018 	str.w	r4, [r9, #24]
- 8001404:	f8cd a06c 	str.w	sl, [sp, #108]	; 0x6c
- 8001408:	f002 fa40 	bl	800388c <HAL_TIM_Encoder_Init>
- 800140c:	b108      	cbz	r0, 8001412 <main+0x1f2>
- 800140e:	b672      	cpsid	i
- 8001410:	e7fe      	b.n	8001410 <main+0x1f0>
- 8001412:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
- 8001416:	a90c      	add	r1, sp, #48	; 0x30
- 8001418:	4648      	mov	r0, r9
- 800141a:	f002 fe0b 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
- 800141e:	b108      	cbz	r0, 8001424 <main+0x204>
- 8001420:	b672      	cpsid	i
- 8001422:	e7fe      	b.n	8001422 <main+0x202>
- 8001424:	4c3d      	ldr	r4, [pc, #244]	; (800151c <main+0x2fc>)
- 8001426:	4b3e      	ldr	r3, [pc, #248]	; (8001520 <main+0x300>)
- 8001428:	6120      	str	r0, [r4, #16]
+ 8001370:	e7fe      	b.n	8001370 <main+0x180>
+ 8001372:	e9cd 0013 	strd	r0, r0, [sp, #76]	; 0x4c
+ 8001376:	e9cd 0015 	strd	r0, r0, [sp, #84]	; 0x54
+ 800137a:	9017      	str	r0, [sp, #92]	; 0x5c
+ 800137c:	f44f 5300 	mov.w	r3, #8192	; 0x2000
+ 8001380:	901a      	str	r0, [sp, #104]	; 0x68
+ 8001382:	a913      	add	r1, sp, #76	; 0x4c
+ 8001384:	4630      	mov	r0, r6
+ 8001386:	9318      	str	r3, [sp, #96]	; 0x60
+ 8001388:	f002 fe92 	bl	80040b0 <HAL_TIMEx_ConfigBreakDeadTime>
+ 800138c:	4604      	mov	r4, r0
+ 800138e:	b108      	cbz	r0, 8001394 <main+0x1a4>
+ 8001390:	b672      	cpsid	i
+ 8001392:	e7fe      	b.n	8001392 <main+0x1a2>
+ 8001394:	f8df 9168 	ldr.w	r9, [pc, #360]	; 8001500 <main+0x310>
+ 8001398:	4630      	mov	r0, r6
+ 800139a:	f000 ffed 	bl	8002378 <HAL_TIM_MspPostInit>
+ 800139e:	f04f 0a0a 	mov.w	sl, #10
+ 80013a2:	f04f 4380 	mov.w	r3, #1073741824	; 0x40000000
+ 80013a6:	f64f 78ff 	movw	r8, #65535	; 0xffff
+ 80013aa:	2603      	movs	r6, #3
+ 80013ac:	a913      	add	r1, sp, #76	; 0x4c
+ 80013ae:	4648      	mov	r0, r9
+ 80013b0:	e9cd 440c 	strd	r4, r4, [sp, #48]	; 0x30
+ 80013b4:	e9c9 3400 	strd	r3, r4, [r9]
+ 80013b8:	e9c9 8403 	strd	r8, r4, [r9, #12]
+ 80013bc:	e9cd 6413 	strd	r6, r4, [sp, #76]	; 0x4c
+ 80013c0:	e9cd 7415 	strd	r7, r4, [sp, #84]	; 0x54
+ 80013c4:	e9cd a417 	strd	sl, r4, [sp, #92]	; 0x5c
+ 80013c8:	e9cd 7419 	strd	r7, r4, [sp, #100]	; 0x64
+ 80013cc:	f8c9 4008 	str.w	r4, [r9, #8]
+ 80013d0:	f8c9 4018 	str.w	r4, [r9, #24]
+ 80013d4:	f8cd a06c 	str.w	sl, [sp, #108]	; 0x6c
+ 80013d8:	f002 fa58 	bl	800388c <HAL_TIM_Encoder_Init>
+ 80013dc:	b108      	cbz	r0, 80013e2 <main+0x1f2>
+ 80013de:	b672      	cpsid	i
+ 80013e0:	e7fe      	b.n	80013e0 <main+0x1f0>
+ 80013e2:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
+ 80013e6:	a90c      	add	r1, sp, #48	; 0x30
+ 80013e8:	4648      	mov	r0, r9
+ 80013ea:	f002 fe23 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
+ 80013ee:	b108      	cbz	r0, 80013f4 <main+0x204>
+ 80013f0:	b672      	cpsid	i
+ 80013f2:	e7fe      	b.n	80013f2 <main+0x202>
+ 80013f4:	4c3d      	ldr	r4, [pc, #244]	; (80014ec <main+0x2fc>)
+ 80013f6:	4b3e      	ldr	r3, [pc, #248]	; (80014f0 <main+0x300>)
+ 80013f8:	6120      	str	r0, [r4, #16]
+ 80013fa:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
+ 80013fe:	e9c4 3000 	strd	r3, r0, [r4]
+ 8001402:	e9c4 0802 	strd	r0, r8, [r4, #8]
+ 8001406:	e9cd 6013 	strd	r6, r0, [sp, #76]	; 0x4c
+ 800140a:	e9cd 7015 	strd	r7, r0, [sp, #84]	; 0x54
+ 800140e:	e9cd a017 	strd	sl, r0, [sp, #92]	; 0x5c
+ 8001412:	e9cd 7019 	strd	r7, r0, [sp, #100]	; 0x64
+ 8001416:	61a0      	str	r0, [r4, #24]
+ 8001418:	a913      	add	r1, sp, #76	; 0x4c
+ 800141a:	4620      	mov	r0, r4
+ 800141c:	f8cd a06c 	str.w	sl, [sp, #108]	; 0x6c
+ 8001420:	f002 fa34 	bl	800388c <HAL_TIM_Encoder_Init>
+ 8001424:	b108      	cbz	r0, 800142a <main+0x23a>
+ 8001426:	b672      	cpsid	i
+ 8001428:	e7fe      	b.n	8001428 <main+0x238>
  800142a:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
- 800142e:	e9c4 3000 	strd	r3, r0, [r4]
- 8001432:	e9c4 0802 	strd	r0, r8, [r4, #8]
- 8001436:	e9cd 6013 	strd	r6, r0, [sp, #76]	; 0x4c
- 800143a:	e9cd 7015 	strd	r7, r0, [sp, #84]	; 0x54
- 800143e:	e9cd a017 	strd	sl, r0, [sp, #92]	; 0x5c
- 8001442:	e9cd 7019 	strd	r7, r0, [sp, #100]	; 0x64
- 8001446:	61a0      	str	r0, [r4, #24]
- 8001448:	a913      	add	r1, sp, #76	; 0x4c
- 800144a:	4620      	mov	r0, r4
- 800144c:	f8cd a06c 	str.w	sl, [sp, #108]	; 0x6c
- 8001450:	f002 fa1c 	bl	800388c <HAL_TIM_Encoder_Init>
- 8001454:	b108      	cbz	r0, 800145a <main+0x23a>
- 8001456:	b672      	cpsid	i
- 8001458:	e7fe      	b.n	8001458 <main+0x238>
- 800145a:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
- 800145e:	a90c      	add	r1, sp, #48	; 0x30
- 8001460:	4620      	mov	r0, r4
- 8001462:	f002 fde7 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
- 8001466:	4604      	mov	r4, r0
- 8001468:	b108      	cbz	r0, 800146e <main+0x24e>
- 800146a:	b672      	cpsid	i
- 800146c:	e7fe      	b.n	800146c <main+0x24c>
- 800146e:	462a      	mov	r2, r5
- 8001470:	4601      	mov	r1, r0
- 8001472:	a808      	add	r0, sp, #32
- 8001474:	f005 f832 	bl	80064dc <memset>
- 8001478:	221c      	movs	r2, #28
- 800147a:	4621      	mov	r1, r4
- 800147c:	a80c      	add	r0, sp, #48	; 0x30
- 800147e:	e9cd 4406 	strd	r4, r4, [sp, #24]
- 8001482:	f005 f82b 	bl	80064dc <memset>
- 8001486:	2220      	movs	r2, #32
- 8001488:	4621      	mov	r1, r4
- 800148a:	a813      	add	r0, sp, #76	; 0x4c
- 800148c:	f005 f826 	bl	80064dc <memset>
- 8001490:	4d24      	ldr	r5, [pc, #144]	; (8001524 <main+0x304>)
- 8001492:	4b25      	ldr	r3, [pc, #148]	; (8001528 <main+0x308>)
- 8001494:	60ac      	str	r4, [r5, #8]
- 8001496:	e9c5 3400 	strd	r3, r4, [r5]
- 800149a:	4628      	mov	r0, r5
- 800149c:	f244 139f 	movw	r3, #16799	; 0x419f
- 80014a0:	e9c5 3403 	strd	r3, r4, [r5, #12]
- 80014a4:	e9c5 4405 	strd	r4, r4, [r5, #20]
- 80014a8:	f002 f96c 	bl	8003784 <HAL_TIM_Base_Init>
- 80014ac:	b108      	cbz	r0, 80014b2 <main+0x292>
- 80014ae:	b672      	cpsid	i
- 80014b0:	e7fe      	b.n	80014b0 <main+0x290>
- 80014b2:	f44f 5380 	mov.w	r3, #4096	; 0x1000
- 80014b6:	a908      	add	r1, sp, #32
- 80014b8:	4628      	mov	r0, r5
- 80014ba:	9308      	str	r3, [sp, #32]
- 80014bc:	f002 fba7 	bl	8003c0e <HAL_TIM_ConfigClockSource>
- 80014c0:	b108      	cbz	r0, 80014c6 <main+0x2a6>
- 80014c2:	b672      	cpsid	i
- 80014c4:	e7fe      	b.n	80014c4 <main+0x2a4>
- 80014c6:	4817      	ldr	r0, [pc, #92]	; (8001524 <main+0x304>)
- 80014c8:	f002 f988 	bl	80037dc <HAL_TIM_PWM_Init>
- 80014cc:	b108      	cbz	r0, 80014d2 <main+0x2b2>
- 80014ce:	b672      	cpsid	i
- 80014d0:	e7fe      	b.n	80014d0 <main+0x2b0>
- 80014d2:	e9cd 0006 	strd	r0, r0, [sp, #24]
- 80014d6:	a906      	add	r1, sp, #24
- 80014d8:	4812      	ldr	r0, [pc, #72]	; (8001524 <main+0x304>)
- 80014da:	f002 fdab 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
- 80014de:	4602      	mov	r2, r0
- 80014e0:	b108      	cbz	r0, 80014e6 <main+0x2c6>
- 80014e2:	b672      	cpsid	i
- 80014e4:	e7fe      	b.n	80014e4 <main+0x2c4>
- 80014e6:	2360      	movs	r3, #96	; 0x60
- 80014e8:	e9cd 300c 	strd	r3, r0, [sp, #48]	; 0x30
- 80014ec:	e9cd 000e 	strd	r0, r0, [sp, #56]	; 0x38
- 80014f0:	e9cd 0010 	strd	r0, r0, [sp, #64]	; 0x40
- 80014f4:	9012      	str	r0, [sp, #72]	; 0x48
- 80014f6:	a90c      	add	r1, sp, #48	; 0x30
- 80014f8:	480a      	ldr	r0, [pc, #40]	; (8001524 <main+0x304>)
- 80014fa:	f002 fa53 	bl	80039a4 <HAL_TIM_PWM_ConfigChannel>
- 80014fe:	b1c8      	cbz	r0, 8001534 <main+0x314>
- 8001500:	b672      	cpsid	i
- 8001502:	e7fe      	b.n	8001502 <main+0x2e2>
- 8001504:	40023800 	.word	0x40023800
- 8001508:	40021000 	.word	0x40021000
- 800150c:	20004cc0 	.word	0x20004cc0
- 8001510:	40020000 	.word	0x40020000
- 8001514:	40020400 	.word	0x40020400
- 8001518:	40020c00 	.word	0x40020c00
- 800151c:	20004bc4 	.word	0x20004bc4
- 8001520:	40000400 	.word	0x40000400
- 8001524:	200049f0 	.word	0x200049f0
- 8001528:	40010400 	.word	0x40010400
- 800152c:	40010000 	.word	0x40010000
- 8001530:	20004d64 	.word	0x20004d64
- 8001534:	486a      	ldr	r0, [pc, #424]	; (80016e0 <main+0x4c0>)
- 8001536:	2204      	movs	r2, #4
- 8001538:	a90c      	add	r1, sp, #48	; 0x30
- 800153a:	f002 fa33 	bl	80039a4 <HAL_TIM_PWM_ConfigChannel>
- 800153e:	b108      	cbz	r0, 8001544 <main+0x324>
- 8001540:	b672      	cpsid	i
- 8001542:	e7fe      	b.n	8001542 <main+0x322>
- 8001544:	f44f 5300 	mov.w	r3, #8192	; 0x2000
- 8001548:	e9cd 0013 	strd	r0, r0, [sp, #76]	; 0x4c
- 800154c:	e9cd 0015 	strd	r0, r0, [sp, #84]	; 0x54
- 8001550:	9017      	str	r0, [sp, #92]	; 0x5c
- 8001552:	901a      	str	r0, [sp, #104]	; 0x68
- 8001554:	a913      	add	r1, sp, #76	; 0x4c
- 8001556:	4862      	ldr	r0, [pc, #392]	; (80016e0 <main+0x4c0>)
- 8001558:	9318      	str	r3, [sp, #96]	; 0x60
- 800155a:	f002 fda9 	bl	80040b0 <HAL_TIMEx_ConfigBreakDeadTime>
- 800155e:	4603      	mov	r3, r0
- 8001560:	b108      	cbz	r0, 8001566 <main+0x346>
- 8001562:	b672      	cpsid	i
- 8001564:	e7fe      	b.n	8001564 <main+0x344>
- 8001566:	485f      	ldr	r0, [pc, #380]	; (80016e4 <main+0x4c4>)
- 8001568:	495f      	ldr	r1, [pc, #380]	; (80016e8 <main+0x4c8>)
- 800156a:	6103      	str	r3, [r0, #16]
- 800156c:	f44f 32e1 	mov.w	r2, #115200	; 0x1c200
- 8001570:	e9c0 1200 	strd	r1, r2, [r0]
- 8001574:	220c      	movs	r2, #12
- 8001576:	e9c0 3302 	strd	r3, r3, [r0, #8]
- 800157a:	e9c0 2305 	strd	r2, r3, [r0, #20]
- 800157e:	61c3      	str	r3, [r0, #28]
- 8001580:	f002 fe80 	bl	8004284 <HAL_UART_Init>
- 8001584:	4605      	mov	r5, r0
- 8001586:	b108      	cbz	r0, 800158c <main+0x36c>
- 8001588:	b672      	cpsid	i
- 800158a:	e7fe      	b.n	800158a <main+0x36a>
- 800158c:	4c57      	ldr	r4, [pc, #348]	; (80016ec <main+0x4cc>)
- 800158e:	4f58      	ldr	r7, [pc, #352]	; (80016f0 <main+0x4d0>)
- 8001590:	4601      	mov	r1, r0
- 8001592:	2210      	movs	r2, #16
- 8001594:	a813      	add	r0, sp, #76	; 0x4c
- 8001596:	f004 ffa1 	bl	80064dc <memset>
- 800159a:	4b56      	ldr	r3, [pc, #344]	; (80016f4 <main+0x4d4>)
- 800159c:	60a5      	str	r5, [r4, #8]
- 800159e:	2601      	movs	r6, #1
- 80015a0:	4620      	mov	r0, r4
- 80015a2:	e9c4 3500 	strd	r3, r5, [r4]
- 80015a6:	6125      	str	r5, [r4, #16]
- 80015a8:	7625      	strb	r5, [r4, #24]
- 80015aa:	f884 5020 	strb.w	r5, [r4, #32]
- 80015ae:	62e5      	str	r5, [r4, #44]	; 0x2c
- 80015b0:	62a7      	str	r7, [r4, #40]	; 0x28
- 80015b2:	60e5      	str	r5, [r4, #12]
- 80015b4:	61e6      	str	r6, [r4, #28]
- 80015b6:	f884 5030 	strb.w	r5, [r4, #48]	; 0x30
- 80015ba:	6166      	str	r6, [r4, #20]
- 80015bc:	f001 f824 	bl	8002608 <HAL_ADC_Init>
- 80015c0:	b108      	cbz	r0, 80015c6 <main+0x3a6>
- 80015c2:	b672      	cpsid	i
- 80015c4:	e7fe      	b.n	80015c4 <main+0x3a4>
- 80015c6:	230a      	movs	r3, #10
- 80015c8:	9015      	str	r0, [sp, #84]	; 0x54
- 80015ca:	a913      	add	r1, sp, #76	; 0x4c
- 80015cc:	4620      	mov	r0, r4
- 80015ce:	e9cd 3613 	strd	r3, r6, [sp, #76]	; 0x4c
- 80015d2:	f001 f999 	bl	8002908 <HAL_ADC_ConfigChannel>
- 80015d6:	4605      	mov	r5, r0
- 80015d8:	b108      	cbz	r0, 80015de <main+0x3be>
- 80015da:	b672      	cpsid	i
- 80015dc:	e7fe      	b.n	80015dc <main+0x3bc>
- 80015de:	4c46      	ldr	r4, [pc, #280]	; (80016f8 <main+0x4d8>)
- 80015e0:	4601      	mov	r1, r0
- 80015e2:	2210      	movs	r2, #16
- 80015e4:	a813      	add	r0, sp, #76	; 0x4c
- 80015e6:	f004 ff79 	bl	80064dc <memset>
- 80015ea:	4b44      	ldr	r3, [pc, #272]	; (80016fc <main+0x4dc>)
- 80015ec:	60a5      	str	r5, [r4, #8]
- 80015ee:	4620      	mov	r0, r4
- 80015f0:	e9c4 3500 	strd	r3, r5, [r4]
- 80015f4:	e9c4 750a 	strd	r7, r5, [r4, #40]	; 0x28
- 80015f8:	6125      	str	r5, [r4, #16]
- 80015fa:	7625      	strb	r5, [r4, #24]
- 80015fc:	f884 5020 	strb.w	r5, [r4, #32]
- 8001600:	60e5      	str	r5, [r4, #12]
- 8001602:	61e6      	str	r6, [r4, #28]
- 8001604:	f884 5030 	strb.w	r5, [r4, #48]	; 0x30
- 8001608:	6166      	str	r6, [r4, #20]
- 800160a:	f000 fffd 	bl	8002608 <HAL_ADC_Init>
- 800160e:	b108      	cbz	r0, 8001614 <main+0x3f4>
- 8001610:	b672      	cpsid	i
- 8001612:	e7fe      	b.n	8001612 <main+0x3f2>
- 8001614:	230e      	movs	r3, #14
- 8001616:	9015      	str	r0, [sp, #84]	; 0x54
- 8001618:	a913      	add	r1, sp, #76	; 0x4c
- 800161a:	4620      	mov	r0, r4
- 800161c:	e9cd 3613 	strd	r3, r6, [sp, #76]	; 0x4c
- 8001620:	f001 f972 	bl	8002908 <HAL_ADC_ConfigChannel>
- 8001624:	b108      	cbz	r0, 800162a <main+0x40a>
- 8001626:	b672      	cpsid	i
- 8001628:	e7fe      	b.n	8001628 <main+0x408>
- 800162a:	4c35      	ldr	r4, [pc, #212]	; (8001700 <main+0x4e0>)
- 800162c:	2210      	movs	r2, #16
- 800162e:	2100      	movs	r1, #0
- 8001630:	a813      	add	r0, sp, #76	; 0x4c
- 8001632:	f004 ff53 	bl	80064dc <memset>
- 8001636:	4a33      	ldr	r2, [pc, #204]	; (8001704 <main+0x4e4>)
- 8001638:	2300      	movs	r3, #0
- 800163a:	270f      	movs	r7, #15
- 800163c:	f04f 36ff 	mov.w	r6, #4294967295
- 8001640:	4620      	mov	r0, r4
- 8001642:	e9cd 330c 	strd	r3, r3, [sp, #48]	; 0x30
- 8001646:	e9c4 2700 	strd	r2, r7, [r4]
- 800164a:	e9c4 6303 	strd	r6, r3, [r4, #12]
- 800164e:	60a3      	str	r3, [r4, #8]
- 8001650:	61a3      	str	r3, [r4, #24]
- 8001652:	f002 f897 	bl	8003784 <HAL_TIM_Base_Init>
- 8001656:	b108      	cbz	r0, 800165c <main+0x43c>
- 8001658:	b672      	cpsid	i
- 800165a:	e7fe      	b.n	800165a <main+0x43a>
- 800165c:	f44f 5380 	mov.w	r3, #4096	; 0x1000
- 8001660:	a913      	add	r1, sp, #76	; 0x4c
- 8001662:	4620      	mov	r0, r4
- 8001664:	9313      	str	r3, [sp, #76]	; 0x4c
- 8001666:	f002 fad2 	bl	8003c0e <HAL_TIM_ConfigClockSource>
- 800166a:	b108      	cbz	r0, 8001670 <main+0x450>
- 800166c:	b672      	cpsid	i
- 800166e:	e7fe      	b.n	800166e <main+0x44e>
- 8001670:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
- 8001674:	a90c      	add	r1, sp, #48	; 0x30
- 8001676:	4620      	mov	r0, r4
- 8001678:	f002 fcdc 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
- 800167c:	4605      	mov	r5, r0
- 800167e:	b108      	cbz	r0, 8001684 <main+0x464>
- 8001680:	b672      	cpsid	i
- 8001682:	e7fe      	b.n	8001682 <main+0x462>
- 8001684:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
- 8001688:	4601      	mov	r1, r0
- 800168a:	2210      	movs	r2, #16
- 800168c:	a813      	add	r0, sp, #76	; 0x4c
- 800168e:	f004 ff25 	bl	80064dc <memset>
- 8001692:	4c1d      	ldr	r4, [pc, #116]	; (8001708 <main+0x4e8>)
- 8001694:	4b1d      	ldr	r3, [pc, #116]	; (800170c <main+0x4ec>)
- 8001696:	60a5      	str	r5, [r4, #8]
- 8001698:	e9c4 3700 	strd	r3, r7, [r4]
- 800169c:	4620      	mov	r0, r4
- 800169e:	f64f 73ff 	movw	r3, #65535	; 0xffff
- 80016a2:	e9c4 3503 	strd	r3, r5, [r4, #12]
- 80016a6:	61a5      	str	r5, [r4, #24]
- 80016a8:	f002 f8c4 	bl	8003834 <HAL_TIM_IC_Init>
- 80016ac:	b108      	cbz	r0, 80016b2 <main+0x492>
- 80016ae:	b672      	cpsid	i
- 80016b0:	e7fe      	b.n	80016b0 <main+0x490>
- 80016b2:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
- 80016b6:	a90c      	add	r1, sp, #48	; 0x30
- 80016b8:	4620      	mov	r0, r4
- 80016ba:	f002 fcbb 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
- 80016be:	b108      	cbz	r0, 80016c4 <main+0x4a4>
- 80016c0:	b672      	cpsid	i
- 80016c2:	e7fe      	b.n	80016c2 <main+0x4a2>
- 80016c4:	2301      	movs	r3, #1
- 80016c6:	e9cd 3014 	strd	r3, r0, [sp, #80]	; 0x50
- 80016ca:	9013      	str	r0, [sp, #76]	; 0x4c
- 80016cc:	9016      	str	r0, [sp, #88]	; 0x58
- 80016ce:	2208      	movs	r2, #8
- 80016d0:	4620      	mov	r0, r4
- 80016d2:	a913      	add	r1, sp, #76	; 0x4c
- 80016d4:	f002 f9fe 	bl	8003ad4 <HAL_TIM_IC_ConfigChannel>
- 80016d8:	4604      	mov	r4, r0
- 80016da:	b1c8      	cbz	r0, 8001710 <main+0x4f0>
- 80016dc:	b672      	cpsid	i
- 80016de:	e7fe      	b.n	80016de <main+0x4be>
- 80016e0:	200049f0 	.word	0x200049f0
- 80016e4:	20004a98 	.word	0x20004a98
- 80016e8:	40004800 	.word	0x40004800
- 80016ec:	20004c20 	.word	0x20004c20
- 80016f0:	0f000001 	.word	0x0f000001
- 80016f4:	40012000 	.word	0x40012000
- 80016f8:	20004ae0 	.word	0x20004ae0
- 80016fc:	40012100 	.word	0x40012100
- 8001700:	20004b60 	.word	0x20004b60
- 8001704:	40000c00 	.word	0x40000c00
- 8001708:	20004a44 	.word	0x20004a44
- 800170c:	40000800 	.word	0x40000800
- 8001710:	f004 fe20 	bl	8006354 <OLED_Init>
- 8001714:	4b6d      	ldr	r3, [pc, #436]	; (80018cc <main+0x6ac>)
- 8001716:	4a6e      	ldr	r2, [pc, #440]	; (80018d0 <main+0x6b0>)
- 8001718:	601a      	str	r2, [r3, #0]
- 800171a:	4b6e      	ldr	r3, [pc, #440]	; (80018d4 <main+0x6b4>)
- 800171c:	4a6e      	ldr	r2, [pc, #440]	; (80018d8 <main+0x6b8>)
- 800171e:	601a      	str	r2, [r3, #0]
- 8001720:	4b6e      	ldr	r3, [pc, #440]	; (80018dc <main+0x6bc>)
- 8001722:	2202      	movs	r2, #2
- 8001724:	701a      	strb	r2, [r3, #0]
- 8001726:	f7ff fc6f 	bl	8001008 <changeProfile>
- 800172a:	4b6d      	ldr	r3, [pc, #436]	; (80018e0 <main+0x6c0>)
- 800172c:	496d      	ldr	r1, [pc, #436]	; (80018e4 <main+0x6c4>)
- 800172e:	f04f 527e 	mov.w	r2, #1065353216	; 0x3f800000
- 8001732:	601a      	str	r2, [r3, #0]
- 8001734:	4a6c      	ldr	r2, [pc, #432]	; (80018e8 <main+0x6c8>)
- 8001736:	2300      	movs	r3, #0
- 8001738:	6013      	str	r3, [r2, #0]
- 800173a:	4a6c      	ldr	r2, [pc, #432]	; (80018ec <main+0x6cc>)
- 800173c:	6011      	str	r1, [r2, #0]
- 800173e:	4a6c      	ldr	r2, [pc, #432]	; (80018f0 <main+0x6d0>)
- 8001740:	6013      	str	r3, [r2, #0]
- 8001742:	4b6c      	ldr	r3, [pc, #432]	; (80018f4 <main+0x6d4>)
- 8001744:	601c      	str	r4, [r3, #0]
- 8001746:	4b6c      	ldr	r3, [pc, #432]	; (80018f8 <main+0x6d8>)
- 8001748:	601e      	str	r6, [r3, #0]
- 800174a:	4b6c      	ldr	r3, [pc, #432]	; (80018fc <main+0x6dc>)
- 800174c:	f242 3228 	movw	r2, #9000	; 0x2328
- 8001750:	601a      	str	r2, [r3, #0]
- 8001752:	4b6b      	ldr	r3, [pc, #428]	; (8001900 <main+0x6e0>)
- 8001754:	f242 7210 	movw	r2, #10000	; 0x2710
- 8001758:	601a      	str	r2, [r3, #0]
- 800175a:	4b6a      	ldr	r3, [pc, #424]	; (8001904 <main+0x6e4>)
- 800175c:	f640 52ac 	movw	r2, #3500	; 0xdac
- 8001760:	601a      	str	r2, [r3, #0]
- 8001762:	4b69      	ldr	r3, [pc, #420]	; (8001908 <main+0x6e8>)
- 8001764:	4618      	mov	r0, r3
- 8001766:	2214      	movs	r2, #20
- 8001768:	2100      	movs	r1, #0
- 800176a:	f004 feb7 	bl	80064dc <memset>
- 800176e:	3401      	adds	r4, #1
- 8001770:	4603      	mov	r3, r0
- 8001772:	f5b4 7f7a 	cmp.w	r4, #1000	; 0x3e8
- 8001776:	f103 0314 	add.w	r3, r3, #20
- 800177a:	d1f3      	bne.n	8001764 <main+0x544>
- 800177c:	4b63      	ldr	r3, [pc, #396]	; (800190c <main+0x6ec>)
- 800177e:	4864      	ldr	r0, [pc, #400]	; (8001910 <main+0x6f0>)
- 8001780:	2201      	movs	r2, #1
- 8001782:	701a      	strb	r2, [r3, #0]
- 8001784:	2100      	movs	r1, #0
- 8001786:	2214      	movs	r2, #20
- 8001788:	f004 fea8 	bl	80064dc <memset>
- 800178c:	2214      	movs	r2, #20
- 800178e:	2100      	movs	r1, #0
- 8001790:	4860      	ldr	r0, [pc, #384]	; (8001914 <main+0x6f4>)
- 8001792:	f004 fea3 	bl	80064dc <memset>
- 8001796:	4b60      	ldr	r3, [pc, #384]	; (8001918 <main+0x6f8>)
- 8001798:	4960      	ldr	r1, [pc, #384]	; (800191c <main+0x6fc>)
- 800179a:	4861      	ldr	r0, [pc, #388]	; (8001920 <main+0x700>)
- 800179c:	2400      	movs	r4, #0
- 800179e:	701c      	strb	r4, [r3, #0]
- 80017a0:	4b60      	ldr	r3, [pc, #384]	; (8001924 <main+0x704>)
- 80017a2:	701c      	strb	r4, [r3, #0]
- 80017a4:	4b60      	ldr	r3, [pc, #384]	; (8001928 <main+0x708>)
- 80017a6:	701c      	strb	r4, [r3, #0]
- 80017a8:	4b60      	ldr	r3, [pc, #384]	; (800192c <main+0x70c>)
- 80017aa:	701c      	strb	r4, [r3, #0]
- 80017ac:	4b60      	ldr	r3, [pc, #384]	; (8001930 <main+0x710>)
- 80017ae:	701c      	strb	r4, [r3, #0]
- 80017b0:	f004 febc 	bl	800652c <strcpy>
- 80017b4:	4b5f      	ldr	r3, [pc, #380]	; (8001934 <main+0x714>)
- 80017b6:	4960      	ldr	r1, [pc, #384]	; (8001938 <main+0x718>)
- 80017b8:	701c      	strb	r4, [r3, #0]
- 80017ba:	4b60      	ldr	r3, [pc, #384]	; (800193c <main+0x71c>)
- 80017bc:	224a      	movs	r2, #74	; 0x4a
- 80017be:	601a      	str	r2, [r3, #0]
- 80017c0:	4b5f      	ldr	r3, [pc, #380]	; (8001940 <main+0x720>)
- 80017c2:	2232      	movs	r2, #50	; 0x32
+ 800142e:	a90c      	add	r1, sp, #48	; 0x30
+ 8001430:	4620      	mov	r0, r4
+ 8001432:	f002 fdff 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
+ 8001436:	4604      	mov	r4, r0
+ 8001438:	b108      	cbz	r0, 800143e <main+0x24e>
+ 800143a:	b672      	cpsid	i
+ 800143c:	e7fe      	b.n	800143c <main+0x24c>
+ 800143e:	462a      	mov	r2, r5
+ 8001440:	4601      	mov	r1, r0
+ 8001442:	a808      	add	r0, sp, #32
+ 8001444:	f005 f84a 	bl	80064dc <memset>
+ 8001448:	221c      	movs	r2, #28
+ 800144a:	4621      	mov	r1, r4
+ 800144c:	a80c      	add	r0, sp, #48	; 0x30
+ 800144e:	e9cd 4406 	strd	r4, r4, [sp, #24]
+ 8001452:	f005 f843 	bl	80064dc <memset>
+ 8001456:	2220      	movs	r2, #32
+ 8001458:	4621      	mov	r1, r4
+ 800145a:	a813      	add	r0, sp, #76	; 0x4c
+ 800145c:	f005 f83e 	bl	80064dc <memset>
+ 8001460:	4d24      	ldr	r5, [pc, #144]	; (80014f4 <main+0x304>)
+ 8001462:	4b25      	ldr	r3, [pc, #148]	; (80014f8 <main+0x308>)
+ 8001464:	60ac      	str	r4, [r5, #8]
+ 8001466:	e9c5 3400 	strd	r3, r4, [r5]
+ 800146a:	4628      	mov	r0, r5
+ 800146c:	f244 139f 	movw	r3, #16799	; 0x419f
+ 8001470:	e9c5 3403 	strd	r3, r4, [r5, #12]
+ 8001474:	e9c5 4405 	strd	r4, r4, [r5, #20]
+ 8001478:	f002 f984 	bl	8003784 <HAL_TIM_Base_Init>
+ 800147c:	b108      	cbz	r0, 8001482 <main+0x292>
+ 800147e:	b672      	cpsid	i
+ 8001480:	e7fe      	b.n	8001480 <main+0x290>
+ 8001482:	f44f 5380 	mov.w	r3, #4096	; 0x1000
+ 8001486:	a908      	add	r1, sp, #32
+ 8001488:	4628      	mov	r0, r5
+ 800148a:	9308      	str	r3, [sp, #32]
+ 800148c:	f002 fbbf 	bl	8003c0e <HAL_TIM_ConfigClockSource>
+ 8001490:	b108      	cbz	r0, 8001496 <main+0x2a6>
+ 8001492:	b672      	cpsid	i
+ 8001494:	e7fe      	b.n	8001494 <main+0x2a4>
+ 8001496:	4817      	ldr	r0, [pc, #92]	; (80014f4 <main+0x304>)
+ 8001498:	f002 f9a0 	bl	80037dc <HAL_TIM_PWM_Init>
+ 800149c:	b108      	cbz	r0, 80014a2 <main+0x2b2>
+ 800149e:	b672      	cpsid	i
+ 80014a0:	e7fe      	b.n	80014a0 <main+0x2b0>
+ 80014a2:	e9cd 0006 	strd	r0, r0, [sp, #24]
+ 80014a6:	a906      	add	r1, sp, #24
+ 80014a8:	4812      	ldr	r0, [pc, #72]	; (80014f4 <main+0x304>)
+ 80014aa:	f002 fdc3 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
+ 80014ae:	4602      	mov	r2, r0
+ 80014b0:	b108      	cbz	r0, 80014b6 <main+0x2c6>
+ 80014b2:	b672      	cpsid	i
+ 80014b4:	e7fe      	b.n	80014b4 <main+0x2c4>
+ 80014b6:	2360      	movs	r3, #96	; 0x60
+ 80014b8:	e9cd 300c 	strd	r3, r0, [sp, #48]	; 0x30
+ 80014bc:	e9cd 000e 	strd	r0, r0, [sp, #56]	; 0x38
+ 80014c0:	e9cd 0010 	strd	r0, r0, [sp, #64]	; 0x40
+ 80014c4:	9012      	str	r0, [sp, #72]	; 0x48
+ 80014c6:	a90c      	add	r1, sp, #48	; 0x30
+ 80014c8:	480a      	ldr	r0, [pc, #40]	; (80014f4 <main+0x304>)
+ 80014ca:	f002 fa6b 	bl	80039a4 <HAL_TIM_PWM_ConfigChannel>
+ 80014ce:	b1c8      	cbz	r0, 8001504 <main+0x314>
+ 80014d0:	b672      	cpsid	i
+ 80014d2:	e7fe      	b.n	80014d2 <main+0x2e2>
+ 80014d4:	40023800 	.word	0x40023800
+ 80014d8:	40021000 	.word	0x40021000
+ 80014dc:	20004cc0 	.word	0x20004cc0
+ 80014e0:	40020000 	.word	0x40020000
+ 80014e4:	40020400 	.word	0x40020400
+ 80014e8:	40020c00 	.word	0x40020c00
+ 80014ec:	20004bc4 	.word	0x20004bc4
+ 80014f0:	40000400 	.word	0x40000400
+ 80014f4:	200049f0 	.word	0x200049f0
+ 80014f8:	40010400 	.word	0x40010400
+ 80014fc:	40010000 	.word	0x40010000
+ 8001500:	20004d64 	.word	0x20004d64
+ 8001504:	486a      	ldr	r0, [pc, #424]	; (80016b0 <main+0x4c0>)
+ 8001506:	2204      	movs	r2, #4
+ 8001508:	a90c      	add	r1, sp, #48	; 0x30
+ 800150a:	f002 fa4b 	bl	80039a4 <HAL_TIM_PWM_ConfigChannel>
+ 800150e:	b108      	cbz	r0, 8001514 <main+0x324>
+ 8001510:	b672      	cpsid	i
+ 8001512:	e7fe      	b.n	8001512 <main+0x322>
+ 8001514:	f44f 5300 	mov.w	r3, #8192	; 0x2000
+ 8001518:	e9cd 0013 	strd	r0, r0, [sp, #76]	; 0x4c
+ 800151c:	e9cd 0015 	strd	r0, r0, [sp, #84]	; 0x54
+ 8001520:	9017      	str	r0, [sp, #92]	; 0x5c
+ 8001522:	901a      	str	r0, [sp, #104]	; 0x68
+ 8001524:	a913      	add	r1, sp, #76	; 0x4c
+ 8001526:	4862      	ldr	r0, [pc, #392]	; (80016b0 <main+0x4c0>)
+ 8001528:	9318      	str	r3, [sp, #96]	; 0x60
+ 800152a:	f002 fdc1 	bl	80040b0 <HAL_TIMEx_ConfigBreakDeadTime>
+ 800152e:	4603      	mov	r3, r0
+ 8001530:	b108      	cbz	r0, 8001536 <main+0x346>
+ 8001532:	b672      	cpsid	i
+ 8001534:	e7fe      	b.n	8001534 <main+0x344>
+ 8001536:	485f      	ldr	r0, [pc, #380]	; (80016b4 <main+0x4c4>)
+ 8001538:	495f      	ldr	r1, [pc, #380]	; (80016b8 <main+0x4c8>)
+ 800153a:	6103      	str	r3, [r0, #16]
+ 800153c:	f44f 32e1 	mov.w	r2, #115200	; 0x1c200
+ 8001540:	e9c0 1200 	strd	r1, r2, [r0]
+ 8001544:	220c      	movs	r2, #12
+ 8001546:	e9c0 3302 	strd	r3, r3, [r0, #8]
+ 800154a:	e9c0 2305 	strd	r2, r3, [r0, #20]
+ 800154e:	61c3      	str	r3, [r0, #28]
+ 8001550:	f002 fe98 	bl	8004284 <HAL_UART_Init>
+ 8001554:	4605      	mov	r5, r0
+ 8001556:	b108      	cbz	r0, 800155c <main+0x36c>
+ 8001558:	b672      	cpsid	i
+ 800155a:	e7fe      	b.n	800155a <main+0x36a>
+ 800155c:	4c57      	ldr	r4, [pc, #348]	; (80016bc <main+0x4cc>)
+ 800155e:	4f58      	ldr	r7, [pc, #352]	; (80016c0 <main+0x4d0>)
+ 8001560:	4601      	mov	r1, r0
+ 8001562:	2210      	movs	r2, #16
+ 8001564:	a813      	add	r0, sp, #76	; 0x4c
+ 8001566:	f004 ffb9 	bl	80064dc <memset>
+ 800156a:	4b56      	ldr	r3, [pc, #344]	; (80016c4 <main+0x4d4>)
+ 800156c:	60a5      	str	r5, [r4, #8]
+ 800156e:	2601      	movs	r6, #1
+ 8001570:	4620      	mov	r0, r4
+ 8001572:	e9c4 3500 	strd	r3, r5, [r4]
+ 8001576:	6125      	str	r5, [r4, #16]
+ 8001578:	7625      	strb	r5, [r4, #24]
+ 800157a:	f884 5020 	strb.w	r5, [r4, #32]
+ 800157e:	62e5      	str	r5, [r4, #44]	; 0x2c
+ 8001580:	62a7      	str	r7, [r4, #40]	; 0x28
+ 8001582:	60e5      	str	r5, [r4, #12]
+ 8001584:	61e6      	str	r6, [r4, #28]
+ 8001586:	f884 5030 	strb.w	r5, [r4, #48]	; 0x30
+ 800158a:	6166      	str	r6, [r4, #20]
+ 800158c:	f001 f83c 	bl	8002608 <HAL_ADC_Init>
+ 8001590:	b108      	cbz	r0, 8001596 <main+0x3a6>
+ 8001592:	b672      	cpsid	i
+ 8001594:	e7fe      	b.n	8001594 <main+0x3a4>
+ 8001596:	230a      	movs	r3, #10
+ 8001598:	9015      	str	r0, [sp, #84]	; 0x54
+ 800159a:	a913      	add	r1, sp, #76	; 0x4c
+ 800159c:	4620      	mov	r0, r4
+ 800159e:	e9cd 3613 	strd	r3, r6, [sp, #76]	; 0x4c
+ 80015a2:	f001 f9b1 	bl	8002908 <HAL_ADC_ConfigChannel>
+ 80015a6:	4605      	mov	r5, r0
+ 80015a8:	b108      	cbz	r0, 80015ae <main+0x3be>
+ 80015aa:	b672      	cpsid	i
+ 80015ac:	e7fe      	b.n	80015ac <main+0x3bc>
+ 80015ae:	4c46      	ldr	r4, [pc, #280]	; (80016c8 <main+0x4d8>)
+ 80015b0:	4601      	mov	r1, r0
+ 80015b2:	2210      	movs	r2, #16
+ 80015b4:	a813      	add	r0, sp, #76	; 0x4c
+ 80015b6:	f004 ff91 	bl	80064dc <memset>
+ 80015ba:	4b44      	ldr	r3, [pc, #272]	; (80016cc <main+0x4dc>)
+ 80015bc:	60a5      	str	r5, [r4, #8]
+ 80015be:	4620      	mov	r0, r4
+ 80015c0:	e9c4 3500 	strd	r3, r5, [r4]
+ 80015c4:	e9c4 750a 	strd	r7, r5, [r4, #40]	; 0x28
+ 80015c8:	6125      	str	r5, [r4, #16]
+ 80015ca:	7625      	strb	r5, [r4, #24]
+ 80015cc:	f884 5020 	strb.w	r5, [r4, #32]
+ 80015d0:	60e5      	str	r5, [r4, #12]
+ 80015d2:	61e6      	str	r6, [r4, #28]
+ 80015d4:	f884 5030 	strb.w	r5, [r4, #48]	; 0x30
+ 80015d8:	6166      	str	r6, [r4, #20]
+ 80015da:	f001 f815 	bl	8002608 <HAL_ADC_Init>
+ 80015de:	b108      	cbz	r0, 80015e4 <main+0x3f4>
+ 80015e0:	b672      	cpsid	i
+ 80015e2:	e7fe      	b.n	80015e2 <main+0x3f2>
+ 80015e4:	230e      	movs	r3, #14
+ 80015e6:	9015      	str	r0, [sp, #84]	; 0x54
+ 80015e8:	a913      	add	r1, sp, #76	; 0x4c
+ 80015ea:	4620      	mov	r0, r4
+ 80015ec:	e9cd 3613 	strd	r3, r6, [sp, #76]	; 0x4c
+ 80015f0:	f001 f98a 	bl	8002908 <HAL_ADC_ConfigChannel>
+ 80015f4:	b108      	cbz	r0, 80015fa <main+0x40a>
+ 80015f6:	b672      	cpsid	i
+ 80015f8:	e7fe      	b.n	80015f8 <main+0x408>
+ 80015fa:	4c35      	ldr	r4, [pc, #212]	; (80016d0 <main+0x4e0>)
+ 80015fc:	2210      	movs	r2, #16
+ 80015fe:	2100      	movs	r1, #0
+ 8001600:	a813      	add	r0, sp, #76	; 0x4c
+ 8001602:	f004 ff6b 	bl	80064dc <memset>
+ 8001606:	4a33      	ldr	r2, [pc, #204]	; (80016d4 <main+0x4e4>)
+ 8001608:	2300      	movs	r3, #0
+ 800160a:	270f      	movs	r7, #15
+ 800160c:	f04f 36ff 	mov.w	r6, #4294967295
+ 8001610:	4620      	mov	r0, r4
+ 8001612:	e9cd 330c 	strd	r3, r3, [sp, #48]	; 0x30
+ 8001616:	e9c4 2700 	strd	r2, r7, [r4]
+ 800161a:	e9c4 6303 	strd	r6, r3, [r4, #12]
+ 800161e:	60a3      	str	r3, [r4, #8]
+ 8001620:	61a3      	str	r3, [r4, #24]
+ 8001622:	f002 f8af 	bl	8003784 <HAL_TIM_Base_Init>
+ 8001626:	b108      	cbz	r0, 800162c <main+0x43c>
+ 8001628:	b672      	cpsid	i
+ 800162a:	e7fe      	b.n	800162a <main+0x43a>
+ 800162c:	f44f 5380 	mov.w	r3, #4096	; 0x1000
+ 8001630:	a913      	add	r1, sp, #76	; 0x4c
+ 8001632:	4620      	mov	r0, r4
+ 8001634:	9313      	str	r3, [sp, #76]	; 0x4c
+ 8001636:	f002 faea 	bl	8003c0e <HAL_TIM_ConfigClockSource>
+ 800163a:	b108      	cbz	r0, 8001640 <main+0x450>
+ 800163c:	b672      	cpsid	i
+ 800163e:	e7fe      	b.n	800163e <main+0x44e>
+ 8001640:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
+ 8001644:	a90c      	add	r1, sp, #48	; 0x30
+ 8001646:	4620      	mov	r0, r4
+ 8001648:	f002 fcf4 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
+ 800164c:	4605      	mov	r5, r0
+ 800164e:	b108      	cbz	r0, 8001654 <main+0x464>
+ 8001650:	b672      	cpsid	i
+ 8001652:	e7fe      	b.n	8001652 <main+0x462>
+ 8001654:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
+ 8001658:	4601      	mov	r1, r0
+ 800165a:	2210      	movs	r2, #16
+ 800165c:	a813      	add	r0, sp, #76	; 0x4c
+ 800165e:	f004 ff3d 	bl	80064dc <memset>
+ 8001662:	4c1d      	ldr	r4, [pc, #116]	; (80016d8 <main+0x4e8>)
+ 8001664:	4b1d      	ldr	r3, [pc, #116]	; (80016dc <main+0x4ec>)
+ 8001666:	60a5      	str	r5, [r4, #8]
+ 8001668:	e9c4 3700 	strd	r3, r7, [r4]
+ 800166c:	4620      	mov	r0, r4
+ 800166e:	f64f 73ff 	movw	r3, #65535	; 0xffff
+ 8001672:	e9c4 3503 	strd	r3, r5, [r4, #12]
+ 8001676:	61a5      	str	r5, [r4, #24]
+ 8001678:	f002 f8dc 	bl	8003834 <HAL_TIM_IC_Init>
+ 800167c:	b108      	cbz	r0, 8001682 <main+0x492>
+ 800167e:	b672      	cpsid	i
+ 8001680:	e7fe      	b.n	8001680 <main+0x490>
+ 8001682:	e9cd 000c 	strd	r0, r0, [sp, #48]	; 0x30
+ 8001686:	a90c      	add	r1, sp, #48	; 0x30
+ 8001688:	4620      	mov	r0, r4
+ 800168a:	f002 fcd3 	bl	8004034 <HAL_TIMEx_MasterConfigSynchronization>
+ 800168e:	b108      	cbz	r0, 8001694 <main+0x4a4>
+ 8001690:	b672      	cpsid	i
+ 8001692:	e7fe      	b.n	8001692 <main+0x4a2>
+ 8001694:	2301      	movs	r3, #1
+ 8001696:	e9cd 3014 	strd	r3, r0, [sp, #80]	; 0x50
+ 800169a:	9013      	str	r0, [sp, #76]	; 0x4c
+ 800169c:	9016      	str	r0, [sp, #88]	; 0x58
+ 800169e:	2208      	movs	r2, #8
+ 80016a0:	4620      	mov	r0, r4
+ 80016a2:	a913      	add	r1, sp, #76	; 0x4c
+ 80016a4:	f002 fa16 	bl	8003ad4 <HAL_TIM_IC_ConfigChannel>
+ 80016a8:	4604      	mov	r4, r0
+ 80016aa:	b1c8      	cbz	r0, 80016e0 <main+0x4f0>
+ 80016ac:	b672      	cpsid	i
+ 80016ae:	e7fe      	b.n	80016ae <main+0x4be>
+ 80016b0:	200049f0 	.word	0x200049f0
+ 80016b4:	20004a98 	.word	0x20004a98
+ 80016b8:	40004800 	.word	0x40004800
+ 80016bc:	20004c20 	.word	0x20004c20
+ 80016c0:	0f000001 	.word	0x0f000001
+ 80016c4:	40012000 	.word	0x40012000
+ 80016c8:	20004ae0 	.word	0x20004ae0
+ 80016cc:	40012100 	.word	0x40012100
+ 80016d0:	20004b60 	.word	0x20004b60
+ 80016d4:	40000c00 	.word	0x40000c00
+ 80016d8:	20004a44 	.word	0x20004a44
+ 80016dc:	40000800 	.word	0x40000800
+ 80016e0:	f004 fe38 	bl	8006354 <OLED_Init>
+ 80016e4:	4b6d      	ldr	r3, [pc, #436]	; (800189c <main+0x6ac>)
+ 80016e6:	4a6e      	ldr	r2, [pc, #440]	; (80018a0 <main+0x6b0>)
+ 80016e8:	601a      	str	r2, [r3, #0]
+ 80016ea:	4b6e      	ldr	r3, [pc, #440]	; (80018a4 <main+0x6b4>)
+ 80016ec:	4a6e      	ldr	r2, [pc, #440]	; (80018a8 <main+0x6b8>)
+ 80016ee:	601a      	str	r2, [r3, #0]
+ 80016f0:	4b6e      	ldr	r3, [pc, #440]	; (80018ac <main+0x6bc>)
+ 80016f2:	2202      	movs	r2, #2
+ 80016f4:	701a      	strb	r2, [r3, #0]
+ 80016f6:	f7ff fc69 	bl	8000fcc <changeProfile>
+ 80016fa:	4b6d      	ldr	r3, [pc, #436]	; (80018b0 <main+0x6c0>)
+ 80016fc:	496d      	ldr	r1, [pc, #436]	; (80018b4 <main+0x6c4>)
+ 80016fe:	f04f 527e 	mov.w	r2, #1065353216	; 0x3f800000
+ 8001702:	601a      	str	r2, [r3, #0]
+ 8001704:	4a6c      	ldr	r2, [pc, #432]	; (80018b8 <main+0x6c8>)
+ 8001706:	2300      	movs	r3, #0
+ 8001708:	6013      	str	r3, [r2, #0]
+ 800170a:	4a6c      	ldr	r2, [pc, #432]	; (80018bc <main+0x6cc>)
+ 800170c:	6011      	str	r1, [r2, #0]
+ 800170e:	4a6c      	ldr	r2, [pc, #432]	; (80018c0 <main+0x6d0>)
+ 8001710:	6013      	str	r3, [r2, #0]
+ 8001712:	4b6c      	ldr	r3, [pc, #432]	; (80018c4 <main+0x6d4>)
+ 8001714:	601c      	str	r4, [r3, #0]
+ 8001716:	4b6c      	ldr	r3, [pc, #432]	; (80018c8 <main+0x6d8>)
+ 8001718:	601e      	str	r6, [r3, #0]
+ 800171a:	4b6c      	ldr	r3, [pc, #432]	; (80018cc <main+0x6dc>)
+ 800171c:	f242 3228 	movw	r2, #9000	; 0x2328
+ 8001720:	601a      	str	r2, [r3, #0]
+ 8001722:	4b6b      	ldr	r3, [pc, #428]	; (80018d0 <main+0x6e0>)
+ 8001724:	f242 7210 	movw	r2, #10000	; 0x2710
+ 8001728:	601a      	str	r2, [r3, #0]
+ 800172a:	4b6a      	ldr	r3, [pc, #424]	; (80018d4 <main+0x6e4>)
+ 800172c:	f640 52ac 	movw	r2, #3500	; 0xdac
+ 8001730:	601a      	str	r2, [r3, #0]
+ 8001732:	4b69      	ldr	r3, [pc, #420]	; (80018d8 <main+0x6e8>)
+ 8001734:	4618      	mov	r0, r3
+ 8001736:	2214      	movs	r2, #20
+ 8001738:	2100      	movs	r1, #0
+ 800173a:	f004 fecf 	bl	80064dc <memset>
+ 800173e:	3401      	adds	r4, #1
+ 8001740:	4603      	mov	r3, r0
+ 8001742:	f5b4 7f7a 	cmp.w	r4, #1000	; 0x3e8
+ 8001746:	f103 0314 	add.w	r3, r3, #20
+ 800174a:	d1f3      	bne.n	8001734 <main+0x544>
+ 800174c:	4b63      	ldr	r3, [pc, #396]	; (80018dc <main+0x6ec>)
+ 800174e:	4864      	ldr	r0, [pc, #400]	; (80018e0 <main+0x6f0>)
+ 8001750:	2201      	movs	r2, #1
+ 8001752:	701a      	strb	r2, [r3, #0]
+ 8001754:	2100      	movs	r1, #0
+ 8001756:	2214      	movs	r2, #20
+ 8001758:	f004 fec0 	bl	80064dc <memset>
+ 800175c:	2214      	movs	r2, #20
+ 800175e:	2100      	movs	r1, #0
+ 8001760:	4860      	ldr	r0, [pc, #384]	; (80018e4 <main+0x6f4>)
+ 8001762:	f004 febb 	bl	80064dc <memset>
+ 8001766:	4b60      	ldr	r3, [pc, #384]	; (80018e8 <main+0x6f8>)
+ 8001768:	4960      	ldr	r1, [pc, #384]	; (80018ec <main+0x6fc>)
+ 800176a:	4861      	ldr	r0, [pc, #388]	; (80018f0 <main+0x700>)
+ 800176c:	2400      	movs	r4, #0
+ 800176e:	701c      	strb	r4, [r3, #0]
+ 8001770:	4b60      	ldr	r3, [pc, #384]	; (80018f4 <main+0x704>)
+ 8001772:	701c      	strb	r4, [r3, #0]
+ 8001774:	4b60      	ldr	r3, [pc, #384]	; (80018f8 <main+0x708>)
+ 8001776:	701c      	strb	r4, [r3, #0]
+ 8001778:	4b60      	ldr	r3, [pc, #384]	; (80018fc <main+0x70c>)
+ 800177a:	701c      	strb	r4, [r3, #0]
+ 800177c:	4b60      	ldr	r3, [pc, #384]	; (8001900 <main+0x710>)
+ 800177e:	701c      	strb	r4, [r3, #0]
+ 8001780:	f004 fed4 	bl	800652c <strcpy>
+ 8001784:	4b5f      	ldr	r3, [pc, #380]	; (8001904 <main+0x714>)
+ 8001786:	4960      	ldr	r1, [pc, #384]	; (8001908 <main+0x718>)
+ 8001788:	701c      	strb	r4, [r3, #0]
+ 800178a:	4b60      	ldr	r3, [pc, #384]	; (800190c <main+0x71c>)
+ 800178c:	224a      	movs	r2, #74	; 0x4a
+ 800178e:	601a      	str	r2, [r3, #0]
+ 8001790:	4b5f      	ldr	r3, [pc, #380]	; (8001910 <main+0x720>)
+ 8001792:	2232      	movs	r2, #50	; 0x32
+ 8001794:	601a      	str	r2, [r3, #0]
+ 8001796:	4b5f      	ldr	r3, [pc, #380]	; (8001914 <main+0x724>)
+ 8001798:	226d      	movs	r2, #109	; 0x6d
+ 800179a:	601a      	str	r2, [r3, #0]
+ 800179c:	4b5e      	ldr	r3, [pc, #376]	; (8001918 <main+0x728>)
+ 800179e:	4a5f      	ldr	r2, [pc, #380]	; (800191c <main+0x72c>)
+ 80017a0:	601c      	str	r4, [r3, #0]
+ 80017a2:	4b5f      	ldr	r3, [pc, #380]	; (8001920 <main+0x730>)
+ 80017a4:	601c      	str	r4, [r3, #0]
+ 80017a6:	4b5f      	ldr	r3, [pc, #380]	; (8001924 <main+0x734>)
+ 80017a8:	601c      	str	r4, [r3, #0]
+ 80017aa:	4b5f      	ldr	r3, [pc, #380]	; (8001928 <main+0x738>)
+ 80017ac:	2505      	movs	r5, #5
+ 80017ae:	3d01      	subs	r5, #1
+ 80017b0:	f841 4b04 	str.w	r4, [r1], #4
+ 80017b4:	f842 4b04 	str.w	r4, [r2], #4
+ 80017b8:	f843 4b04 	str.w	r4, [r3], #4
+ 80017bc:	d1f7      	bne.n	80017ae <main+0x5be>
+ 80017be:	4b5b      	ldr	r3, [pc, #364]	; (800192c <main+0x73c>)
+ 80017c0:	f44f 62fa 	mov.w	r2, #2000	; 0x7d0
  80017c4:	601a      	str	r2, [r3, #0]
- 80017c6:	4b5f      	ldr	r3, [pc, #380]	; (8001944 <main+0x724>)
- 80017c8:	226d      	movs	r2, #109	; 0x6d
- 80017ca:	601a      	str	r2, [r3, #0]
- 80017cc:	4b5e      	ldr	r3, [pc, #376]	; (8001948 <main+0x728>)
- 80017ce:	4a5f      	ldr	r2, [pc, #380]	; (800194c <main+0x72c>)
- 80017d0:	601c      	str	r4, [r3, #0]
- 80017d2:	4b5f      	ldr	r3, [pc, #380]	; (8001950 <main+0x730>)
- 80017d4:	601c      	str	r4, [r3, #0]
- 80017d6:	4b5f      	ldr	r3, [pc, #380]	; (8001954 <main+0x734>)
- 80017d8:	601c      	str	r4, [r3, #0]
- 80017da:	4b5f      	ldr	r3, [pc, #380]	; (8001958 <main+0x738>)
- 80017dc:	2505      	movs	r5, #5
- 80017de:	3d01      	subs	r5, #1
- 80017e0:	f841 4b04 	str.w	r4, [r1], #4
- 80017e4:	f842 4b04 	str.w	r4, [r2], #4
- 80017e8:	f843 4b04 	str.w	r4, [r3], #4
- 80017ec:	d1f7      	bne.n	80017de <main+0x5be>
- 80017ee:	4b5b      	ldr	r3, [pc, #364]	; (800195c <main+0x73c>)
- 80017f0:	f44f 62fa 	mov.w	r2, #2000	; 0x7d0
- 80017f4:	601a      	str	r2, [r3, #0]
- 80017f6:	4a5a      	ldr	r2, [pc, #360]	; (8001960 <main+0x740>)
- 80017f8:	2301      	movs	r3, #1
- 80017fa:	6013      	str	r3, [r2, #0]
- 80017fc:	4a59      	ldr	r2, [pc, #356]	; (8001964 <main+0x744>)
- 80017fe:	2119      	movs	r1, #25
- 8001800:	6011      	str	r1, [r2, #0]
- 8001802:	4959      	ldr	r1, [pc, #356]	; (8001968 <main+0x748>)
- 8001804:	2264      	movs	r2, #100	; 0x64
- 8001806:	600a      	str	r2, [r1, #0]
- 8001808:	4958      	ldr	r1, [pc, #352]	; (800196c <main+0x74c>)
- 800180a:	f640 30b8 	movw	r0, #3000	; 0xbb8
- 800180e:	6008      	str	r0, [r1, #0]
- 8001810:	4957      	ldr	r1, [pc, #348]	; (8001970 <main+0x750>)
- 8001812:	600b      	str	r3, [r1, #0]
- 8001814:	4957      	ldr	r1, [pc, #348]	; (8001974 <main+0x754>)
- 8001816:	200a      	movs	r0, #10
- 8001818:	6008      	str	r0, [r1, #0]
- 800181a:	4957      	ldr	r1, [pc, #348]	; (8001978 <main+0x758>)
- 800181c:	600b      	str	r3, [r1, #0]
- 800181e:	4957      	ldr	r1, [pc, #348]	; (800197c <main+0x75c>)
- 8001820:	600b      	str	r3, [r1, #0]
- 8001822:	4b57      	ldr	r3, [pc, #348]	; (8001980 <main+0x760>)
- 8001824:	2132      	movs	r1, #50	; 0x32
- 8001826:	6019      	str	r1, [r3, #0]
- 8001828:	4b56      	ldr	r3, [pc, #344]	; (8001984 <main+0x764>)
- 800182a:	601a      	str	r2, [r3, #0]
- 800182c:	4b56      	ldr	r3, [pc, #344]	; (8001988 <main+0x768>)
- 800182e:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
- 8001832:	601a      	str	r2, [r3, #0]
- 8001834:	f002 ff8a 	bl	800474c <osKernelInitialize>
- 8001838:	4a54      	ldr	r2, [pc, #336]	; (800198c <main+0x76c>)
- 800183a:	4855      	ldr	r0, [pc, #340]	; (8001990 <main+0x770>)
- 800183c:	4629      	mov	r1, r5
- 800183e:	f002 ffb1 	bl	80047a4 <osThreadNew>
- 8001842:	4b54      	ldr	r3, [pc, #336]	; (8001994 <main+0x774>)
- 8001844:	4a54      	ldr	r2, [pc, #336]	; (8001998 <main+0x778>)
- 8001846:	6018      	str	r0, [r3, #0]
- 8001848:	4629      	mov	r1, r5
- 800184a:	4854      	ldr	r0, [pc, #336]	; (800199c <main+0x77c>)
- 800184c:	f002 ffaa 	bl	80047a4 <osThreadNew>
- 8001850:	4b53      	ldr	r3, [pc, #332]	; (80019a0 <main+0x780>)
- 8001852:	4a54      	ldr	r2, [pc, #336]	; (80019a4 <main+0x784>)
- 8001854:	6018      	str	r0, [r3, #0]
- 8001856:	4629      	mov	r1, r5
- 8001858:	4853      	ldr	r0, [pc, #332]	; (80019a8 <main+0x788>)
- 800185a:	f002 ffa3 	bl	80047a4 <osThreadNew>
- 800185e:	4b53      	ldr	r3, [pc, #332]	; (80019ac <main+0x78c>)
- 8001860:	4a53      	ldr	r2, [pc, #332]	; (80019b0 <main+0x790>)
- 8001862:	6018      	str	r0, [r3, #0]
- 8001864:	4629      	mov	r1, r5
- 8001866:	4853      	ldr	r0, [pc, #332]	; (80019b4 <main+0x794>)
- 8001868:	f002 ff9c 	bl	80047a4 <osThreadNew>
- 800186c:	4b52      	ldr	r3, [pc, #328]	; (80019b8 <main+0x798>)
- 800186e:	4a53      	ldr	r2, [pc, #332]	; (80019bc <main+0x79c>)
- 8001870:	6018      	str	r0, [r3, #0]
- 8001872:	4629      	mov	r1, r5
- 8001874:	4852      	ldr	r0, [pc, #328]	; (80019c0 <main+0x7a0>)
- 8001876:	f002 ff95 	bl	80047a4 <osThreadNew>
- 800187a:	4b52      	ldr	r3, [pc, #328]	; (80019c4 <main+0x7a4>)
- 800187c:	4a52      	ldr	r2, [pc, #328]	; (80019c8 <main+0x7a8>)
- 800187e:	6018      	str	r0, [r3, #0]
- 8001880:	4629      	mov	r1, r5
- 8001882:	4852      	ldr	r0, [pc, #328]	; (80019cc <main+0x7ac>)
- 8001884:	f002 ff8e 	bl	80047a4 <osThreadNew>
- 8001888:	4b51      	ldr	r3, [pc, #324]	; (80019d0 <main+0x7b0>)
- 800188a:	4a52      	ldr	r2, [pc, #328]	; (80019d4 <main+0x7b4>)
- 800188c:	6018      	str	r0, [r3, #0]
- 800188e:	4629      	mov	r1, r5
- 8001890:	4851      	ldr	r0, [pc, #324]	; (80019d8 <main+0x7b8>)
- 8001892:	f002 ff87 	bl	80047a4 <osThreadNew>
- 8001896:	4b51      	ldr	r3, [pc, #324]	; (80019dc <main+0x7bc>)
- 8001898:	4a51      	ldr	r2, [pc, #324]	; (80019e0 <main+0x7c0>)
- 800189a:	6018      	str	r0, [r3, #0]
- 800189c:	4629      	mov	r1, r5
- 800189e:	4851      	ldr	r0, [pc, #324]	; (80019e4 <main+0x7c4>)
- 80018a0:	f002 ff80 	bl	80047a4 <osThreadNew>
- 80018a4:	4b50      	ldr	r3, [pc, #320]	; (80019e8 <main+0x7c8>)
- 80018a6:	4a51      	ldr	r2, [pc, #324]	; (80019ec <main+0x7cc>)
- 80018a8:	6018      	str	r0, [r3, #0]
- 80018aa:	4629      	mov	r1, r5
- 80018ac:	4850      	ldr	r0, [pc, #320]	; (80019f0 <main+0x7d0>)
- 80018ae:	f002 ff79 	bl	80047a4 <osThreadNew>
- 80018b2:	4b50      	ldr	r3, [pc, #320]	; (80019f4 <main+0x7d4>)
- 80018b4:	4a50      	ldr	r2, [pc, #320]	; (80019f8 <main+0x7d8>)
- 80018b6:	6018      	str	r0, [r3, #0]
- 80018b8:	4629      	mov	r1, r5
- 80018ba:	4850      	ldr	r0, [pc, #320]	; (80019fc <main+0x7dc>)
- 80018bc:	f002 ff72 	bl	80047a4 <osThreadNew>
- 80018c0:	4b4f      	ldr	r3, [pc, #316]	; (8001a00 <main+0x7e0>)
- 80018c2:	6018      	str	r0, [r3, #0]
- 80018c4:	f002 ff54 	bl	8004770 <osKernelStart>
- 80018c8:	e7fe      	b.n	80018c8 <main+0x6a8>
- 80018ca:	bf00      	nop
- 80018cc:	20004db4 	.word	0x20004db4
- 80018d0:	40490fdb 	.word	0x40490fdb
- 80018d4:	20004b2c 	.word	0x20004b2c
- 80018d8:	40566666 	.word	0x40566666
- 80018dc:	20004c9a 	.word	0x20004c9a
- 80018e0:	20009bf0 	.word	0x20009bf0
- 80018e4:	3c8c7e28 	.word	0x3c8c7e28
- 80018e8:	200049d4 	.word	0x200049d4
- 80018ec:	20004c0c 	.word	0x20004c0c
- 80018f0:	20004b30 	.word	0x20004b30
- 80018f4:	20004c8c 	.word	0x20004c8c
- 80018f8:	200049a8 	.word	0x200049a8
- 80018fc:	20004a3c 	.word	0x20004a3c
- 8001900:	20004c70 	.word	0x20004c70
- 8001904:	20004c14 	.word	0x20004c14
- 8001908:	20004dc4 	.word	0x20004dc4
- 800190c:	20004dac 	.word	0x20004dac
- 8001910:	20004cac 	.word	0x20004cac
- 8001914:	20004d10 	.word	0x20004d10
- 8001918:	20004c1c 	.word	0x20004c1c
- 800191c:	08006f0b 	.word	0x08006f0b
- 8001920:	20004b40 	.word	0x20004b40
- 8001924:	20009bec 	.word	0x20009bec
- 8001928:	20004b28 	.word	0x20004b28
- 800192c:	20004c9b 	.word	0x20004c9b
- 8001930:	20004c98 	.word	0x20004c98
- 8001934:	20004c99 	.word	0x20004c99
- 8001938:	20004d50 	.word	0x20004d50
- 800193c:	20009bfc 	.word	0x20009bfc
- 8001940:	20004a94 	.word	0x20004a94
- 8001944:	20009be4 	.word	0x20009be4
- 8001948:	20004c9c 	.word	0x20004c9c
- 800194c:	200049dc 	.word	0x200049dc
- 8001950:	20004d44 	.word	0x20004d44
- 8001954:	200049c8 	.word	0x200049c8
- 8001958:	20004ba8 	.word	0x20004ba8
- 800195c:	20004d08 	.word	0x20004d08
- 8001960:	20004ca4 	.word	0x20004ca4
- 8001964:	200049b8 	.word	0x200049b8
- 8001968:	20004c7c 	.word	0x20004c7c
- 800196c:	200049c0 	.word	0x200049c0
- 8001970:	20004c6c 	.word	0x20004c6c
- 8001974:	20004d2c 	.word	0x20004d2c
- 8001978:	20004adc 	.word	0x20004adc
- 800197c:	20004c84 	.word	0x20004c84
- 8001980:	20004dc0 	.word	0x20004dc0
- 8001984:	20004c78 	.word	0x20004c78
- 8001988:	20004a38 	.word	0x20004a38
- 800198c:	0800704c 	.word	0x0800704c
- 8001990:	08000b59 	.word	0x08000b59
- 8001994:	20004c18 	.word	0x20004c18
- 8001998:	08006fe0 	.word	0x08006fe0
- 800199c:	08000ee9 	.word	0x08000ee9
- 80019a0:	20004d48 	.word	0x20004d48
- 80019a4:	08007070 	.word	0x08007070
- 80019a8:	08000ca9 	.word	0x08000ca9
- 80019ac:	20004d40 	.word	0x20004d40
- 80019b0:	08007094 	.word	0x08007094
- 80019b4:	08000931 	.word	0x08000931
- 80019b8:	200049d0 	.word	0x200049d0
- 80019bc:	08006f98 	.word	0x08006f98
- 80019c0:	08001ff1 	.word	0x08001ff1
- 80019c4:	20004c90 	.word	0x20004c90
- 80019c8:	08006f74 	.word	0x08006f74
- 80019cc:	08000f41 	.word	0x08000f41
- 80019d0:	20004a40 	.word	0x20004a40
- 80019d4:	08007004 	.word	0x08007004
- 80019d8:	08000991 	.word	0x08000991
- 80019dc:	200049b4 	.word	0x200049b4
- 80019e0:	080070b8 	.word	0x080070b8
- 80019e4:	08000ded 	.word	0x08000ded
- 80019e8:	20004c94 	.word	0x20004c94
- 80019ec:	08007028 	.word	0x08007028
- 80019f0:	080009b1 	.word	0x080009b1
- 80019f4:	20004b54 	.word	0x20004b54
- 80019f8:	08006fbc 	.word	0x08006fbc
- 80019fc:	08001b91 	.word	0x08001b91
- 8001a00:	20004bbc 	.word	0x20004bbc
+ 80017c6:	4a5a      	ldr	r2, [pc, #360]	; (8001930 <main+0x740>)
+ 80017c8:	2301      	movs	r3, #1
+ 80017ca:	6013      	str	r3, [r2, #0]
+ 80017cc:	4a59      	ldr	r2, [pc, #356]	; (8001934 <main+0x744>)
+ 80017ce:	2119      	movs	r1, #25
+ 80017d0:	6011      	str	r1, [r2, #0]
+ 80017d2:	4959      	ldr	r1, [pc, #356]	; (8001938 <main+0x748>)
+ 80017d4:	2264      	movs	r2, #100	; 0x64
+ 80017d6:	600a      	str	r2, [r1, #0]
+ 80017d8:	4958      	ldr	r1, [pc, #352]	; (800193c <main+0x74c>)
+ 80017da:	f640 30b8 	movw	r0, #3000	; 0xbb8
+ 80017de:	6008      	str	r0, [r1, #0]
+ 80017e0:	4957      	ldr	r1, [pc, #348]	; (8001940 <main+0x750>)
+ 80017e2:	600b      	str	r3, [r1, #0]
+ 80017e4:	4957      	ldr	r1, [pc, #348]	; (8001944 <main+0x754>)
+ 80017e6:	200a      	movs	r0, #10
+ 80017e8:	6008      	str	r0, [r1, #0]
+ 80017ea:	4957      	ldr	r1, [pc, #348]	; (8001948 <main+0x758>)
+ 80017ec:	600b      	str	r3, [r1, #0]
+ 80017ee:	4957      	ldr	r1, [pc, #348]	; (800194c <main+0x75c>)
+ 80017f0:	600b      	str	r3, [r1, #0]
+ 80017f2:	4b57      	ldr	r3, [pc, #348]	; (8001950 <main+0x760>)
+ 80017f4:	2132      	movs	r1, #50	; 0x32
+ 80017f6:	6019      	str	r1, [r3, #0]
+ 80017f8:	4b56      	ldr	r3, [pc, #344]	; (8001954 <main+0x764>)
+ 80017fa:	601a      	str	r2, [r3, #0]
+ 80017fc:	4b56      	ldr	r3, [pc, #344]	; (8001958 <main+0x768>)
+ 80017fe:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
+ 8001802:	601a      	str	r2, [r3, #0]
+ 8001804:	f002 ffa2 	bl	800474c <osKernelInitialize>
+ 8001808:	4a54      	ldr	r2, [pc, #336]	; (800195c <main+0x76c>)
+ 800180a:	4855      	ldr	r0, [pc, #340]	; (8001960 <main+0x770>)
+ 800180c:	4629      	mov	r1, r5
+ 800180e:	f002 ffc9 	bl	80047a4 <osThreadNew>
+ 8001812:	4b54      	ldr	r3, [pc, #336]	; (8001964 <main+0x774>)
+ 8001814:	4a54      	ldr	r2, [pc, #336]	; (8001968 <main+0x778>)
+ 8001816:	6018      	str	r0, [r3, #0]
+ 8001818:	4629      	mov	r1, r5
+ 800181a:	4854      	ldr	r0, [pc, #336]	; (800196c <main+0x77c>)
+ 800181c:	f002 ffc2 	bl	80047a4 <osThreadNew>
+ 8001820:	4b53      	ldr	r3, [pc, #332]	; (8001970 <main+0x780>)
+ 8001822:	4a54      	ldr	r2, [pc, #336]	; (8001974 <main+0x784>)
+ 8001824:	6018      	str	r0, [r3, #0]
+ 8001826:	4629      	mov	r1, r5
+ 8001828:	4853      	ldr	r0, [pc, #332]	; (8001978 <main+0x788>)
+ 800182a:	f002 ffbb 	bl	80047a4 <osThreadNew>
+ 800182e:	4b53      	ldr	r3, [pc, #332]	; (800197c <main+0x78c>)
+ 8001830:	4a53      	ldr	r2, [pc, #332]	; (8001980 <main+0x790>)
+ 8001832:	6018      	str	r0, [r3, #0]
+ 8001834:	4629      	mov	r1, r5
+ 8001836:	4853      	ldr	r0, [pc, #332]	; (8001984 <main+0x794>)
+ 8001838:	f002 ffb4 	bl	80047a4 <osThreadNew>
+ 800183c:	4b52      	ldr	r3, [pc, #328]	; (8001988 <main+0x798>)
+ 800183e:	4a53      	ldr	r2, [pc, #332]	; (800198c <main+0x79c>)
+ 8001840:	6018      	str	r0, [r3, #0]
+ 8001842:	4629      	mov	r1, r5
+ 8001844:	4852      	ldr	r0, [pc, #328]	; (8001990 <main+0x7a0>)
+ 8001846:	f002 ffad 	bl	80047a4 <osThreadNew>
+ 800184a:	4b52      	ldr	r3, [pc, #328]	; (8001994 <main+0x7a4>)
+ 800184c:	4a52      	ldr	r2, [pc, #328]	; (8001998 <main+0x7a8>)
+ 800184e:	6018      	str	r0, [r3, #0]
+ 8001850:	4629      	mov	r1, r5
+ 8001852:	4852      	ldr	r0, [pc, #328]	; (800199c <main+0x7ac>)
+ 8001854:	f002 ffa6 	bl	80047a4 <osThreadNew>
+ 8001858:	4b51      	ldr	r3, [pc, #324]	; (80019a0 <main+0x7b0>)
+ 800185a:	4a52      	ldr	r2, [pc, #328]	; (80019a4 <main+0x7b4>)
+ 800185c:	6018      	str	r0, [r3, #0]
+ 800185e:	4629      	mov	r1, r5
+ 8001860:	4851      	ldr	r0, [pc, #324]	; (80019a8 <main+0x7b8>)
+ 8001862:	f002 ff9f 	bl	80047a4 <osThreadNew>
+ 8001866:	4b51      	ldr	r3, [pc, #324]	; (80019ac <main+0x7bc>)
+ 8001868:	4a51      	ldr	r2, [pc, #324]	; (80019b0 <main+0x7c0>)
+ 800186a:	6018      	str	r0, [r3, #0]
+ 800186c:	4629      	mov	r1, r5
+ 800186e:	4851      	ldr	r0, [pc, #324]	; (80019b4 <main+0x7c4>)
+ 8001870:	f002 ff98 	bl	80047a4 <osThreadNew>
+ 8001874:	4b50      	ldr	r3, [pc, #320]	; (80019b8 <main+0x7c8>)
+ 8001876:	4a51      	ldr	r2, [pc, #324]	; (80019bc <main+0x7cc>)
+ 8001878:	6018      	str	r0, [r3, #0]
+ 800187a:	4629      	mov	r1, r5
+ 800187c:	4850      	ldr	r0, [pc, #320]	; (80019c0 <main+0x7d0>)
+ 800187e:	f002 ff91 	bl	80047a4 <osThreadNew>
+ 8001882:	4b50      	ldr	r3, [pc, #320]	; (80019c4 <main+0x7d4>)
+ 8001884:	4a50      	ldr	r2, [pc, #320]	; (80019c8 <main+0x7d8>)
+ 8001886:	6018      	str	r0, [r3, #0]
+ 8001888:	4629      	mov	r1, r5
+ 800188a:	4850      	ldr	r0, [pc, #320]	; (80019cc <main+0x7dc>)
+ 800188c:	f002 ff8a 	bl	80047a4 <osThreadNew>
+ 8001890:	4b4f      	ldr	r3, [pc, #316]	; (80019d0 <main+0x7e0>)
+ 8001892:	6018      	str	r0, [r3, #0]
+ 8001894:	f002 ff6c 	bl	8004770 <osKernelStart>
+ 8001898:	e7fe      	b.n	8001898 <main+0x6a8>
+ 800189a:	bf00      	nop
+ 800189c:	20004db4 	.word	0x20004db4
+ 80018a0:	40490fdb 	.word	0x40490fdb
+ 80018a4:	20004b2c 	.word	0x20004b2c
+ 80018a8:	40566666 	.word	0x40566666
+ 80018ac:	20004c9a 	.word	0x20004c9a
+ 80018b0:	20009bf0 	.word	0x20009bf0
+ 80018b4:	3c8c7e28 	.word	0x3c8c7e28
+ 80018b8:	200049d4 	.word	0x200049d4
+ 80018bc:	20004c0c 	.word	0x20004c0c
+ 80018c0:	20004b30 	.word	0x20004b30
+ 80018c4:	20004c8c 	.word	0x20004c8c
+ 80018c8:	200049a8 	.word	0x200049a8
+ 80018cc:	20004a3c 	.word	0x20004a3c
+ 80018d0:	20004c70 	.word	0x20004c70
+ 80018d4:	20004c14 	.word	0x20004c14
+ 80018d8:	20004dc4 	.word	0x20004dc4
+ 80018dc:	20004dac 	.word	0x20004dac
+ 80018e0:	20004cac 	.word	0x20004cac
+ 80018e4:	20004d10 	.word	0x20004d10
+ 80018e8:	20004c1c 	.word	0x20004c1c
+ 80018ec:	08006eff 	.word	0x08006eff
+ 80018f0:	20004b40 	.word	0x20004b40
+ 80018f4:	20009bec 	.word	0x20009bec
+ 80018f8:	20004b28 	.word	0x20004b28
+ 80018fc:	20004c9b 	.word	0x20004c9b
+ 8001900:	20004c98 	.word	0x20004c98
+ 8001904:	20004c99 	.word	0x20004c99
+ 8001908:	20004d50 	.word	0x20004d50
+ 800190c:	20009bfc 	.word	0x20009bfc
+ 8001910:	20004a94 	.word	0x20004a94
+ 8001914:	20009be4 	.word	0x20009be4
+ 8001918:	20004c9c 	.word	0x20004c9c
+ 800191c:	200049dc 	.word	0x200049dc
+ 8001920:	20004d44 	.word	0x20004d44
+ 8001924:	200049c8 	.word	0x200049c8
+ 8001928:	20004ba8 	.word	0x20004ba8
+ 800192c:	20004d08 	.word	0x20004d08
+ 8001930:	20004ca4 	.word	0x20004ca4
+ 8001934:	200049b8 	.word	0x200049b8
+ 8001938:	20004c7c 	.word	0x20004c7c
+ 800193c:	200049c0 	.word	0x200049c0
+ 8001940:	20004c6c 	.word	0x20004c6c
+ 8001944:	20004d2c 	.word	0x20004d2c
+ 8001948:	20004adc 	.word	0x20004adc
+ 800194c:	20004c84 	.word	0x20004c84
+ 8001950:	20004dc0 	.word	0x20004dc0
+ 8001954:	20004c78 	.word	0x20004c78
+ 8001958:	20004a38 	.word	0x20004a38
+ 800195c:	08007048 	.word	0x08007048
+ 8001960:	08000b59 	.word	0x08000b59
+ 8001964:	20004c18 	.word	0x20004c18
+ 8001968:	08006fdc 	.word	0x08006fdc
+ 800196c:	08000ead 	.word	0x08000ead
+ 8001970:	20004d48 	.word	0x20004d48
+ 8001974:	0800706c 	.word	0x0800706c
+ 8001978:	08000ca9 	.word	0x08000ca9
+ 800197c:	20004d40 	.word	0x20004d40
+ 8001980:	08007090 	.word	0x08007090
+ 8001984:	08000931 	.word	0x08000931
+ 8001988:	200049d0 	.word	0x200049d0
+ 800198c:	08006f94 	.word	0x08006f94
+ 8001990:	08001ff1 	.word	0x08001ff1
+ 8001994:	20004c90 	.word	0x20004c90
+ 8001998:	08006f70 	.word	0x08006f70
+ 800199c:	08000f05 	.word	0x08000f05
+ 80019a0:	20004a40 	.word	0x20004a40
+ 80019a4:	08007000 	.word	0x08007000
+ 80019a8:	08000991 	.word	0x08000991
+ 80019ac:	200049b4 	.word	0x200049b4
+ 80019b0:	080070b4 	.word	0x080070b4
+ 80019b4:	08000db1 	.word	0x08000db1
+ 80019b8:	20004c94 	.word	0x20004c94
+ 80019bc:	08007024 	.word	0x08007024
+ 80019c0:	080009b1 	.word	0x080009b1
+ 80019c4:	20004b54 	.word	0x20004b54
+ 80019c8:	08006fb8 	.word	0x08006fb8
+ 80019cc:	08001b91 	.word	0x08001b91
+ 80019d0:	20004bbc 	.word	0x20004bbc
 
-08001a04 <pid>:
- 8001a04:	b530      	push	{r4, r5, lr}
- 8001a06:	4b4d      	ldr	r3, [pc, #308]	; (8001b3c <pid+0x138>)
- 8001a08:	781b      	ldrb	r3, [r3, #0]
- 8001a0a:	2b01      	cmp	r3, #1
- 8001a0c:	ee07 0a90 	vmov	s15, r0
- 8001a10:	d178      	bne.n	8001b04 <pid+0x100>
- 8001a12:	4b4b      	ldr	r3, [pc, #300]	; (8001b40 <pid+0x13c>)
- 8001a14:	eddf 6a4b 	vldr	s13, [pc, #300]	; 8001b44 <pid+0x140>
- 8001a18:	781b      	ldrb	r3, [r3, #0]
- 8001a1a:	494b      	ldr	r1, [pc, #300]	; (8001b48 <pid+0x144>)
- 8001a1c:	2b46      	cmp	r3, #70	; 0x46
- 8001a1e:	bf0c      	ite	eq
- 8001a20:	4a4a      	ldreq	r2, [pc, #296]	; (8001b4c <pid+0x148>)
- 8001a22:	4a4b      	ldrne	r2, [pc, #300]	; (8001b50 <pid+0x14c>)
- 8001a24:	ed92 7a00 	vldr	s14, [r2]
- 8001a28:	2b46      	cmp	r3, #70	; 0x46
- 8001a2a:	ee27 6a26 	vmul.f32	s12, s14, s13
- 8001a2e:	bf0c      	ite	eq
- 8001a30:	4a48      	ldreq	r2, [pc, #288]	; (8001b54 <pid+0x150>)
- 8001a32:	4a49      	ldrne	r2, [pc, #292]	; (8001b58 <pid+0x154>)
- 8001a34:	eef8 7a67 	vcvt.f32.u32	s15, s15
- 8001a38:	2b46      	cmp	r3, #70	; 0x46
- 8001a3a:	ee86 7a27 	vdiv.f32	s14, s12, s15
- 8001a3e:	bf0c      	ite	eq
- 8001a40:	4b46      	ldreq	r3, [pc, #280]	; (8001b5c <pid+0x158>)
- 8001a42:	4b47      	ldrne	r3, [pc, #284]	; (8001b60 <pid+0x15c>)
- 8001a44:	ed92 6a00 	vldr	s12, [r2]
- 8001a48:	edd3 4a00 	vldr	s9, [r3]
- 8001a4c:	4a45      	ldr	r2, [pc, #276]	; (8001b64 <pid+0x160>)
- 8001a4e:	4b46      	ldr	r3, [pc, #280]	; (8001b68 <pid+0x164>)
- 8001a50:	6814      	ldr	r4, [r2, #0]
- 8001a52:	681b      	ldr	r3, [r3, #0]
- 8001a54:	ee67 7a86 	vmul.f32	s15, s15, s12
- 8001a58:	1b1a      	subs	r2, r3, r4
- 8001a5a:	ee87 5aa6 	vdiv.f32	s10, s15, s13
- 8001a5e:	600a      	str	r2, [r1, #0]
- 8001a60:	4942      	ldr	r1, [pc, #264]	; (8001b6c <pid+0x168>)
- 8001a62:	6808      	ldr	r0, [r1, #0]
- 8001a64:	4942      	ldr	r1, [pc, #264]	; (8001b70 <pid+0x16c>)
- 8001a66:	1a1b      	subs	r3, r3, r0
- 8001a68:	600b      	str	r3, [r1, #0]
- 8001a6a:	4942      	ldr	r1, [pc, #264]	; (8001b74 <pid+0x170>)
- 8001a6c:	ee07 2a90 	vmov	s15, r2
- 8001a70:	edd1 5a00 	vldr	s11, [r1]
- 8001a74:	4a40      	ldr	r2, [pc, #256]	; (8001b78 <pid+0x174>)
- 8001a76:	eeb8 6ae7 	vcvt.f32.s32	s12, s15
- 8001a7a:	ee07 3a90 	vmov	s15, r3
- 8001a7e:	eee5 5a06 	vfma.f32	s11, s10, s12
- 8001a82:	2300      	movs	r3, #0
- 8001a84:	eef8 6ae7 	vcvt.f32.s32	s13, s15
- 8001a88:	edd2 7a00 	vldr	s15, [r2]
- 8001a8c:	edc1 5a00 	vstr	s11, [r1]
- 8001a90:	eee5 7a26 	vfma.f32	s15, s10, s13
- 8001a94:	eef5 5ac0 	vcmpe.f32	s11, #0.0
- 8001a98:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001a9c:	edc2 7a00 	vstr	s15, [r2]
- 8001aa0:	d531      	bpl.n	8001b06 <pid+0x102>
- 8001aa2:	600b      	str	r3, [r1, #0]
- 8001aa4:	eef5 7ac0 	vcmpe.f32	s15, #0.0
- 8001aa8:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001aac:	d538      	bpl.n	8001b20 <pid+0x11c>
- 8001aae:	6013      	str	r3, [r2, #0]
- 8001ab0:	4d32      	ldr	r5, [pc, #200]	; (8001b7c <pid+0x178>)
- 8001ab2:	682b      	ldr	r3, [r5, #0]
- 8001ab4:	602c      	str	r4, [r5, #0]
- 8001ab6:	1ae3      	subs	r3, r4, r3
- 8001ab8:	ee07 3a90 	vmov	s15, r3
+080019d4 <pid>:
+ 80019d4:	b5f0      	push	{r4, r5, r6, r7, lr}
+ 80019d6:	4b57      	ldr	r3, [pc, #348]	; (8001b34 <pid+0x160>)
+ 80019d8:	781b      	ldrb	r3, [r3, #0]
+ 80019da:	2b01      	cmp	r3, #1
+ 80019dc:	ee07 0a90 	vmov	s15, r0
+ 80019e0:	b087      	sub	sp, #28
+ 80019e2:	f040 808b 	bne.w	8001afc <pid+0x128>
+ 80019e6:	4b54      	ldr	r3, [pc, #336]	; (8001b38 <pid+0x164>)
+ 80019e8:	eddf 6a54 	vldr	s13, [pc, #336]	; 8001b3c <pid+0x168>
+ 80019ec:	781b      	ldrb	r3, [r3, #0]
+ 80019ee:	4d54      	ldr	r5, [pc, #336]	; (8001b40 <pid+0x16c>)
+ 80019f0:	4854      	ldr	r0, [pc, #336]	; (8001b44 <pid+0x170>)
+ 80019f2:	4c55      	ldr	r4, [pc, #340]	; (8001b48 <pid+0x174>)
+ 80019f4:	4e55      	ldr	r6, [pc, #340]	; (8001b4c <pid+0x178>)
+ 80019f6:	2b46      	cmp	r3, #70	; 0x46
+ 80019f8:	bf0c      	ite	eq
+ 80019fa:	4a55      	ldreq	r2, [pc, #340]	; (8001b50 <pid+0x17c>)
+ 80019fc:	4a55      	ldrne	r2, [pc, #340]	; (8001b54 <pid+0x180>)
+ 80019fe:	ed92 7a00 	vldr	s14, [r2]
+ 8001a02:	2b46      	cmp	r3, #70	; 0x46
+ 8001a04:	ee27 6a26 	vmul.f32	s12, s14, s13
+ 8001a08:	bf0c      	ite	eq
+ 8001a0a:	4a53      	ldreq	r2, [pc, #332]	; (8001b58 <pid+0x184>)
+ 8001a0c:	4a53      	ldrne	r2, [pc, #332]	; (8001b5c <pid+0x188>)
+ 8001a0e:	eef8 7a67 	vcvt.f32.u32	s15, s15
+ 8001a12:	2b46      	cmp	r3, #70	; 0x46
+ 8001a14:	ee86 7a27 	vdiv.f32	s14, s12, s15
+ 8001a18:	bf0c      	ite	eq
+ 8001a1a:	4b51      	ldreq	r3, [pc, #324]	; (8001b60 <pid+0x18c>)
+ 8001a1c:	4b51      	ldrne	r3, [pc, #324]	; (8001b64 <pid+0x190>)
+ 8001a1e:	ed92 6a00 	vldr	s12, [r2]
+ 8001a22:	edd3 4a00 	vldr	s9, [r3]
+ 8001a26:	4b50      	ldr	r3, [pc, #320]	; (8001b68 <pid+0x194>)
+ 8001a28:	ee67 7a86 	vmul.f32	s15, s15, s12
+ 8001a2c:	681a      	ldr	r2, [r3, #0]
+ 8001a2e:	682b      	ldr	r3, [r5, #0]
+ 8001a30:	ee87 5aa6 	vdiv.f32	s10, s15, s13
+ 8001a34:	1ad1      	subs	r1, r2, r3
+ 8001a36:	6001      	str	r1, [r0, #0]
+ 8001a38:	6820      	ldr	r0, [r4, #0]
+ 8001a3a:	1a12      	subs	r2, r2, r0
+ 8001a3c:	6032      	str	r2, [r6, #0]
+ 8001a3e:	4e4b      	ldr	r6, [pc, #300]	; (8001b6c <pid+0x198>)
+ 8001a40:	ee07 1a90 	vmov	s15, r1
+ 8001a44:	edd6 5a00 	vldr	s11, [r6]
+ 8001a48:	4949      	ldr	r1, [pc, #292]	; (8001b70 <pid+0x19c>)
+ 8001a4a:	eeb8 6ae7 	vcvt.f32.s32	s12, s15
+ 8001a4e:	ee07 2a90 	vmov	s15, r2
+ 8001a52:	eee5 5a06 	vfma.f32	s11, s10, s12
+ 8001a56:	4632      	mov	r2, r6
+ 8001a58:	eef8 6ae7 	vcvt.f32.s32	s13, s15
+ 8001a5c:	edd1 7a00 	vldr	s15, [r1]
+ 8001a60:	edc6 5a00 	vstr	s11, [r6]
+ 8001a64:	eee5 7a26 	vfma.f32	s15, s10, s13
+ 8001a68:	2600      	movs	r6, #0
+ 8001a6a:	eef5 5ac0 	vcmpe.f32	s11, #0.0
+ 8001a6e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001a72:	edc1 7a00 	vstr	s15, [r1]
+ 8001a76:	d543      	bpl.n	8001b00 <pid+0x12c>
+ 8001a78:	6016      	str	r6, [r2, #0]
+ 8001a7a:	eef5 7ac0 	vcmpe.f32	s15, #0.0
+ 8001a7e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001a82:	d54a      	bpl.n	8001b1a <pid+0x146>
+ 8001a84:	600e      	str	r6, [r1, #0]
+ 8001a86:	4e3b      	ldr	r6, [pc, #236]	; (8001b74 <pid+0x1a0>)
+ 8001a88:	6837      	ldr	r7, [r6, #0]
+ 8001a8a:	1bdb      	subs	r3, r3, r7
+ 8001a8c:	ee07 3a90 	vmov	s15, r3
+ 8001a90:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8001a94:	4b38      	ldr	r3, [pc, #224]	; (8001b78 <pid+0x1a4>)
+ 8001a96:	4f39      	ldr	r7, [pc, #228]	; (8001b7c <pid+0x1a8>)
+ 8001a98:	ee67 7a67 	vnmul.f32	s15, s14, s15
+ 8001a9c:	eee6 7a24 	vfma.f32	s15, s12, s9
+ 8001aa0:	ed92 6a00 	vldr	s12, [r2]
+ 8001aa4:	ee77 7a86 	vadd.f32	s15, s15, s12
+ 8001aa8:	eefd 7ae7 	vcvt.s32.f32	s15, s15
+ 8001aac:	edc3 7a00 	vstr	s15, [r3]
+ 8001ab0:	683b      	ldr	r3, [r7, #0]
+ 8001ab2:	1ac0      	subs	r0, r0, r3
+ 8001ab4:	ee17 2a90 	vmov	r2, s15
+ 8001ab8:	ee07 0a90 	vmov	s15, r0
  8001abc:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8001ac0:	4b2f      	ldr	r3, [pc, #188]	; (8001b80 <pid+0x17c>)
- 8001ac2:	ee67 7a67 	vnmul.f32	s15, s14, s15
- 8001ac6:	eee6 7a24 	vfma.f32	s15, s12, s9
- 8001aca:	ed91 6a00 	vldr	s12, [r1]
- 8001ace:	492d      	ldr	r1, [pc, #180]	; (8001b84 <pid+0x180>)
- 8001ad0:	ee77 7a86 	vadd.f32	s15, s15, s12
- 8001ad4:	eefd 7ae7 	vcvt.s32.f32	s15, s15
- 8001ad8:	edc3 7a00 	vstr	s15, [r3]
- 8001adc:	680b      	ldr	r3, [r1, #0]
- 8001ade:	6008      	str	r0, [r1, #0]
- 8001ae0:	1ac3      	subs	r3, r0, r3
- 8001ae2:	ee07 3a90 	vmov	s15, r3
- 8001ae6:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8001aea:	4b27      	ldr	r3, [pc, #156]	; (8001b88 <pid+0x184>)
- 8001aec:	ee27 7a67 	vnmul.f32	s14, s14, s15
- 8001af0:	edd2 7a00 	vldr	s15, [r2]
- 8001af4:	eea6 7aa4 	vfma.f32	s14, s13, s9
- 8001af8:	ee37 7a27 	vadd.f32	s14, s14, s15
- 8001afc:	eebd 7ac7 	vcvt.s32.f32	s14, s14
- 8001b00:	ed83 7a00 	vstr	s14, [r3]
- 8001b04:	bd30      	pop	{r4, r5, pc}
- 8001b06:	4d21      	ldr	r5, [pc, #132]	; (8001b8c <pid+0x188>)
- 8001b08:	ed95 5a00 	vldr	s10, [r5]
- 8001b0c:	eeb8 5ac5 	vcvt.f32.s32	s10, s10
- 8001b10:	eef4 5ac5 	vcmpe.f32	s11, s10
- 8001b14:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001b18:	bfc8      	it	gt
- 8001b1a:	ed81 5a00 	vstrgt	s10, [r1]
- 8001b1e:	e7c1      	b.n	8001aa4 <pid+0xa0>
- 8001b20:	4b1a      	ldr	r3, [pc, #104]	; (8001b8c <pid+0x188>)
- 8001b22:	edd3 5a00 	vldr	s11, [r3]
- 8001b26:	eef8 5ae5 	vcvt.f32.s32	s11, s11
- 8001b2a:	eef4 7ae5 	vcmpe.f32	s15, s11
- 8001b2e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
- 8001b32:	bfc8      	it	gt
- 8001b34:	edc2 5a00 	vstrgt	s11, [r2]
- 8001b38:	e7ba      	b.n	8001ab0 <pid+0xac>
- 8001b3a:	bf00      	nop
- 8001b3c:	20004c98 	.word	0x20004c98
- 8001b40:	20009bec 	.word	0x20009bec
- 8001b44:	447a0000 	.word	0x447a0000
- 8001b48:	20004d0c 	.word	0x20004d0c
- 8001b4c:	20004c10 	.word	0x20004c10
- 8001b50:	200049ac 	.word	0x200049ac
- 8001b54:	20004db0 	.word	0x20004db0
- 8001b58:	20004b34 	.word	0x20004b34
- 8001b5c:	20004bc0 	.word	0x20004bc0
- 8001b60:	200049bc 	.word	0x200049bc
- 8001b64:	20004d34 	.word	0x20004d34
+ 8001ac0:	a801      	add	r0, sp, #4
+ 8001ac2:	ee27 7a67 	vnmul.f32	s14, s14, s15
+ 8001ac6:	edd1 7a00 	vldr	s15, [r1]
+ 8001aca:	492d      	ldr	r1, [pc, #180]	; (8001b80 <pid+0x1ac>)
+ 8001acc:	eea6 7aa4 	vfma.f32	s14, s13, s9
+ 8001ad0:	ee37 7a27 	vadd.f32	s14, s14, s15
+ 8001ad4:	eefd 7ac7 	vcvt.s32.f32	s15, s14
+ 8001ad8:	ee17 3a90 	vmov	r3, s15
+ 8001adc:	edc1 7a00 	vstr	s15, [r1]
+ 8001ae0:	4928      	ldr	r1, [pc, #160]	; (8001b84 <pid+0x1b0>)
+ 8001ae2:	f004 fd03 	bl	80064ec <siprintf>
+ 8001ae6:	f64f 73ff 	movw	r3, #65535	; 0xffff
+ 8001aea:	4827      	ldr	r0, [pc, #156]	; (8001b88 <pid+0x1b4>)
+ 8001aec:	2214      	movs	r2, #20
+ 8001aee:	a901      	add	r1, sp, #4
+ 8001af0:	f002 fbf6 	bl	80042e0 <HAL_UART_Transmit>
+ 8001af4:	682b      	ldr	r3, [r5, #0]
+ 8001af6:	6033      	str	r3, [r6, #0]
+ 8001af8:	6823      	ldr	r3, [r4, #0]
+ 8001afa:	603b      	str	r3, [r7, #0]
+ 8001afc:	b007      	add	sp, #28
+ 8001afe:	bdf0      	pop	{r4, r5, r6, r7, pc}
+ 8001b00:	4f22      	ldr	r7, [pc, #136]	; (8001b8c <pid+0x1b8>)
+ 8001b02:	ed97 5a00 	vldr	s10, [r7]
+ 8001b06:	eeb8 5ac5 	vcvt.f32.s32	s10, s10
+ 8001b0a:	eef4 5ac5 	vcmpe.f32	s11, s10
+ 8001b0e:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001b12:	bfc8      	it	gt
+ 8001b14:	ed82 5a00 	vstrgt	s10, [r2]
+ 8001b18:	e7af      	b.n	8001a7a <pid+0xa6>
+ 8001b1a:	4e1c      	ldr	r6, [pc, #112]	; (8001b8c <pid+0x1b8>)
+ 8001b1c:	edd6 5a00 	vldr	s11, [r6]
+ 8001b20:	eef8 5ae5 	vcvt.f32.s32	s11, s11
+ 8001b24:	eef4 7ae5 	vcmpe.f32	s15, s11
+ 8001b28:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
+ 8001b2c:	bfc8      	it	gt
+ 8001b2e:	edc1 5a00 	vstrgt	s11, [r1]
+ 8001b32:	e7a8      	b.n	8001a86 <pid+0xb2>
+ 8001b34:	20004c98 	.word	0x20004c98
+ 8001b38:	20009bec 	.word	0x20009bec
+ 8001b3c:	447a0000 	.word	0x447a0000
+ 8001b40:	20004d34 	.word	0x20004d34
+ 8001b44:	20004d0c 	.word	0x20004d0c
+ 8001b48:	20004b50 	.word	0x20004b50
+ 8001b4c:	20004b58 	.word	0x20004b58
+ 8001b50:	20004c10 	.word	0x20004c10
+ 8001b54:	200049ac 	.word	0x200049ac
+ 8001b58:	20004db0 	.word	0x20004db0
+ 8001b5c:	20004b34 	.word	0x20004b34
+ 8001b60:	20004bc0 	.word	0x20004bc0
+ 8001b64:	200049bc 	.word	0x200049bc
  8001b68:	200049b0 	.word	0x200049b0
- 8001b6c:	20004b50 	.word	0x20004b50
- 8001b70:	20004b58 	.word	0x20004b58
- 8001b74:	20004b4c 	.word	0x20004b4c
- 8001b78:	20004ca8 	.word	0x20004ca8
- 8001b7c:	20004db8 	.word	0x20004db8
- 8001b80:	20004d4c 	.word	0x20004d4c
- 8001b84:	20004c80 	.word	0x20004c80
- 8001b88:	20004b38 	.word	0x20004b38
+ 8001b6c:	20004b4c 	.word	0x20004b4c
+ 8001b70:	20004ca8 	.word	0x20004ca8
+ 8001b74:	20004db8 	.word	0x20004db8
+ 8001b78:	20004d4c 	.word	0x20004d4c
+ 8001b7c:	20004c80 	.word	0x20004c80
+ 8001b80:	20004b38 	.word	0x20004b38
+ 8001b84:	08006f0a 	.word	0x08006f0a
+ 8001b88:	20004a98 	.word	0x20004a98
  8001b8c:	20004c70 	.word	0x20004c70
 
 08001b90 <encoder>:
@@ -2618,7 +2619,7 @@ Disassembly of section .text:
  8001ce4:	edd3 7a00 	vldr	s15, [r3]
  8001ce8:	ee77 7a27 	vadd.f32	s15, s14, s15
  8001cec:	edc3 7a00 	vstr	s15, [r3]
- 8001cf0:	f7ff fe88 	bl	8001a04 <pid>
+ 8001cf0:	f7ff fe70 	bl	80019d4 <pid>
  8001cf4:	682b      	ldr	r3, [r5, #0]
  8001cf6:	f8d3 9024 	ldr.w	r9, [r3, #36]	; 0x24
  8001cfa:	6823      	ldr	r3, [r4, #0]
@@ -3462,12 +3463,12 @@ Disassembly of section .text:
  8002514:	d3fb      	bcc.n	800250e <FillZerobss>
  8002516:	f7ff ffdf 	bl	80024d8 <SystemInit>
  800251a:	f003 ffad 	bl	8006478 <__libc_init_array>
- 800251e:	f7fe fe7f 	bl	8001220 <main>
+ 800251e:	f7fe fe67 	bl	80011f0 <main>
  8002522:	4770      	bx	lr
  8002524:	20020000 	.word	0x20020000
  8002528:	20000000 	.word	0x20000000
  800252c:	20000074 	.word	0x20000074
- 8002530:	08007cb0 	.word	0x08007cb0
+ 8002530:	08007cac 	.word	0x08007cac
  8002534:	20000074 	.word	0x20000074
  8002538:	2000a054 	.word	0x2000a054
 
@@ -4341,7 +4342,7 @@ Disassembly of section .text:
  8002d8a:	b508      	push	{r3, lr}
  8002d8c:	d002      	beq.n	8002d94 <HAL_GPIO_EXTI_IRQHandler+0x10>
  8002d8e:	6150      	str	r0, [r2, #20]
- 8002d90:	f7fe fa34 	bl	80011fc <HAL_GPIO_EXTI_Callback>
+ 8002d90:	f7fe fa1c 	bl	80011cc <HAL_GPIO_EXTI_Callback>
  8002d94:	bd08      	pop	{r3, pc}
  8002d96:	bf00      	nop
  8002d98:	40013c00 	.word	0x40013c00
@@ -4879,7 +4880,7 @@ Disassembly of section .text:
  80032aa:	bf00      	nop
  80032ac:	40023c00 	.word	0x40023c00
  80032b0:	40023800 	.word	0x40023800
- 80032b4:	080070dc 	.word	0x080070dc
+ 80032b4:	080070d8 	.word	0x080070d8
  80032b8:	20000000 	.word	0x20000000
  80032bc:	20000008 	.word	0x20000008
 
@@ -4894,7 +4895,7 @@ Disassembly of section .text:
  80032d0:	40d8      	lsrs	r0, r3
  80032d2:	4770      	bx	lr
  80032d4:	40023800 	.word	0x40023800
- 80032d8:	080070ec 	.word	0x080070ec
+ 80032d8:	080070e8 	.word	0x080070e8
  80032dc:	20000000 	.word	0x20000000
 
 080032e0 <HAL_RCC_GetPCLK2Freq>:
@@ -4908,7 +4909,7 @@ Disassembly of section .text:
  80032f0:	40d8      	lsrs	r0, r3
  80032f2:	4770      	bx	lr
  80032f4:	40023800 	.word	0x40023800
- 80032f8:	080070ec 	.word	0x080070ec
+ 80032f8:	080070e8 	.word	0x080070e8
  80032fc:	20000000 	.word	0x20000000
 
 08003300 <TIM_OC1_SetConfig>:
@@ -5199,7 +5200,7 @@ Disassembly of section .text:
  800358e:	699b      	ldr	r3, [r3, #24]
  8003590:	079b      	lsls	r3, r3, #30
  8003592:	d077      	beq.n	8003684 <HAL_TIM_IRQHandler+0x112>
- 8003594:	f7fd fc60 	bl	8000e58 <HAL_TIM_IC_CaptureCallback>
+ 8003594:	f7fd fc42 	bl	8000e1c <HAL_TIM_IC_CaptureCallback>
  8003598:	2300      	movs	r3, #0
  800359a:	7723      	strb	r3, [r4, #28]
  800359c:	6823      	ldr	r3, [r4, #0]
@@ -5217,7 +5218,7 @@ Disassembly of section .text:
  80035b6:	f413 7f40 	tst.w	r3, #768	; 0x300
  80035ba:	4620      	mov	r0, r4
  80035bc:	d068      	beq.n	8003690 <HAL_TIM_IRQHandler+0x11e>
- 80035be:	f7fd fc4b 	bl	8000e58 <HAL_TIM_IC_CaptureCallback>
+ 80035be:	f7fd fc2d 	bl	8000e1c <HAL_TIM_IC_CaptureCallback>
  80035c2:	2300      	movs	r3, #0
  80035c4:	7723      	strb	r3, [r4, #28]
  80035c6:	6823      	ldr	r3, [r4, #0]
@@ -5235,7 +5236,7 @@ Disassembly of section .text:
  80035e0:	0799      	lsls	r1, r3, #30
  80035e2:	4620      	mov	r0, r4
  80035e4:	d05a      	beq.n	800369c <HAL_TIM_IRQHandler+0x12a>
- 80035e6:	f7fd fc37 	bl	8000e58 <HAL_TIM_IC_CaptureCallback>
+ 80035e6:	f7fd fc19 	bl	8000e1c <HAL_TIM_IC_CaptureCallback>
  80035ea:	2300      	movs	r3, #0
  80035ec:	7723      	strb	r3, [r4, #28]
  80035ee:	6823      	ldr	r3, [r4, #0]
@@ -5253,7 +5254,7 @@ Disassembly of section .text:
  8003608:	f413 7f40 	tst.w	r3, #768	; 0x300
  800360c:	4620      	mov	r0, r4
  800360e:	d04b      	beq.n	80036a8 <HAL_TIM_IRQHandler+0x136>
- 8003610:	f7fd fc22 	bl	8000e58 <HAL_TIM_IC_CaptureCallback>
+ 8003610:	f7fd fc04 	bl	8000e1c <HAL_TIM_IC_CaptureCallback>
  8003614:	2300      	movs	r3, #0
  8003616:	7723      	strb	r3, [r4, #28]
  8003618:	6823      	ldr	r3, [r4, #0]
@@ -8202,7 +8203,7 @@ Disassembly of section .text:
  8005318:	f3bf 8f4f 	dsb	sy
  800531c:	e7fe      	b.n	800531c <vTaskStartScheduler+0x70>
  800531e:	bf00      	nop
- 8005320:	080070f4 	.word	0x080070f4
+ 8005320:	080070f0 	.word	0x080070f0
  8005324:	08005109 	.word	0x08005109
  8005328:	20000bf8 	.word	0x20000bf8
  800532c:	20000c18 	.word	0x20000c18
@@ -8780,7 +8781,7 @@ Disassembly of section .text:
  80058b8:	20000c54 	.word	0x20000c54
  80058bc:	20000c50 	.word	0x20000c50
  80058c0:	20000d20 	.word	0x20000d20
- 80058c4:	080070f9 	.word	0x080070f9
+ 80058c4:	080070f5 	.word	0x080070f5
 
 080058c8 <prvInsertTimerInActiveList>:
  80058c8:	4291      	cmp	r1, r2
@@ -8847,7 +8848,7 @@ Disassembly of section .text:
  8005954:	b008      	add	sp, #32
  8005956:	bd10      	pop	{r4, pc}
  8005958:	20000d70 	.word	0x20000d70
- 800595c:	080070fe 	.word	0x080070fe
+ 800595c:	080070fa 	.word	0x080070fa
  8005960:	08005a3d 	.word	0x08005a3d
  8005964:	20000d74 	.word	0x20000d74
 
@@ -9809,8 +9810,8 @@ Disassembly of section .text:
  8006306:	45a2      	cmp	sl, r4
  8006308:	d1e1      	bne.n	80062ce <OLED_ShowChar+0x4a>
  800630a:	e7f9      	b.n	8006300 <OLED_ShowChar+0x7c>
- 800630c:	0800757a 	.word	0x0800757a
- 8006310:	08007106 	.word	0x08007106
+ 800630c:	08007576 	.word	0x08007576
+ 8006310:	08007102 	.word	0x08007102
 
 08006314 <OLED_ShowString>:
  8006314:	b5f7      	push	{r0, r1, r2, r4, r5, r6, r7, lr}
@@ -9983,10 +9984,10 @@ Disassembly of section .text:
  80064aa:	4798      	blx	r3
  80064ac:	3601      	adds	r6, #1
  80064ae:	e7f2      	b.n	8006496 <__libc_init_array+0x1e>
- 80064b0:	08007ca8 	.word	0x08007ca8
- 80064b4:	08007ca8 	.word	0x08007ca8
- 80064b8:	08007ca8 	.word	0x08007ca8
- 80064bc:	08007cac 	.word	0x08007cac
+ 80064b0:	08007ca4 	.word	0x08007ca4
+ 80064b4:	08007ca4 	.word	0x08007ca4
+ 80064b8:	08007ca4 	.word	0x08007ca4
+ 80064bc:	08007ca8 	.word	0x08007ca8
 
 080064c0 <memcpy>:
  80064c0:	440a      	add	r2, r1
@@ -10170,7 +10171,7 @@ Disassembly of section .text:
  8006662:	230a      	movs	r3, #10
  8006664:	e7ad      	b.n	80065c2 <_strtol_l.isra.0+0x5e>
  8006666:	bf00      	nop
- 8006668:	08007b6b 	.word	0x08007b6b
+ 8006668:	08007b67 	.word	0x08007b67
 
 0800666c <strtol>:
  800666c:	4613      	mov	r3, r2
@@ -10461,11 +10462,11 @@ Disassembly of section .text:
  800691c:	f000 f87a 	bl	8006a14 <_printf_i>
  8006920:	e7eb      	b.n	80068fa <_svfiprintf_r+0x1c2>
  8006922:	bf00      	nop
- 8006924:	08007c6b 	.word	0x08007c6b
- 8006928:	08007c75 	.word	0x08007c75
+ 8006924:	08007c67 	.word	0x08007c67
+ 8006928:	08007c71 	.word	0x08007c71
  800692c:	00000000 	.word	0x00000000
  8006930:	08006681 	.word	0x08006681
- 8006934:	08007c71 	.word	0x08007c71
+ 8006934:	08007c6d 	.word	0x08007c6d
 
 08006938 <_printf_common>:
  8006938:	e92d 47f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, sl, lr}
@@ -10801,8 +10802,8 @@ Disassembly of section .text:
  8006c50:	f104 0619 	add.w	r6, r4, #25
  8006c54:	e7f5      	b.n	8006c42 <_printf_i+0x22e>
  8006c56:	bf00      	nop
- 8006c58:	08007c7c 	.word	0x08007c7c
- 8006c5c:	08007c8d 	.word	0x08007c8d
+ 8006c58:	08007c78 	.word	0x08007c78
+ 8006c5c:	08007c89 	.word	0x08007c89
 
 08006c60 <memmove>:
  8006c60:	4288      	cmp	r0, r1

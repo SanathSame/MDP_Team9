@@ -56,11 +56,11 @@ class RPI(threading.Thread):
 
         count = 0
         while True:
-            self.sendToSTM("{:<3} F {:<4}".format(count, 50))
+            self.sendToSTM("{:<3} F {:<4}".format(count, 100))
             #A = input("hhi")
             count += 1
             time.sleep(0.2)
-            self.sendToSTM("{:<3} B {:<4}".format(count, 50))
+            self.sendToSTM("{:<3} B {:<4}".format(count, 100))
             count += 1
             #time.sleep(2)
             b = input("hhi")

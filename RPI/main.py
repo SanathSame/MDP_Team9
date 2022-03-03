@@ -103,7 +103,7 @@ class RPI(threading.Thread):
                         if c[2:5] == "STM":
                             print("Message sending to STM: " + str(c[6:] + "||"))
                             self.sendToSTM(c[6:])
-                        time.sleep(0.5)
+                        time.sleep(0.1)
                 commands = None
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
@@ -175,7 +175,6 @@ class RPI(threading.Thread):
                 print("Error with Ultra: " + str(e))
 
     def closeAll(self):
-
         self.camera.close()
         self.pcObject.disconnect()
         self.androidObject.disconnect()

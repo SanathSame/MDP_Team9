@@ -11,8 +11,10 @@ WEIGHTS_PATH = 'Image Recognition/weights/best.pt' # Path to weights being used
 MODEL_PATH = 'Image Recognition' # Path to yolov5 repo locally
 PREDICTIONS_DIR = 'RPI/predictions' # Path to save predictions
 NO_PREDICTION_PREFIX = "NO_PREDICTION" # Prefix to images that do not have predictions in them
+ADJUSTMENT_PREFIX = "ADJUSTMENT" # Prefix to images that are used just for adjustments
 STITCHED_IMAGE_PREFIX = "stitched" # Prefix to images that are stitches of the other predictions
 model = torch.hub.load(MODEL_PATH, 'custom', path=WEIGHTS_PATH, source='local')
+
 
 def read_and_preprocess_img(img_path: str):
     img = cv2.imread(img_path)
@@ -24,9 +26,11 @@ def read_and_preprocess_img(img_path: str):
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel) # Sharpen image
     return img
 
-def predict(img_path: str):
+def predict(img_path: str, forAdjusting: bool):
     """
-    Given a path to an image file, predict what classes are in the image
+    img_path : path to an image file to predict what classes are in the image
+    forAdjusting : determines if image is taken for adjustment purposes and ignored in stitching process
+
     Returns a list of strings with the format "IMG <ID> <CLASS>", where 
     - ID is the ID of the class
     - CLASS is the name of the class
@@ -104,7 +108,10 @@ def predict(img_path: str):
     counter = len(os.listdir(PREDICTIONS_DIR))
 
     # for img in results.imgs:
-    if len(result) == 0: 
+    if forAdjusting:
+        # If image is for adjustment, we append an ADJUSTMENT_PREFIX to separate the images
+        image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, ADJUSTMENT_PREFIX, counter)
+    elif len(result) == 0:
         # If image has no predictions, we append a NO_PREDICTION_PREFIX to 
         # separate from images with predictions
         image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, NO_PREDICTION_PREFIX, counter)
@@ -118,7 +125,8 @@ def predict(img_path: str):
     images_to_stitch = [cv2.imread(os.path.join(PREDICTIONS_DIR, img)) for img in os.listdir(PREDICTIONS_DIR) if 
         (not img.startswith(STITCHED_IMAGE_PREFIX) and 
         not img.startswith(".") and 
-        not img.startswith(NO_PREDICTION_PREFIX)
+        not img.startswith(NO_PREDICTION_PREFIX) and
+        not img.startswith(ADJUSTMENT_PREFIX)
     )]
 
     # Stitch images and save the result
@@ -189,6 +197,10 @@ def stitch_images_and_save(images, images_per_row = 4):
     `images`: List of cv2 images to stitch together
     `images_per_row`: Number of images per row (maximum)
     """
+
+    if len(images) == 0:
+        print("No images to stitch")
+        return
     
     # Separate images into individual rows
     if len(images) == 0:

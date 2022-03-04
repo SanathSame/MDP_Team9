@@ -120,7 +120,8 @@ def TestImagePrediction():
             commands = s.recv(1024).split()        # TAKEPICTURE OBSTACLE_ID
             if len(commands) > 0:
                 obsID = commands[1].decode('utf-8')        # Extract out the OBSTACLE_ID
-                if str(commands[0].decode('utf-8')) == "TAKEPICTURE":
+                if str(commands[0].decode('utf-8')) == "TAKEPICTURE" or str(commands[0].decode('utf-8')) == "ADJUST":
+                    forAdjusting = True if str(commands[0].decode('utf-8')) == "ADJUST" else False
                     data = s.recv(1024)
                     filesize = int(data.decode('utf-8'))
                     print("Filesize", filesize)
@@ -143,12 +144,18 @@ def TestImagePrediction():
 
                     print("Received")
 
-                    predictions = predict(SAVE_FILE)
+                    predictions = predict(SAVE_FILE, forAdjusting)
                     print("Predictions", predictions)
                     if len(predictions) == 0:
-                        s.send(bytes("NOIMAGE", "utf-8"))
+                        if forAdjusting:
+                            s.send(bytes("ADJUST NOIMAGE", "utf-8"))
+                        else:
+                            s.send(bytes("NOIMAGE", "utf-8"))
                     else:
-                        s.send(bytes(str(predictions[0] + " " + obsID), "utf-8"))
+                        if forAdjusting:
+                            s.send(bytes(str("ADJUST " + predictions[0][4:] + " " + obsID), "utf-8"))       #Replace "IMG" header with "ADJUST"
+                        else:
+                            s.send(bytes(str(predictions[0] + " " + obsID), "utf-8"))
                 commands = None
         except KeyboardInterrupt:
             s.close()

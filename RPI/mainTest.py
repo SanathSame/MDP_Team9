@@ -183,7 +183,6 @@ def TestMultipleMessages():
 
     print("Data fully received:", data)
 
-
 if __name__ == "__main__":
     TestImagePrediction()
     #TestMultipleMessages()

@@ -5,6 +5,7 @@ import torch
 import cv2
 from math import ceil
 import os
+import numpy as np
 
 WEIGHTS_PATH = 'Image Recognition/weights/best.pt' # Path to weights being used
 MODEL_PATH = 'Image Recognition' # Path to yolov5 repo locally
@@ -13,6 +14,17 @@ NO_PREDICTION_PREFIX = "NO_PREDICTION" # Prefix to images that do not have predi
 ADJUSTMENT_PREFIX = "ADJUSTMENT" # Prefix to images that are used just for adjustments
 STITCHED_IMAGE_PREFIX = "stitched" # Prefix to images that are stitches of the other predictions
 model = torch.hub.load(MODEL_PATH, 'custom', path=WEIGHTS_PATH, source='local')
+
+
+def read_and_preprocess_img(img_path: str):
+    img = cv2.imread(img_path)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    img = cv2.GaussianBlur(img, (3, 3), 0) # Denoise image with gaussian blur
+    kernel = np.array([[0, -1, 0],
+                   [-1, 5,-1],
+                   [0, -1, 0]])
+    img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel) # Sharpen image
+    return img
 
 def predict(img_path: str, forAdjusting: bool):
     """
@@ -23,17 +35,22 @@ def predict(img_path: str, forAdjusting: bool):
     - ID is the ID of the class
     - CLASS is the name of the class
     """
-    model.conf = 0.6
+    model_confidence = 0.8
+    MIN_MODEL_CONFIDENCE_THRESHOLD = 0.5 # Model confidence should not go below this
+    img = read_and_preprocess_img(img_path)
 
-    img = cv2.imread(img_path)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = cv2.GaussianBlur(img, (5, 5), 1)
-    results = model(img)
-    # results.render()
+    while model_confidence >= MIN_MODEL_CONFIDENCE_THRESHOLD: # Reduce confidence until something is detected
+        model.conf = model_confidence
+        results = model(img)
+        df = results.pandas().xyxyn[0]
+
+        if df.empty:
+            model_confidence -= 0.1
+        else:
+            break
 
     # Extract ids, classnames and locations of the image
     # Note that results are sorted from highest confidence to lowest confidence
-    df = results.pandas().xyxyn[0]
 
     result = []
     if not df.empty:
@@ -186,6 +203,9 @@ def stitch_images_and_save(images, images_per_row = 4):
         return
     
     # Separate images into individual rows
+    if len(images) == 0:
+        return 
+
     rows = []
     for i in range(ceil(len(images) / images_per_row)):
         initial_index = images_per_row * i
@@ -231,4 +251,8 @@ def concat_tile_resize(im_list_2d, interpolation=cv2.INTER_CUBIC):
     return vconcat_resize_min(im_list_v, interpolation=cv2.INTER_CUBIC)
 
 if __name__ == "__main__":
-    print(predict("Image Recognition/data/images/n.jpeg"))
+    for img in ["100.jpeg", "110.jpeg", "130.jpeg", "160.jpeg", "200.jpeg"]:
+        print(img)
+        print(predict("RPI/images/" + img))
+
+    # print(predict("cropped.jpeg"))

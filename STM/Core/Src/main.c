@@ -22,10 +22,13 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "icm20948.h"
 #include "oled.h"
+#include "tm_stm32_ahrs_imu.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,6 +48,8 @@
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
+
+I2C_HandleTypeDef hi2c1;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -141,6 +146,7 @@ static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_TIM4_Init(void);
+static void MX_I2C1_Init(void);
 void oled(void *argument);
 void ir(void *argument);
 void rpi(void *argument);
@@ -155,10 +161,11 @@ void encoder(void *argument);
 /* USER CODE BEGIN PFP */
 float avgVal(uint32_t *val, uint32_t size, float grad, float inter);
 uint8_t bufferFilled(uint8_t *buffer, uint32_t size);
+void changeProfile();
+void clearCmds();
 void microDelay(uint32_t us);
 void valShift(uint32_t *val, uint32_t size);
 
-void changeProfile();
 void driveRobot(uint8_t *cmd);
 void pid(uint32_t dur);
 void stopRobot();
@@ -172,21 +179,27 @@ float encoderGrad, encoderInt;
 float kdb, kdf, kib, kif, kpb, kpf;
 float iTermA, iTermB;
 float distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
-float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
+float bGrad, bInt, fGrad, fInt, lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
 float irGrad, irInt, ultraGrad, ultraInt;
 
+float gyroBias[3] = {0, 0, 0};
+float accelBias[3] = {0, 0, 0};
+float magBias[3] = {0, 0, 0};
+float magScale[3] = {0, 0, 0};
+
 int actionCounter, fillCounter;
-int driveMotorPWM, maxMotorPWM, motorAVal, motorBVal, turnMotorPWM;
+int driveMotorAPWM, driveMotorBPWM, maxMotorPWM, motorAVal, motorBVal, turnMotorAPWM, turnMotorBPWM;
 int encoderAVal, encoderBVal, encoderTarget;
 int errorA, errorB, prevEncoderA, prevEncoderB;
 int robotAngle;
 
 uint8_t cmds[1000][20], cmdState, rxBuffer[20], txBuffer[20];
-uint8_t angleCmd, driveCmd, enablePID, startDriving, startPID;
+uint8_t angleCmd, driveCmd, enablePID, startDriving, startPID, useDelay;
 uint8_t batteryState[11];
 uint8_t ultraCapture;
 uint8_t profile;
 
+uint32_t robotCount1, robotCount2, robotDelay;
 uint32_t servoCenter, servoLeft, servoRight, servoVal;
 uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5], ultraCounter, ultraVal[5];
 uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay, ultraDelay;  // rpiDelay <= encoderDelay
@@ -230,8 +243,11 @@ int main(void)
   MX_ADC2_Init();
   MX_TIM5_Init();
   MX_TIM4_Init();
+  MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
+  icm20948_init();
+  ak09916_init();
 
   pi = 3.1415926536;
   radius = 3.35;
@@ -239,22 +255,21 @@ int main(void)
   profile = 2;
   changeProfile();
 
+  robotCount1 = 0;
+  robotCount2 = 0;
+
   irGrad = 1;
   irInt = 0;
   ultraGrad = 0.01715;
   ultraInt = 0;
 
-  actionCounter = 0;
-  fillCounter = -1;
+  driveMotorAPWM = 9000;
+  driveMotorBPWM = 9000;
+  maxMotorPWM = 12000;
+  turnMotorAPWM = 3300;
+  turnMotorBPWM = 3500;
 
-  driveMotorPWM = 9000;
-  maxMotorPWM = 10000;
-  turnMotorPWM = 3500;
-
-  for (int counter = 0; counter < 1000; ++counter)
-	memset(cmds[counter], 0, 20);
-
-  cmdState = 1;
+  clearCmds();
 
   memset(rxBuffer, 0, 20);
   memset(txBuffer, 0, 20);
@@ -264,6 +279,7 @@ int main(void)
   enablePID = 0;
   startDriving = 0;
   startPID = 0;
+  useDelay = 1;
 
   sprintf((char*)batteryState, "Batt:     ");
 
@@ -295,7 +311,7 @@ int main(void)
   ultraDelay = 50;
 
   stoppingDelay = 100;
-  turningDelay = 1000;
+  turningDelay = 700;
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -507,6 +523,40 @@ static void MX_ADC2_Init(void)
   /* USER CODE BEGIN ADC2_Init 2 */
 
   /* USER CODE END ADC2_Init 2 */
+
+}
+
+/**
+  * @brief I2C1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C1_Init(void)
+{
+
+  /* USER CODE BEGIN I2C1_Init 0 */
+
+  /* USER CODE END I2C1_Init 0 */
+
+  /* USER CODE BEGIN I2C1_Init 1 */
+
+  /* USER CODE END I2C1_Init 1 */
+  hi2c1.Instance = I2C1;
+  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c1.Init.OwnAddress1 = 0;
+  hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C1_Init 2 */
+
+  /* USER CODE END I2C1_Init 2 */
 
 }
 
@@ -1004,18 +1054,6 @@ uint8_t bufferFilled(uint8_t *buffer, uint32_t size)
   return 1;
 }
 
-void microDelay(uint32_t us)
-{
-  __HAL_TIM_SET_COUNTER(&htim5, 0);
-  while (__HAL_TIM_GET_COUNTER(&htim5) < us);
-}
-
-void valShift(uint32_t *val, uint32_t size)
-{
-  for (int counter = 0; counter < size - 1; ++counter)
-	val[counter] = val[counter + 1];
-}
-
 void changeProfile()
 {
   switch (profile)
@@ -1024,24 +1062,29 @@ void changeProfile()
     encoderGrad = 0.208211985127613;
 	encoderInt = 0.556356667437655;
 
-	kdb = 2;
-	kdf = 1.5;
-	kib = 1.5;
-	kif = 2;
-	kpb = 8;
-	kpf = 8.5;
+	kdb = 0;
+	kdf = 0;
+	kib = 0;
+	kif = 0;
+	kpb = 0;
+	kpf = 0;
 
 	distOffset = 5;
 	turnOffset = 0.5;
 
-	lbGrad = 0.406223321414319;
-	lbInt = -1.03827694476358;
-	lfGrad = 0.374241777484367;
-	lfInt = -0.80255211795561;
-	rbGrad = 0.390119353921512;
-	rbInt = 1.405188423049935;
-	rfGrad = 0.364677963587823;
-	rfInt = 1.011921094590065;
+	bGrad = 1;
+	bInt = 0;
+	fGrad = 1;
+	bInt = 0;
+
+	lbGrad = useDelay == 0 ? 0.406223321414319 : 1;
+	lbInt = useDelay == 0 ? -1.03827694476358 : 0;
+	lfGrad = useDelay == 0 ? 0.374241777484367 : 1;
+	lfInt = useDelay == 0 ? -0.80255211795561 : 0;
+	rbGrad = useDelay == 0 ? 0.390119353921512 : 1;
+	rbInt = useDelay == 0 ? 1.405188423049935 : 0;
+	rfGrad = useDelay == 0 ? 0.364677963587823 : 1;
+	rfInt = useDelay == 0 ? 1.011921094590065 : 0;
 
 	encoderTarget = 130;
 
@@ -1061,14 +1104,19 @@ void changeProfile()
 	distOffset = 5;
 	turnOffset = 0;
 
-	lbGrad = 1;
-	lbInt = 0;
-	lfGrad = 1;
-	lfInt = 0;
-	rbGrad = 1;
-	rbInt = 0;
-	rfGrad = 1;
-	rfInt = 0;
+	bGrad = 1;
+	bInt = 0;
+	fGrad = 1;
+	bInt = 0;
+
+	lbGrad = useDelay == 0 ? 1 : 1;
+	lbInt = useDelay == 0 ? 0 : 0;
+	lfGrad = useDelay == 0 ? 1 : 1;
+	lfInt = useDelay == 0 ? 0 : 0;
+	rbGrad = useDelay == 0 ? 1 : 1;
+	rbInt = useDelay == 0 ? 0 : 0;
+	rfGrad = useDelay == 0 ? 1 : 1;
+	rfInt = useDelay == 0 ? 0 : 0;
 
 	encoderTarget = 130;
 
@@ -1079,26 +1127,64 @@ void changeProfile()
 	encoderInt = 1.08776618891631;
 
 	kdb = 0;
-	kdf = 2;
+	kdf = 0;
 	kib = 0;
-	kif = 1;
+	kif = 0;
 	kpb = 0;
-	kpf = 10;
+	kpf = 0;
 
 	distOffset = 4;
 	turnOffset = 1;
 
-	lbGrad = 0.477744248433485;
-	lbInt = 2.02776765331444;
-	lfGrad = 0.425142145382334;
-	lfInt = 1.59811982955917;
-	rbGrad = 0.452958458665014;
-	rbInt = 3.65536165354082;
-	rfGrad = 0.381832587414008;
-	rfInt = 2.05906630142695;
+	bGrad = 1;
+	bInt = 0;
+	fGrad = 1;
+	bInt = 0;
+
+	lbGrad = useDelay == 0 ? 0.477744248433485 : 1;
+	lbInt = useDelay == 0 ? 2.02776765331444 : 0;
+	lfGrad = useDelay == 0 ? 0.425142145382334 : 1;
+	lfInt = useDelay == 0 ? 1.59811982955917 : 0;
+	rbGrad = useDelay == 0 ? 0.452958458665014 : 1;
+	rbInt = useDelay == 0 ? 3.65536165354082 : 0;
+	rfGrad = useDelay == 0 ? 0.381832587414008 : 1;
+	rfInt = useDelay == 0 ? 2.05906630142695 : 0;
 
 	encoderTarget = 130;
   }
+}
+
+void clearCmds()
+{
+  cmdState = 3;
+
+  fillCounter = -1;
+  actionCounter = 0;
+
+  for (int counter = 0; counter < 1000; ++counter)
+	memset((char*)cmds[counter], 0, 20);
+
+  cmdState = 1;
+}
+
+void microDelay(uint32_t us)
+{
+  uint32_t counter1, counter2, diff;
+  counter1 = __HAL_TIM_GET_COUNTER(&htim5);
+  while (1)
+  {
+	counter2 = __HAL_TIM_GET_COUNTER(&htim5);
+	diff = counter2 >= counter1 ? counter2 - counter1 : 4294967295 - counter1 + counter2;
+
+	if (diff >= us)
+	  break;
+  }
+}
+
+void valShift(uint32_t *val, uint32_t size)
+{
+  for (int counter = 0; counter < size - 1; ++counter)
+	val[counter] = val[counter + 1];
 }
 
 void driveRobot(uint8_t *cmd)
@@ -1114,36 +1200,50 @@ void driveRobot(uint8_t *cmd)
 
 	if (angleCmd == 0)
 	{
+	  driveCmd = cmd[4];
+
 	  char distStr[5];
 	  strncpy(distStr, (char*)(cmd + 6), 4);
 	  robotDist = (float)atoi(distStr);
 
-	  driveCmd = cmd[4];
+	  robotDelay = (int)(driveCmd == 'F' ? fGrad * robotDist + fInt : bGrad * robotDist + bInt) * 10000;
 
 	  distBuffer = distOffset;
 
-	  errorA = 0;
-	  errorB = 0;
-	  prevEncoderA = 0;
-	  prevEncoderB = 0;
-	  iTermA = 0.0;
-	  iTermB = 0.0;
+	  if (HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin) == 1)
+	  {
+	  	errorA = 0;
+	  	errorB = 0;
+	  	prevEncoderA = 0;
+	  	prevEncoderB = 0;
+	  	iTermA = driveMotorAPWM;
+	  	iTermB = driveMotorBPWM;
 
-	  startPID = HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin);
+	  	startPID = useDelay == 1 || robotDist > distBuffer ? 1 : 0;
+	  }
 
-	  motorAVal = startPID == 1 ? 0 : driveMotorPWM;
-	  motorBVal = motorAVal;
+	  motorAVal = (useDelay == 0 && robotDist <= distBuffer) || startPID == 1 ? 0 : driveMotorAPWM;
+	  motorBVal = (useDelay == 0 && robotDist <= distBuffer) || startPID == 1 ? 0 : driveMotorBPWM;
 	}
 	else
 	{
 	  distBuffer = turnOffset;
 
-	  motorAVal = turnMotorPWM;
-	  motorBVal = turnMotorPWM;
+	  motorAVal = turnMotorAPWM;
+	  motorBVal = turnMotorBPWM;
 	}
+
+	robotCount1 = __HAL_TIM_GET_COUNTER(&htim5);
   }
-  else if (distA >= robotDist - distBuffer && distB >= robotDist - distBuffer)
+  else if (useDelay == 0 && distA >= robotDist - distBuffer && distB >= robotDist - distBuffer)
 	stopRobot();
+  else if (useDelay == 1)
+  {
+	robotCount2 = __HAL_TIM_GET_COUNTER(&htim5);
+
+	if ((robotCount2 >= robotCount1 ? robotCount2 - robotCount1 : 4294967295 - robotCount1 + robotCount2) >= robotDelay)
+	  stopRobot();
+  }
 }
 
 void pid(uint32_t dur)
@@ -1172,12 +1272,17 @@ void pid(uint32_t dur)
 	else if (iTermB > maxMotorPWM)
 	  iTermB = maxMotorPWM;
 
+	if (prevEncoderA == 0 && prevEncoderB == 0)
+	{
+	  prevEncoderA = encoderAVal;
+	  prevEncoderB = encoderBVal;
+	}
+
 	motorAVal = (int)(kp * errorA - kd * (encoderAVal - prevEncoderA) + iTermA);
 	motorBVal = (int)(kp * errorB - kd * (encoderBVal - prevEncoderB) + iTermB);
 
-	uint8_t strBuffer[20];
-	sprintf((char*)strBuffer, "%-4d %-4d", motorAVal, motorBVal);
-	HAL_UART_Transmit(&huart3, strBuffer, 20, 0xFFFF);
+	//sprintf((char*)txBuffer, "%-5d %-5d", motorAVal, motorBVal);
+	//HAL_UART_Transmit(&huart3, txBuffer, 11, 0xFFFF);
 
 	prevEncoderA = encoderAVal;
 	prevEncoderB = encoderBVal;
@@ -1198,6 +1303,7 @@ void stopRobot()
   startDriving = 0;
   angleCmd = 0;
   driveCmd = 0;
+
   cmdState = 2;
 }
 
@@ -1221,6 +1327,8 @@ void turnRobot(uint8_t *cmd)
     else if (angleCmd == 'R' && driveCmd == 'F')
 	  robotDist = rfGrad * robotAngle + rfInt;
 
+    robotDelay = (int)robotDist * 100000;
+
     servoVal = angleCmd == 'L' ? servoLeft : servoRight;
     osDelay(turningDelay);
   }
@@ -1240,14 +1348,41 @@ void oled(void *argument)
 {
   /* USER CODE BEGIN 5 */
   uint8_t strBuffer[20];
+
+  TM_AHRSIMU_t IMU;
+
+  TM_AHRSIMU_Init(&IMU, 1000, 0.5, 0);
+
+  axises my_gyro;
+  axises my_accel;
+  axises my_mag;
   /* Infinite loop */
   for(;;)
   {
-	sprintf((char*)strBuffer, "%d", profile);
+	if (TM_MPU9250_DataReady() == 1)
+	{
+	  icm20948_gyro_read_dps(&my_gyro);
+	  icm20948_accel_read_g(&my_accel);
+	  ak09916_mag_read_uT(&my_mag);
+
+	  //TM_AHRSIMU_UpdateIMU(&IMU, my_gyro.x, my_gyro.y, my_gyro.z, my_mag.x, my_mag.y, my_mag.z);
+	  TM_AHRSIMU_UpdateIMU(&IMU, my_gyro.x, my_gyro.y, my_gyro.z, my_accel.x, my_accel.y, my_accel.z); // Sensor Fusion using only gyro and accel
+	  //TM_AHRSIMU_UpdateAHRS(&IMU, my_gyro.x, my_gyro.y, my_gyro.z, my_accel.x, my_accel.y, my_accel.z, my_mag.x, my_mag.y, my_mag.z); // Sensor Fusion using all 3 sensors but drift is very bad
+	  //MahonyAHRSupdate(&IMU, my_gyro.x, my_gyro.y, my_gyro.z, my_accel.x, my_accel.y, my_accel.z, my_mag.x, my_mag.y, my_mag.z);
+	  sprintf((char*)strBuffer, "Yaw: %d", (int)IMU.Yaw);
+	  //sprintf(text, "Angle: %d", (int) (atan2(my_mag.y, my_mag.x) * 180 / M_PI));  // Heading using magnetometer
+	  OLED_ShowString(10, 10, strBuffer);
+	}
+
+
+	sprintf((char*)strBuffer, "%d", (int)profile);
 	OLED_ShowString(0, 0, strBuffer);
 
 	sprintf((char*)strBuffer, "%d", (int)HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin));
 	OLED_ShowString(0, 10, strBuffer);
+
+	sprintf((char*)strBuffer, "%d", (int)useDelay);
+	OLED_ShowString(0, 20, strBuffer);
 
 	sprintf((char*)strBuffer, "          ");
 
@@ -1258,33 +1393,41 @@ void oled(void *argument)
 
 	//sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
     //sprintf((char*)strBuffer, "MotorA: %-5d", (int)motorAVal);
-	sprintf((char*)strBuffer, "EncA: %-5d", (int)encoderAVal);
+	//sprintf((char*)strBuffer, "EncA: %-5d", (int)encoderAVal);
 	//sprintf((char*)strBuffer, "IR: %-5d", (int)(avgVal(irVal, irCounter, irGrad, irInt) + 0.5));
-	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(ultraDist + 0.5));
+	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
 	//sprintf((char*)strBuffer, "Tick1: %-5d", (int)tick1);
 	//sprintf((char*)strBuffer, "TempA: %-5d", (int)tempA);
-	OLED_ShowString(10, 10, strBuffer);
+	//sprintf((char*)strBuffer, "AdjState: %-5d", (int)adjusting);
+	//sprintf((char*)strBuffer, "0: %-5d", (int)ultraVal[0]);
+	//OLED_ShowString(10, 10, strBuffer);
 
 	//sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
 	//sprintf((char*)strBuffer, "MotorB: %-5d", (int)motorBVal);
-	sprintf((char*)strBuffer, "EncB: %-5d", (int)encoderBVal);
+	//sprintf((char*)strBuffer, "EncB: %-5d", (int)encoderBVal);
 	//sprintf((char*)strBuffer, "Tick2: %-5d", (int)tick2);
 	//sprintf((char*)strBuffer, "TempB: %-5d", (int)tempB);
 	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
+	//sprintf((char*)strBuffer, "Adjust: %c %-5d", driveCmd, (int)(robotDist + 0.5));
+	//sprintf((char*)strBuffer, "1: %-5d", (int)ultraVal[1]);
+	sprintf((char*)strBuffer, "Delay: %-8d", (int)robotDelay);
 	OLED_ShowString(10, 20, strBuffer);
 
 	//sprintf((char*)strBuffer, "Action: %-5d", (int)actionCounter);
 	sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
 	//sprintf((char*)strBuffer, "TempA: %-5d", (int)tempA);
-	//sprintf((char*)strBuffer, "TempA: %-5d", (int)ultraCount1);
+	//sprintf((char*)strBuffer, "2: %-5d", (int)ultraVal[2]);
 	OLED_ShowString(10, 30, strBuffer);
 
 	//sprintf((char*)strBuffer, "Fill: %-5d", (int)fillCounter);
 	sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
 	//sprintf((char*)strBuffer, "TempB: %-5d", (int)tempB);
 	//sprintf((char*)strBuffer, "TempA: %-5d", (int)ultraCount2);
+	//sprintf((char*)strBuffer, "3: %-5d", (int)ultraVal[3]);
 	OLED_ShowString(10, 40, strBuffer);
 
+	//sprintf((char*)strBuffer, "4: %-5d", (int)ultraVal[4]);
+	//OLED_ShowString(10, 50, strBuffer);
 	OLED_ShowString(10, 50, batteryState);
 
 	OLED_Refresh_Gram();
@@ -1357,20 +1500,12 @@ void rpi(void *argument)
       cmdState = 0;
       cmdType = cmds[actionCounter][4];
 
-      strncpy(strCounter, (char*)cmds[actionCounter], 3);
-      //sprintf((char*)txBuffer, "%d %d", (int)tempA, (int)tempB);
-      //sprintf((char*)txBuffer, cmdType == 'C' ? "Done C" : "Done %d", atoi(strCounter));
-      //HAL_UART_Transmit(&huart3, txBuffer, 20, 0xFFFF);
-
       if (cmdType == 'C')
-      {
-    	actionCounter = 0;
-    	fillCounter = -1;
-    	cmdState = 1;
+    	clearCmds();
 
-    	for (int counter = 0; counter < 1000; ++counter)
-    	  memset(cmds[counter], 0, 20);
-      }
+      strncpy(strCounter, (char*)cmds[actionCounter], 3);
+      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C  " : "Done %-3d", atoi(strCounter));
+      HAL_UART_Transmit(&huart3, txBuffer, 8, 0xFFFF);
     }
 
     if (cmdState == 0 && actionCounter <= fillCounter)

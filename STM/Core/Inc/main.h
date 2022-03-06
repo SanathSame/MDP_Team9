@@ -106,10 +106,14 @@ void Error_Handler(void);
 #define ENCODER_A2_GPIO_Port GPIOB
 #define ULTRA_TRIG_Pin GPIO_PIN_4
 #define ULTRA_TRIG_GPIO_Port GPIOB
+#define ICM_SCL_Pin GPIO_PIN_6
+#define ICM_SCL_GPIO_Port GPIOB
+#define ICM_SDA_Pin GPIO_PIN_7
+#define ICM_SDA_GPIO_Port GPIOB
 #define ENABLE_Pin GPIO_PIN_0
 #define ENABLE_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
-
+extern I2C_HandleTypeDef hi2c1;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

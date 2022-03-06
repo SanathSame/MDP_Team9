@@ -26,7 +26,7 @@ def read_and_preprocess_img(img_path: str):
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel) # Sharpen image
     return img
 
-def predict(img_path: str, forAdjusting: bool):
+def predict(img_path: str, forAdjusting = False):
     """
     img_path : path to an image file to predict what classes are in the image
     forAdjusting : determines if image is taken for adjustment purposes and ignored in stitching process
@@ -251,8 +251,8 @@ def concat_tile_resize(im_list_2d, interpolation=cv2.INTER_CUBIC):
     return vconcat_resize_min(im_list_v, interpolation=cv2.INTER_CUBIC)
 
 if __name__ == "__main__":
-    for img in ["100.jpeg", "110.jpeg", "130.jpeg", "160.jpeg", "200.jpeg"]:
+    '''for img in ["100.jpeg", "110.jpeg", "130.jpeg", "160.jpeg", "200.jpeg"]:
         print(img)
-        print(predict("RPI/images/" + img))
+        print(predict("RPI/images/" + img))'''
 
-    # print(predict("cropped.jpeg"))
+    print(predict("RPI/predictions/NO_PREDICTION_13.jpeg"))

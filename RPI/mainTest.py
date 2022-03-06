@@ -119,8 +119,8 @@ def TestImagePrediction():
         try:
             commands = s.recv(1024).split()        # TAKEPICTURE OBSTACLE_ID
             if len(commands) > 0:
-                obsID = commands[1].decode('utf-8')        # Extract out the OBSTACLE_ID
                 if str(commands[0].decode('utf-8')) == "TAKEPICTURE" or str(commands[0].decode('utf-8')) == "ADJUST":
+                    obsID = commands[1].decode('utf-8')  # Extract out the OBSTACLE_ID
                     forAdjusting = True if str(commands[0].decode('utf-8')) == "ADJUST" else False
                     data = s.recv(1024)
                     filesize = int(data.decode('utf-8'))

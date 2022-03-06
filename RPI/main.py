@@ -27,6 +27,12 @@ class RPI(threading.Thread):
 
         self.imgCount = 0
         self.camera = None
+        self.commandCounter = 0         # Tracks the current command_ID that has been COMPLETED by the STM
+        self.curObstacle = 0            # Stores the current obstacle ID robot is heading towards
+        self.imgLocation = -1           # Stores the img Location of the current obstacle, set to -1 to no location
+        self.adjustingFlag = False
+        self.initialAdjust = True
+        self.initialLocation = -1
 
         #temp variables
         self.time = 0.05
@@ -41,6 +47,9 @@ class RPI(threading.Thread):
         "ALG STARTPF" (WEEK 8)
         "ALG STARTPARKING" (WEEK 9)
         
+        RPI:
+        Send to IMG: "ADJUST 1" (OBSTACLE NUMBER)
+        Send to IMG: "TAKEPICTURE 1" (OBSTACLE NUMBER)
         
         ALG:
         "IMG TAKEPICTURE 1" (OBSTACLE NUMBER)
@@ -68,25 +77,63 @@ class RPI(threading.Thread):
         receiveFromAndroidThread.start()
         receiveFromSTMThread.start()
 
+    def get_command_for_adjustment(self, img_location, adjustment_counter):
+        should_move_forward = adjustment_counter % 2 == 0
+
+        if img_location < 2:
+            direction = "LF" if should_move_forward else "RB"
+            angle = 20 if img_location == 0 else 10
+            return "{:<3} {} {:<3}".format(self.commandCounter, direction, angle)
+        elif img_location == 2:
+            return "{:<3} A {:<4}".format(self.commandCounter, self.initialLocation)
+        else:
+            direction = "RF" if should_move_forward else "LB"
+            angle = 20 if img_location == 4 else 10
+            return "{:<3} {} {:<3}".format(self.commandCounter, direction, angle)
+
     def receiveFromImg(self):
+        times_to_adjust = 0
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
-            if imgMsg is not None:
-                print("Message received from Image: " + str(imgMsg))
-                predictions = imgMsg.split()        ## IMG ImageID classname location ObstacleID
-                if len(predictions) > 1:
-                    if int(predictions[1]) == 12:
-                        self.sendToAlgo("STOP")
-                        # TODO: robot recovery from detecting bullseye
-                    else:
-                        self.sendToAlgo("NEXT")
-                        self.sendToAndroid("TARGET " + predictions[4] + "," + predictions[1]) # "TARGET ObstacleID, ImageID"
 
-                elif len(predictions) == 1:
-                    if predictions[0] == "NOIMAGE":
-                        print("Incorrect positioning of car...")
+            if imgMsg is None:
+                print("Empty prediction array")
+                continue
+
+            print("Message received from Image: " + str(imgMsg))
+            predictions = imgMsg.split()        ## returns IMG ImageID classname location ObstacleID or ADJUST ImageID classname location ObstacleID
+
+            if len(predictions) == 1 and predictions[0] == "NOIMAGE":
+                self.sendToAlgo("NOIMAGE")
+                print("Incorrect positioning of car...")
+                continue
+
+            '''if predictions[0] == "ADJUST" and predictions[1] == "NOIMAGE":
+                #self.commandCounter += 1
+                self.sendToSTM("{:<3} B {:<4}".format(self.commandCounter, 10))  # Send -1 if there is no image?
+                #self.adjustingFlag = True
+                #self.centraliseImage()
+                # TODO: check with stm the data to send for no image'''
+            if predictions[0] == "IMG":
+                times_to_adjust = 0
+                if int(predictions[1]) == 10:       ## ImageID of bullseye is 10
+                    self.sendToAlgo("STOP")
+                    # TODO: robot recovery from detecting bullseye
                 else:
-                    print("Empty prediction array...")
+                    self.sendToAlgo("NEXT")
+                    self.sendToAndroid("TARGET " + predictions[4] + "," + predictions[1]) # "TARGET ObstacleID, ImageID"
+                continue
+            '''elif predictions[0] == "ADJUST":
+                #self.commandCounter += 1
+                if self.initialAdjust:
+                    self.initialLocation = str(predictions[3])
+                    self.initialAdjust = False
+                # self.sendToSTM("{:<3} A {:<4}".format(self.commandCounter, predictions[3]))
+
+                self.imgLocation = int(predictions[3])
+                #self.sendToSTM(self.get_command_for_adjustment(self.imgLocation, times_to_adjust))
+                times_to_adjust += 1
+                self.centraliseImage()'''
 
     def receiveFromAlgo(self):
         while True:
@@ -98,13 +145,12 @@ class RPI(threading.Thread):
                     if len(c) > 0:
                         if c[2:5] == "IMG":
                             print("Message sending to img server: " + str(c[6:] + "||"))
-                            #self.useUltra()
                             self.sendToImg(c[6:])            #Send the obstacle: XX YY
+                            #self.curObstacle = int(c[6:].split()[1])
                         if c[2:5] == "STM":
                             print("Message sending to STM: " + str(c[6:] + "||"))
                             self.sendToSTM(c[6:])
                         time.sleep(0.1)
-                commands = None
 
     def sendToImg(self, msgToImg="DEFAULT_MESSAGE"):
         if msgToImg:
@@ -148,6 +194,24 @@ class RPI(threading.Thread):
                     self.sendToImg()
                 elif str(stmMsg[:4]) == "Done":
                     self.sendToAlgo(stmMsg)
+                time.sleep(0.1)
+                '''elif str(stmMsg[:6]) == "Done A":
+                    self.sendToImg("TAKEPICTURE " + str(self.curObstacle))'''
+
+                #self.commandCounter = stmMsg.split()[1]     #Update the command counter
+
+                '''if int(stmMsg[5:8]) == self.commandCounter:
+                    print("Centralise the image for ultra...")
+                    self.adjustingFlag = True
+                    self.centraliseImage()'''
+
+    def centraliseImage(self):
+        if self.imgLocation != 2 and self.adjustingFlag:
+            print("CENTRALISING IMAGE")
+            self.sendToImg("ADJUST " + str(self.curObstacle))
+            self.adjustingFlag = False
+        else:
+            self.sendToImg("TAKEPICTURE " + str(self.curObstacle))
 
     def snapPic(self):
         try:

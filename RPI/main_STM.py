@@ -56,13 +56,21 @@ class RPI(threading.Thread):
 
         count = 0
         while True:
-            self.sendToSTM("{:<3} F {:<4}".format(count, 100))
-            #A = input("hhi")
+            self.sendToSTM("{:<3} RF {:<3}".format(count, 87))
+            A = input("hhi")
             count += 1
             time.sleep(0.2)
-            self.sendToSTM("{:<3} B {:<4}".format(count, 100))
+            self.sendToSTM("{:<3} LF {:<3}".format(count, 78))
             count += 1
-            #time.sleep(2)
+            time.sleep(2)
+            b = input("hhi")
+            self.sendToSTM("{:<3} LB {:<3}".format(count, 78))
+            count += 1
+            time.sleep(2)
+            b = input("hhi")
+            self.sendToSTM("{:<3} RB {:<3}".format(count, 79))
+            count += 1
+            time.sleep(2)
             b = input("hhi")
 
         #self.sendToSTM(str(0) + "   LF 360")
@@ -196,13 +204,12 @@ class RPI(threading.Thread):
                 #     self.sendToSTM("1   LF 90 ")
                 #     time.sleep(0.5)
                 #     self.sendToSTM("2   B 100 ")
-
-                '''time.sleep(2)
-                msg = str(input("Message for STM: "))
+                '''msg = str(input("Message for STM: "))
                 if len(msg) < 6:
                     msg += " " * (6 - len(msg))
                     self.sendToSTM(msg)'''
-                '''y1, y2 = int(stmMsg[:3]), int(stmMsg[4:])
+
+                '''y1, y2 = stmMsg[:5], stmMsg[6:11]
                 rpi.y1.append(int(y1))
                 rpi.y2.append(int(y2))
                 rpi.x1.append(self.time)
@@ -246,11 +253,12 @@ class RPI(threading.Thread):
     def closeAll(self):
         #self.pcObject.disconnect()
         #self.androidObject.disconnect()
-        '''with open("test1.csv", 'w') as f:
-            f.write(str(rpi.y1[20:-10])[1:-1] + '\n')
-            f.write(str(rpi.y2[20:-10])[1:-1])
+        with open("test1.csv", 'w') as f:
+            f.write(str(rpi.y1)[1:-1] + '\n')
+            f.write(str(rpi.y2)[1:-1])
             f.close()
-        print("in closing....")'''
+        print("in closing....")
+
         self.stm.disconnect()
         #self.camera.close()
 

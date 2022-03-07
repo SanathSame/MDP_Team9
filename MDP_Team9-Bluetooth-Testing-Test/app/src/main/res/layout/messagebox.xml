@@ -80,10 +80,10 @@
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.108"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.902">
+        app:layout_constraintVertical_bias="0.922">
 
         <TextView
             android:id="@+id/editText"
@@ -108,38 +108,40 @@
         android:shadowColor="@color/cardview_light_background"
         android:text="STATUS BOX"
         android:textAlignment="center"
-        android:textColor="@color/yellow"
+        android:textColor="#FFD600"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/typeBoxEditText" />
 
+
     <ScrollView
-        android:layout_width="190dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="82dp"
+        android:id="@+id/scrollView3"
+        android:layout_width="251dp"
+        android:layout_height="220dp"
+        android:fadeScrollbars="false"
+        android:fillViewport="true"
+        android:scrollbarSize="30dp"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbarThumbVertical="@color/yellow"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
-        app:layout_constraintStart_toEndOf="@+id/scrollView2"
+        app:layout_constraintHorizontal_bias="0.919"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.638">
 
         <TextView
             android:id="@+id/receivebox"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="17dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="56dp"
-            android:background="@color/black_hl"
+            android:background="@drawable/rounded_corner"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.913"
             app:layout_constraintStart_toEndOf="@+id/scrollView2"
             app:layout_constraintTop_toBottomOf="@+id/textView3"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="0.412" />
     </ScrollView>
 
 

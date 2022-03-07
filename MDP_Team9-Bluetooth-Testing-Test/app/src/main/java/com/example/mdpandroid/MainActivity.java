@@ -387,8 +387,14 @@ public class MainActivity extends AppCompatActivity {
             refreshMessageReceivedfromblue();
             String receivedText = sharedPreferences.getString("message", "");
             System.out.println(receivedText + "test");
-            useReceivedMessage(_map, mapCanvas, receivedText);
-            MessageBox.receiveMessage(receivedText);
+            if (receivedText.length() > 7) {
+                if (receivedText.substring(0, 7) != "status:") {
+                    useReceivedMessage(_map, mapCanvas, receivedText);
+                }
+            }
+            else {
+                MessageBox.receiveMessage(receivedText);
+            }
             updateRoboStatus();
         }
     };

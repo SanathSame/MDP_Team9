@@ -100,7 +100,7 @@ public class MessageBox extends Fragment {
     }
     public static void receiveMessage(String txt) {
         String receivedText = txt;
-        receiveWindowTxt+= "FROM RPI: " + receivedText + "\n";
+        receiveWindowTxt += "FROM RPI: " + receivedText + "\n";
         receiveText.setText(receiveWindowTxt);
         System.out.println(receivedText);
     }

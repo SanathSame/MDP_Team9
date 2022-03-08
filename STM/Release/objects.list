@@ -40,4 +40,5 @@
 "./PeripheralDriver/Src/icm20948.o"
 "./PeripheralDriver/Src/oled.o"
 "./PeripheralDriver/Src/tm_stm32_ahrs_imu.o"
+"./PeripheralDriver/Src/tm_stm32_gpio.o"
 "./PeripheralDriver/Src/tm_stm32_i2c.o"

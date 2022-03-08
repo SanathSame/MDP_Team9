@@ -7,25 +7,28 @@
  * @ide     Keil uVision
  * @license MIT
  * @brief   AHRS and IMU algorithm library by Sebastian Madgwick and ported as library
- *
+ *	
 \verbatim
    ----------------------------------------------------------------------
     Copyright (c) 2016 Tilen MAJERLE
+
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
     files (the "Software"), to deal in the Software without restriction,
     including without limitation the rights to use, copy, modify, merge,
-    publish, distribute, sublicense, and/or sell copies of the Software,
-    and to permit persons to whom the Software is furnished to do so,
+    publish, distribute, sublicense, and/or sell copies of the Software, 
+    and to permit persons to whom the Software is furnished to do so, 
     subject to the following conditions:
+
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
+
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
     AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
    ----------------------------------------------------------------------
@@ -69,7 +72,7 @@ extern "C" {
 
 #include "stdint.h"
 #include "math.h"
-
+    
 /**
  * @defgroup TM_AHRSIMU_Macros
  * @brief    Library defines
@@ -83,13 +86,13 @@ extern "C" {
 /**
  * @}
  */
-
+ 
 /**
  * @defgroup TM_AHRSIMU_Typedefs
  * @brief    Library Typedefs
  * @{
  */
-
+ 
 /**
  * @brief   Main working AHRS IMU structure
  */
@@ -98,7 +101,7 @@ typedef struct _TM_AHRSIMU_t {
     float Pitch;            /*!< Pitch angle value. This parameter is in units of degrees */
     float Yaw;              /*!< Yaw angle value. This parameter is in units of degrees */
     float Inclination;      /*!< Inclination in units of degrees */
-
+    
     float _beta;
     float _q0, _q1, _q2, _q3;
     float _sampleRate;
@@ -118,7 +121,7 @@ typedef struct _TM_AHRSIMU_t {
  * \brief  Initializes ARHS or IMU algorithm for motion calculations
  * \param  *AHRSIMU: Pointer to \ref TM_AHRSIMU_t empty structure
  * \param  sampleRate: Sample rate frequency for updating data
- * \param  beta: Gain for calculations and speed to stabilize. A value less than 0.2 is a good value but it mostly depends on applicaiton.
+ * \param  beta: Gain for calculations and speed to stabilize. A value less than 0.2 is a good value but it mostly depends on application.
  * \param  inclination: Magnetic inclination for position on earth in units of degrees. This value depends on GPS coordinates on earth.
  * \retval None
  */
@@ -150,21 +153,16 @@ void TM_AHRSIMU_UpdateIMU(TM_AHRSIMU_t* AHRSIMU, float gx, float gy, float gz, f
  * \param  beta: New beta value
  * \retval None
  */
-
-void MahonyAHRSupdate(TM_AHRSIMU_t* AHRSIMU, float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
-void MahonyAHRSupdateIMU(TM_AHRSIMU_t* AHRSIMU, float gx, float gy, float gz, float ax, float ay, float az);
-float invSqrt(float x);
-
 #define TM_AHRSIMU_SetBeta(AHRSIMU, beta)       ((AHRSIMU)->_beta = (beta))
 
 /**
  * @}
  */
-
+ 
 /**
  * @}
  */
-
+ 
 /**
  * @}
  */

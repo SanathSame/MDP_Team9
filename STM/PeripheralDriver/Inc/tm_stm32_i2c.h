@@ -1,5 +1,5 @@
 /**
- * @author  Tilen MAJERLE
+ * @author  Tilen Majerle
  * @email   tilen@majerle.eu
  * @website http://stm32f4-discovery.net
  * @link    http://stm32f4-discovery.net/2015/07/hal-library-16-i2c-for-stm32fxxx-devices/
@@ -7,25 +7,28 @@
  * @ide     Keil uVision
  * @license MIT
  * @brief   I2C library for STM32Fxxx
- *
+ *	
 \verbatim
    ----------------------------------------------------------------------
-    Copyright (c) 2017 Tilen MAJERLE
+    Copyright (c) 2017 Tilen Majerle
+
     Permission is hereby granted, free of charge, to any person
     obtaining a copy of this software and associated documentation
     files (the "Software"), to deal in the Software without restriction,
     including without limitation the rights to use, copy, modify, merge,
-    publish, distribute, sublicense, and/or sell copies of the Software,
-    and to permit persons to whom the Software is furnished to do so,
+    publish, distribute, sublicense, and/or sell copies of the Software, 
+    and to permit persons to whom the Software is furnished to do so, 
     subject to the following conditions:
+
     The above copyright notice and this permission notice shall be
     included in all copies or substantial portions of the Software.
+
     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
     AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
     OTHER DEALINGS IN THE SOFTWARE.
    ----------------------------------------------------------------------
@@ -50,15 +53,15 @@ extern "C" {
  * @{
  *
  *	\par Pinout
- *
+ *	
 \verbatim
-       |PINSPACK 1   |PINSPACK 2   |PINSPACK 3   |PINSPACK 4   |PINSPACK 5   |
-I2CX   |SCL   SDA    |SCL   SDA    |SCL   SDA    |SCL   SDA    |SCL   SDA    |
-       |             |             |             |             |             |
-I2C1   |PB6   PB7    |PB8   PB9    |PB6   PB9    |             |             |
-I2C2   |PB10  PB11   |PF1   PF0    |PH4   PH5    |             |             |
-I2C3   |PA8   PC9    |PH7   PH8    |-     -      |             |             |
-I2C4   |PD12  PD13   |PF1   PF0    |PF14  PF15   |PH11  PH12   |PD12  PB7    |
+       |PINSPACK 1   |PINSPACK 2   |PINSPACK 3   |PINSPACK 4
+I2CX   |SCL   SDA    |SCL   SDA    |SCL   SDA    |SCL   SDA
+       |             |             |             |
+I2C1   |PB6   PB7    |PB8   PB9    |PB6   PB9    |
+I2C2   |PB10  PB11   |PF1   PF0    |PH4   PH5    |
+I2C3   |PA8   PC9    |PH7   PH8    |-     -      |
+I2C4   |PD12  PD13   |PF1   PF0    |PF14  PF15   |PH11  PH12
 \endverbatim
  *
  * I2C4 is not available on all devices. Please check if it is available for your device before using it!
@@ -86,6 +89,9 @@ I2C4   |PD12  PD13   |PF1   PF0    |PF14  PF15   |PH11  PH12   |PD12  PB7    |
 \endverbatim
  */
 #include "stm32f4xx_hal.h"
+//#include "defines.h"
+#include "attributes.h"
+#include "tm_stm32_gpio.h"
 
 /**
  * @defgroup TM_I2C_Macros
@@ -102,7 +108,7 @@ I2C4   |PD12  PD13   |PF1   PF0    |PF14  PF15   |PH11  PH12   |PD12  PB7    |
  /**
  * @}
  */
-
+ 
 /**
  * @defgroup TM_I2C_Typedefs
  * @brief    Library Typedefs
@@ -117,7 +123,6 @@ typedef enum {
 	TM_I2C_PinsPack_2,        /*!< Use Pinspack2 from Pinout table for I2Cx */
 	TM_I2C_PinsPack_3,        /*!< Use Pinspack3 from Pinout table for I2Cx */
 	TM_I2C_PinsPack_4,        /*!< Use Pinspack4 from Pinout table for I2Cx */
-	TM_I2C_PinsPack_5,        /*!< Use Pinspack5 from Pinout table for I2Cx */
 	TM_I2C_PinsPack_Custom    /*!< Use custom pins for I2Cx */
 } TM_I2C_PinsPack_t;
 
@@ -146,7 +151,7 @@ typedef enum {
  * @param  clockSpeed: Clock speed in units of Hz for I2C communication
  * @retval Member of @ref TM_I2C_Result_t enumeration
  */
-TM_I2C_Result_t TM_I2C_Init(I2C_HandleTypeDef* Handle, TM_I2C_PinsPack_t pinspack, uint32_t clockSpeed);
+TM_I2C_Result_t TM_I2C_Init(I2C_TypeDef* I2Cx, TM_I2C_PinsPack_t pinspack, uint32_t clockSpeed);
 
 /**
  * @brief  Reads single byte from device
@@ -177,7 +182,7 @@ TM_I2C_Result_t TM_I2C_ReadMulti(I2C_HandleTypeDef* Handle, uint8_t device_addre
  * @param  *data: Pointer to variable where data will be stored from read operation
  * @retval Member of @ref TM_I2C_Result_t enumeration
  */
-TM_I2C_Result_t TM_I2C_ReadNoRegister(I2C_HandleTypeDef* Handle, uint8_t device_address, uint8_t* data);
+TM_I2C_Result_t TM_I2C_ReadNoRegister(I2C_TypeDef* I2Cx, uint8_t device_address, uint8_t* data);
 
 /**
  * @brief  Reads multiple bytes from device without specifying register address
@@ -187,7 +192,7 @@ TM_I2C_Result_t TM_I2C_ReadNoRegister(I2C_HandleTypeDef* Handle, uint8_t device_
  * @param  count: Number of elements to read from device
  * @retval Member of @ref TM_I2C_Result_t enumeration
  */
-TM_I2C_Result_t TM_I2C_ReadMultiNoRegister(I2C_HandleTypeDef* Handle, uint8_t device_address, uint8_t* data, uint16_t count);
+TM_I2C_Result_t TM_I2C_ReadMultiNoRegister(I2C_TypeDef* I2Cx, uint8_t device_address, uint8_t* data, uint16_t count);
 
 /**
  * @brief  Reads single byte from device with 16-bit register address
@@ -197,7 +202,7 @@ TM_I2C_Result_t TM_I2C_ReadMultiNoRegister(I2C_HandleTypeDef* Handle, uint8_t de
  * @param  *data: Pointer to variable where data will be stored from read operation
  * @retval Member of @ref TM_I2C_Result_t enumeration
  */
-TM_I2C_Result_t TM_I2C_Read16(I2C_HandleTypeDef* Handle, uint8_t device_address, uint16_t register_address, uint8_t* data);
+TM_I2C_Result_t TM_I2C_Read16(I2C_TypeDef* I2Cx, uint8_t device_address, uint16_t register_address, uint8_t* data);
 
 /**
  * @brief  Writes single byte to device
@@ -227,7 +232,7 @@ TM_I2C_Result_t TM_I2C_WriteMulti(I2C_HandleTypeDef* Handle, uint8_t device_addr
  * @param  data: Data to be written to device
  * @retval Member of @ref TM_I2C_Result_t enumeration
  */
-TM_I2C_Result_t TM_I2C_WriteNoRegister(I2C_HandleTypeDef* Handle, uint8_t device_address, uint8_t data);
+TM_I2C_Result_t TM_I2C_WriteNoRegister(I2C_TypeDef* I2Cx, uint8_t device_address, uint8_t data);
 
 /**
  * @brief  Writes multiple data to device without register address
@@ -237,7 +242,7 @@ TM_I2C_Result_t TM_I2C_WriteNoRegister(I2C_HandleTypeDef* Handle, uint8_t device
  * @param  count: Number of elements to write
  * @retval Member of @ref TM_I2C_Result_t enumeration
  */
-TM_I2C_Result_t TM_I2C_WriteMultiNoRegister(I2C_HandleTypeDef* Handle, uint8_t device_address, uint8_t* data, uint16_t count);
+TM_I2C_Result_t TM_I2C_WriteMultiNoRegister(I2C_TypeDef* I2Cx, uint8_t device_address, uint8_t* data, uint16_t count);
 
 /**
  * @brief  Writes single byte in a 16-bit length register address
@@ -247,7 +252,7 @@ TM_I2C_Result_t TM_I2C_WriteMultiNoRegister(I2C_HandleTypeDef* Handle, uint8_t d
  * @param  data: Data byte to write
  * @retval Member of @ref TM_I2C_Result_t enumeration
  */
-TM_I2C_Result_t TM_I2C_Write16(I2C_HandleTypeDef* Handle, uint8_t device_address, uint16_t register_address, uint8_t data);
+TM_I2C_Result_t TM_I2C_Write16(I2C_TypeDef* I2Cx, uint8_t device_address, uint16_t register_address, uint8_t data);
 
 
 /**
@@ -259,13 +264,55 @@ TM_I2C_Result_t TM_I2C_Write16(I2C_HandleTypeDef* Handle, uint8_t device_address
 TM_I2C_Result_t TM_I2C_IsDeviceConnected(I2C_HandleTypeDef* Handle, uint8_t address);
 
 /**
- * @}
+ * @brief  Callback for custom pins initialization.
+ * 
+ *         When you call TM_I2C_Init() function, and if you pass TM_I2C_PinsPack_Custom to function,
+ *         then this function will be called where you can initialize custom pins for I2C peripheral.
+ * @param  *I2Cx: I2C for which initialization will be set
+ * @param  AlternateFunction: Alternate function which should be used for GPIO initialization
+ * @retval None
+ * @note   With __weak parameter to prevent link errors if not defined by user
  */
+void TM_I2C_InitCustomPinsCallback(I2C_TypeDef* I2Cx, uint16_t AlternateFunction);
+
+/**
+ * @brief  Gets pointer to I2C handle structure for specific I2C
+ * @param  *I2Cx: Pointer to I2Cx used for handle
+ * @retval Pointer to I2C Handle structure
+ */
+I2C_HandleTypeDef* TM_I2C_GetHandle(I2C_TypeDef* I2Cx);
+
+/**
+ * @brief  Writes and receives amount of data via I2C using repeated start condition
+ * @param  *I2Cx: Pointer to I2Cx peripheral to be used in communication
+ * @param  device_address: 7-bit, left aligned device address used for communication
+ * @param  write_register_address: Register address to start writing to
+ * @param  *write_data: Pointer to data array where data for write are stored
+ * @param  write_count: Number of elements to write
+ * @param  read_register_address: Register address where reading will start
+ * @param  *read_data: Pointer to array where data will be saved
+ * @param  read_count: Number of elements to read
+ * @retval Member of @ref TM_I2C_Result_t enumeration
+ */
+TM_I2C_Result_t TM_I2C_WriteReadRepeatedStart(
+	I2C_TypeDef* I2Cx,
+	uint8_t device_address, 
+	uint8_t write_register_address, 
+	uint8_t* write_data,
+	uint16_t write_count, 
+	uint8_t read_register_address, 
+	uint8_t* read_data,
+	uint16_t read_count
+);
 
 /**
  * @}
  */
-
+ 
+/**
+ * @}
+ */
+ 
 /**
  * @}
  */
@@ -276,3 +323,4 @@ TM_I2C_Result_t TM_I2C_IsDeviceConnected(I2C_HandleTypeDef* Handle, uint8_t addr
 #endif
 
 #endif
+

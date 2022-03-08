@@ -25,7 +25,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "icm20948.h"
 #include "oled.h"
+#include "tm_stm32_ahrs_imu.h"
+#include "tm_stm32_i2c.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -173,20 +176,20 @@ void turnRobot(uint8_t *cmd);
 /* USER CODE BEGIN 0 */
 float pi, radius;
 float encoderGrad, encoderInt;
-float kdb, kdf, kib, kif, kpb, kpf;
+float kdbA, kdfA, kibA, kifA, kpbA, kpfA, kdbB, kdfB, kibB, kifB, kpbB, kpfB;
 float iTermA, iTermB;
 float changeDist, distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
 float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
 float irGrad, irInt, ultraGrad, ultraInt;
 
 int actionCounter, fillCounter;
-int highMotorPWM, lowMotorPWM, maxMotorPWM, motorAVal, motorBVal;
+int highMotorAPWM, highMotorBPWM, lowMotorAPWM, lowMotorBPWM, maxMotorPWM, motorAVal, motorBVal;
 int encoderAVal, encoderBVal, encoderHTarget, encoderLTarget, encoderTarget;
 int countRequired, errorA, errorB, pidCount, prevEncoderA, prevEncoderB;
 int lbOffset, lfOffset, rbOffset, rfOffset, robotAngle;
 
 uint8_t cmds[1000][20], cmdState, rxBuffer[20], txBuffer[20];
-uint8_t angleCmd, driveCmd, enablePID, pwmChanged, startDriving, startPID;
+uint8_t angleCmd, driveCmd, enablePID, pwmStartChanged, pwmStopChanged, startDriving, startPID;
 uint8_t batteryState[13];
 uint8_t ultraCapture;
 uint8_t profile;
@@ -237,6 +240,8 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
+  //icm20948_init();
+  //ak09916_init();
 
   pi = 3.1415926536;
   radius = 3.35;
@@ -244,15 +249,12 @@ int main(void)
   changeDist = 10;
 
   profile = 2;
-  changeProfile();
 
   irGrad = 1;
   irInt = 0;
   ultraGrad = 0.01715;
   ultraInt = 0;
 
-  highMotorPWM = 9000;
-  lowMotorPWM = 3500;
   maxMotorPWM = 12000;
 
   countRequired = 20;
@@ -299,6 +301,8 @@ int main(void)
 
   stoppingDelay = 100;
   turningDelay = 700;
+
+  changeProfile();
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -985,7 +989,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if (GPIO_Pin == SW1_Pin)
   {
-	profile = (profile + 1) % 3;
+	profile = (profile + 1) % 4;
 	changeProfile();
   }
 }
@@ -1049,12 +1053,19 @@ void changeProfile()
     encoderGrad = 0.208211985127613;
 	encoderInt = 0.556356667437655;
 
-	kdb = 0;
-	kib = 0;
-	kpb = 0;
-	kdf = 0;
-	kif = 0;
-	kpf = 0;
+	kdbA = 0;
+	kibA = 0;
+	kpbA = 0;
+	kdfA = 0;
+	kifA = 0;
+	kpfA = 0;
+
+	kdbB = 0;
+	kibB = 0;
+	kpbB = 0;
+	kdfB = 0;
+	kifB = 0;
+	kpfB = 0;
 
 	distOffset = 5;
 	turnOffset = 0.5;
@@ -1067,6 +1078,11 @@ void changeProfile()
 	rbInt = 1.405188423049935;
 	rfGrad = 0.364677963587823;
 	rfInt = 1.011921094590065;
+
+	highMotorAPWM = 8800;
+	highMotorBPWM = 9500;
+	lowMotorAPWM = 3300;
+	lowMotorBPWM = 3500;
 
 	encoderHTarget = 130;
 	encoderLTarget = 50;
@@ -1082,12 +1098,19 @@ void changeProfile()
 	encoderGrad = 0.20959044667335;
 	encoderInt = 1.10778227509323;
 
-	kdb = 0;
-	kib = 0;
-	kpb = 0;
-	kdf = 0;
-	kif = 0;
-	kpf = 0;
+	kdbA = 0;
+	kibA = 0;
+	kpbA = 0;
+	kdfA = 0;
+	kifA = 0;
+	kpfA = 0;
+
+	kdbB = 0;
+	kibB = 0;
+	kpbB = 0;
+	kdfB = 0;
+	kifB = 0;
+	kpfB = 0;
 
 	distOffset = 5;
 	turnOffset = 0;
@@ -1100,6 +1123,11 @@ void changeProfile()
 	rbInt = 0;
 	rfGrad = 1;
 	rfInt = 0;
+
+	highMotorAPWM = 8800;
+	highMotorBPWM = 9500;
+	lowMotorAPWM = 3300;
+	lowMotorBPWM = 3500;
 
 	encoderHTarget = 130;
 	encoderLTarget = 50;
@@ -1115,12 +1143,21 @@ void changeProfile()
 	encoderGrad = 0.208496572267945;
 	encoderInt = 1.08776618891631;
 
-	kdb = 0;
-	kib = 0;
-	kpb = 0;
-	kdf = 0;
-	kif = 0;
-	kpf = 1;
+	kdbA = 1;
+	kibA = 256;
+	kpbA = 64;
+
+	kdfA = 1;
+	kifA = 2;
+	kpfA = 32;
+
+	kdbB = 1;
+	kibB = 16;
+	kpbB = 32;
+
+	kdfB = 1;
+	kifB = 8;
+	kpfB = 64;
 
 	distOffset = 0;
 	turnOffset = 1;
@@ -1134,6 +1171,11 @@ void changeProfile()
 	rfGrad = 0.381832587414008;
 	rfInt = 2.05906630142695;
 
+	highMotorAPWM = 8800;
+	highMotorBPWM = 9500;
+	lowMotorAPWM = 3400;
+	lowMotorBPWM = 3500;
+
 	encoderHTarget = 130;
 	encoderLTarget = 50;
 
@@ -1141,6 +1183,56 @@ void changeProfile()
 	lfOffset = 0;
 	rbOffset = 0;
 	rfOffset = 0;
+
+	break;
+
+  case 3: //Outside Lab No Delay
+  	encoderGrad = 0.208496572267945;
+  	encoderInt = 1.08776618891631;
+
+  	kdbA = 1;
+  	kibA = 256;
+  	kpbA = 64;
+
+  	kdfA = 1;
+  	kifA = 2;
+  	kpfA = 32;
+
+  	kdbB = 1;
+  	kibB = 16;
+  	kpbB = 32;
+
+  	kdfB = 1;
+  	kifB = 8;
+  	kpfB = 64;
+
+  	distOffset = 0;
+  	turnOffset = 1;
+
+  	lbGrad = 0.477744248433485;
+  	lbInt = 2.02776765331444;
+  	lfGrad = 0.425142145382334;
+  	lfInt = 1.59811982955917;
+  	rbGrad = 0.452958458665014;
+  	rbInt = 3.65536165354082;
+  	rfGrad = 0.381832587414008;
+  	rfInt = 2.05906630142695;
+
+  	highMotorAPWM = 8800;
+  	highMotorBPWM = 9500;
+  	lowMotorAPWM = 3400;
+  	lowMotorBPWM = 3500;
+
+  	encoderHTarget = 130;
+  	encoderLTarget = 50;
+
+  	lbOffset = 0;
+  	lfOffset = 0;
+  	rbOffset = 0;
+  	rfOffset = 0;
+
+  	stoppingDelay = 10;
+  	turningDelay = 10;
   }
 }
 
@@ -1191,95 +1283,93 @@ void driveRobot(uint8_t *cmd)
 
 	  distBuffer = distOffset;
 
-	  if (HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin) == GPIO_PIN_SET)
+	  enablePID = HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin) == 1 && robotDist > 2 * changeDist - distBuffer ? 1 : 0;
+
+	  if (enablePID == 1)
 	  {
 	  	prevEncoderA = 0;
 	  	prevEncoderB = 0;
-	  	iTermA = robotDist <= changeDist ? lowMotorPWM : highMotorPWM;
-	  	iTermB = iTermA;
+	  	iTermA = highMotorAPWM;
+	  	iTermB = highMotorBPWM;
 
 	  	pidCount = 0;
-	  	encoderTarget = robotDist <= changeDist ? encoderLTarget : encoderHTarget;
+	  	encoderTarget = encoderHTarget;
 	  }
-
-	  motorAVal = robotDist <= distBuffer || startPID == 1 ? 0 : (robotDist <= changeDist ? lowMotorPWM : highMotorPWM);
-	  motorBVal = motorAVal;
 	}
 	else
-	{
 	  distBuffer = turnOffset;
 
-	  motorAVal = lowMotorPWM;
-	  motorBVal = lowMotorPWM;
-	}
+	motorAVal = robotDist <= distBuffer ? 0 : lowMotorAPWM;
+    motorBVal = robotDist <= distBuffer ? 0 : lowMotorBPWM;
 
 	tempA = 0;
 	tempB = 0;
 	distA = robotDist > distBuffer ? encoderInt : 0;
 	distB = distA;
 
-	pwmChanged = 0;
-	startPID = robotDist > distBuffer ? HAL_GPIO_ReadPin(ENABLE_GPIO_Port, ENABLE_Pin) : 0;
+	pwmStartChanged = 0;
+	pwmStopChanged = 0;
+	startPID = 0;
 	startDriving = 1;
   }
   else if (distA >= robotDist - distBuffer && distB >= robotDist - distBuffer)
   	stopRobot();
-  else if (angleCmd == 0 && pwmChanged == 0 && robotDist - distBuffer - distA <= changeDist && robotDist - distBuffer - distB <= changeDist)
+  else if (angleCmd == 0 && pwmStartChanged == 0 && enablePID == 1 && distA >= changeDist - distBuffer && distB >= changeDist - distBuffer)
   {
-    motorAVal = lowMotorPWM;
-    motorBVal = lowMotorPWM;
+	motorAVal = highMotorAPWM;
+	motorBVal = highMotorBPWM;
 
-    encoderTarget = encoderLTarget;
+	startPID = 1;
+	pwmStartChanged = 1;
+  }
+  else if (angleCmd == 0 && pwmStopChanged == 0 && robotDist - distBuffer - distA <= changeDist && robotDist - distBuffer - distB <= changeDist)
+  {
+	startPID = 0;
 
-    prevEncoderA = 0;
-    prevEncoderB = 0;
-    iTermA = lowMotorPWM;
-    iTermB = lowMotorPWM;
+    motorAVal = lowMotorAPWM;
+    motorBVal = lowMotorBPWM;
 
-    pwmChanged = 1;
+    pwmStopChanged = 1;
   }
 }
 
 void pid(uint32_t dur)
 {
-  if (startPID == 1 && pidCount++ >= countRequired)
+  if (startPID == 1)
   {
-	float kd, ki, kp;
-
-	kd = (driveCmd == 'F' ? kdf : kdb) * 1000 / dur;
-	ki = (driveCmd == 'F' ? kif : kib) * dur / 1000;
-	kp = driveCmd == 'F' ? kpf : kpb;
-
-	errorA = encoderTarget - encoderAVal;
-	errorB = encoderTarget - encoderBVal;
-
-	iTermA += ki * errorA;
-	iTermB += ki * errorB;
-
-	if (iTermA < 0)
-	  iTermA = 0;
-	else if (iTermA > maxMotorPWM)
-	  iTermA = maxMotorPWM;
-
-	if (iTermB < 0)
-	  iTermB = 0;
-	else if (iTermB > maxMotorPWM)
-	  iTermB = maxMotorPWM;
-
-	if (prevEncoderA == 0 && prevEncoderB == 0)
+	if (pidCount++ >= countRequired)
 	{
+	  float kdA, kdB, kiA, kiB, kpA, kpB;
+
+	  kdA = (driveCmd == 'F' ? kdfA : kdbA) * 1000 / dur;
+	  kiA = (driveCmd == 'F' ? kifA : kibA) * dur / 1000;
+	  kpA = driveCmd == 'F' ? kpfA : kpbA;
+
+	  kdB = (driveCmd == 'F' ? kdfB : kdbB) * 1000 / dur;
+	  kiB = (driveCmd == 'F' ? kifB : kibB) * dur / 1000;
+	  kpB = driveCmd == 'F' ? kpfB : kpbB;
+
+	  errorA = encoderTarget - encoderAVal;
+	  errorB = encoderTarget - encoderBVal;
+
+	  iTermA += kiA * errorA;
+	  iTermB += kiB * errorB;
+
+	  if (prevEncoderA == 0 && prevEncoderB == 0)
+	  {
+	    prevEncoderA = encoderAVal;
+	    prevEncoderB = encoderBVal;
+	  }
+
+	  motorAVal = (int)(kpA * errorA - kdA * (encoderAVal - prevEncoderA) + iTermA);
+	  motorBVal = (int)(kpB * errorB - kdB * (encoderBVal - prevEncoderB) + iTermB);
+
 	  prevEncoderA = encoderAVal;
 	  prevEncoderB = encoderBVal;
-	}
+    }
 
-	motorAVal = (int)(kp * errorA - kd * (encoderAVal - prevEncoderA) + iTermA);
-	motorBVal = (int)(kp * errorB - kd * (encoderBVal - prevEncoderB) + iTermB);
-
-	//sprintf((char*)txBuffer, "%-5d %-5d", motorAVal, motorBVal);
-	//HAL_UART_Transmit(&huart3, txBuffer, 11, 0xFFFF);
-
-	prevEncoderA = encoderAVal;
-	prevEncoderB = encoderBVal;
+	sprintf((char*)txBuffer, "%-3d %-3d %-5d %-5d", encoderAVal, encoderBVal, motorAVal, motorBVal);
+	HAL_UART_Transmit(&huart3, txBuffer, 19, 0xFFFF);
   }
 }
 
@@ -1354,9 +1444,27 @@ void oled(void *argument)
 {
   /* USER CODE BEGIN 5 */
   uint8_t strBuffer[20];
+
+  //axises accel, gyro, mag;
   /* Infinite loop */
   for(;;)
   {
+	//if (TM_I2C_IsDeviceConnected(&hi2c1, ICM20948_ADDR) == TM_I2C_Result_Ok)
+	//{
+		//icm20948_gyro_read(&gyro);
+		//icm20948_accel_read(&accel);
+		//ak09916_mag_read(&mag);
+
+		/*sprintf((char*)strBuffer, "Gx: %-5d", (int)gyro.x);
+		OLED_ShowString(10, 10, strBuffer);
+
+		sprintf((char*)strBuffer, "Gy: %-5d", (int)gyro.y);
+		OLED_ShowString(10, 20, strBuffer);
+
+		sprintf((char*)strBuffer, "Gz: %-5d", (int)gyro.z);
+		OLED_ShowString(10, 30, strBuffer);*/
+	//}
+
 	sprintf((char*)strBuffer, "%d", (int)profile);
 	OLED_ShowString(0, 0, strBuffer);
 
@@ -1371,12 +1479,12 @@ void oled(void *argument)
 	OLED_ShowString(10, 0, strBuffer);
 
 	//sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
-    //sprintf((char*)strBuffer, "MotorA: %-5d", (int)motorAVal);
+    sprintf((char*)strBuffer, "MotorA: %-5d", (int)motorAVal);
 	//sprintf((char*)strBuffer, "EncA: %-5d", (int)encoderAVal);
 	//sprintf((char*)strBuffer, "IR: %-5d", (int)(avgVal(irVal, irCounter, irGrad, irInt) + 0.5));
 	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
 	//sprintf((char*)strBuffer, "Tick1: %-5d", (int)tick1);
-	sprintf((char*)strBuffer, "TempA: %-5d", (int)(tempA + 0.5));
+	//sprintf((char*)strBuffer, "TempA: %-5d", (int)(tempA + 0.5));
 	//sprintf((char*)strBuffer, "AdjState: %-5d", (int)adjusting);
 	//sprintf((char*)strBuffer, "0: %-5d", (int)ultraVal[0]);
 	//sprintf((char*)strBuffer, "Angle: %-5d", (int)robotAngle);
@@ -1384,10 +1492,10 @@ void oled(void *argument)
 	OLED_ShowString(10, 10, strBuffer);
 
 	//sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
-	//sprintf((char*)strBuffer, "MotorB: %-5d", (int)motorBVal);
+	sprintf((char*)strBuffer, "MotorB: %-5d", (int)motorBVal);
 	//sprintf((char*)strBuffer, "EncB: %-5d", (int)encoderBVal);
 	//sprintf((char*)strBuffer, "Tick2: %-5d", (int)tick2);
-	sprintf((char*)strBuffer, "TempB: %-5d", (int)(tempB + 0.5));
+	//sprintf((char*)strBuffer, "TempB: %-5d", (int)(tempB + 0.5));
 	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
 	//sprintf((char*)strBuffer, "Adjust: %c %-5d", driveCmd, (int)(robotDist + 0.5));
 	//sprintf((char*)strBuffer, "1: %-5d", (int)ultraVal[1]);
@@ -1395,16 +1503,18 @@ void oled(void *argument)
 	OLED_ShowString(10, 20, strBuffer);
 
 	//sprintf((char*)strBuffer, "Action: %-5d", (int)actionCounter);
-	sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
+	//sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
 	//sprintf((char*)strBuffer, "TempA: %-5d", (int)(tempA + 0.5));
 	//sprintf((char*)strBuffer, "2: %-5d", (int)ultraVal[2]);
+	sprintf((char*)strBuffer, "EncA: %-5d", (int)encoderAVal);
 	OLED_ShowString(10, 30, strBuffer);
 
 	//sprintf((char*)strBuffer, "Fill: %-5d", (int)fillCounter);
-	sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
+	//sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
 	//sprintf((char*)strBuffer, "TempB: %-5d", (int)(tempB + 0.5));
 	//sprintf((char*)strBuffer, "TempA: %-5d", (int)ultraCount2);
 	//sprintf((char*)strBuffer, "3: %-5d", (int)ultraVal[3]);
+	sprintf((char*)strBuffer, "EncB: %-5d", (int)encoderBVal);
 	OLED_ShowString(10, 40, strBuffer);
 
 	//sprintf((char*)strBuffer, "4: %-5d", (int)ultraVal[4]);
@@ -1485,9 +1595,9 @@ void rpi(void *argument)
     	clearCmds();
 
       strncpy(strCounter, (char*)cmds[actionCounter], 3);
-      //sprintf((char*)txBuffer, cmdType == 'C' ? "Done C  " : "Done %-3d", atoi(strCounter));
-      sprintf((char*)txBuffer, "%-3d  %-3d", (int)(tempA + 0.5), (int)(tempB + 0.5));
-      HAL_UART_Transmit(&huart3, txBuffer, 8, 0xFFFF);
+      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C             " : "Done %-3d           ", atoi(strCounter));
+      //sprintf((char*)txBuffer, "%-3d  %-3d           ", (int)(tempA + 0.5), (int)(tempB + 0.5));
+      HAL_UART_Transmit(&huart3, txBuffer, 19, 0xFFFF);
     }
 
     if (cmdState == 0 && actionCounter <= fillCounter)
@@ -1739,6 +1849,12 @@ void encoder(void *argument)
 	  }
 
 	  pid(dur);
+
+//	  if (startDriving == 1)
+//	  {
+//		sprintf((char*)txBuffer, "%-3d %-3d %-5d %-5d", encoderAVal, encoderBVal, motorAVal, motorBVal);
+//		HAL_UART_Transmit(&huart3, txBuffer, 19, 0xFFFF);
+//	  }
 
 	  cnt1A = __HAL_TIM_GET_COUNTER(&htim2);
 	  cnt1B = __HAL_TIM_GET_COUNTER(&htim3);

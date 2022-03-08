@@ -1,4 +1,6 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+PeripheralDriver/Src/tm_stm32_gpio.o: \
+ ../PeripheralDriver/Src/tm_stm32_gpio.c \
+ C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_gpio.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -31,27 +33,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h \
- ../Core/Inc/FreeRTOSConfig.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h \
- ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/icm20948.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_i2c.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/attributes.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_gpio.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/oled.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_ahrs_imu.h \
- C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_i2c.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 
-../Core/Inc/main.h:
+C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_gpio.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 
@@ -118,39 +102,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h:
-
-../Core/Inc/FreeRTOSConfig.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/task.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/include/list.h:
-
-../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h:
-
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/icm20948.h:
-
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_i2c.h:
-
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/attributes.h:
-
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_gpio.h:
-
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/oled.h:
-
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_ahrs_imu.h:
-
-C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_i2c.h:

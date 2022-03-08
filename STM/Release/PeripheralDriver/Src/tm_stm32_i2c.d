@@ -33,7 +33,9 @@ PeripheralDriver/Src/tm_stm32_i2c.o: \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
+ C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/attributes.h \
+ C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_gpio.h
 
 C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_i2c.h:
 
@@ -102,3 +104,7 @@ C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ P
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
+
+C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/attributes.h:
+
+C:/Users/Jeff\ Chua/Desktop/Year\ 3\ Sem\ 2/CE3004\ Multidisciplinary\ Design\ Project/MDP_Team9/STM/PeripheralDriver/Inc/tm_stm32_gpio.h:

@@ -8,18 +8,21 @@ C_SRCS += \
 ../PeripheralDriver/Src/icm20948.c \
 ../PeripheralDriver/Src/oled.c \
 ../PeripheralDriver/Src/tm_stm32_ahrs_imu.c \
+../PeripheralDriver/Src/tm_stm32_gpio.c \
 ../PeripheralDriver/Src/tm_stm32_i2c.c 
 
 OBJS += \
 ./PeripheralDriver/Src/icm20948.o \
 ./PeripheralDriver/Src/oled.o \
 ./PeripheralDriver/Src/tm_stm32_ahrs_imu.o \
+./PeripheralDriver/Src/tm_stm32_gpio.o \
 ./PeripheralDriver/Src/tm_stm32_i2c.o 
 
 C_DEPS += \
 ./PeripheralDriver/Src/icm20948.d \
 ./PeripheralDriver/Src/oled.d \
 ./PeripheralDriver/Src/tm_stm32_ahrs_imu.d \
+./PeripheralDriver/Src/tm_stm32_gpio.d \
 ./PeripheralDriver/Src/tm_stm32_i2c.d 
 
 
@@ -30,7 +33,7 @@ PeripheralDriver/Src/%.o: ../PeripheralDriver/Src/%.c PeripheralDriver/Src/subdi
 clean: clean-PeripheralDriver-2f-Src
 
 clean-PeripheralDriver-2f-Src:
-	-$(RM) ./PeripheralDriver/Src/icm20948.d ./PeripheralDriver/Src/icm20948.o ./PeripheralDriver/Src/oled.d ./PeripheralDriver/Src/oled.o ./PeripheralDriver/Src/tm_stm32_ahrs_imu.d ./PeripheralDriver/Src/tm_stm32_ahrs_imu.o ./PeripheralDriver/Src/tm_stm32_i2c.d ./PeripheralDriver/Src/tm_stm32_i2c.o
+	-$(RM) ./PeripheralDriver/Src/icm20948.d ./PeripheralDriver/Src/icm20948.o ./PeripheralDriver/Src/oled.d ./PeripheralDriver/Src/oled.o ./PeripheralDriver/Src/tm_stm32_ahrs_imu.d ./PeripheralDriver/Src/tm_stm32_ahrs_imu.o ./PeripheralDriver/Src/tm_stm32_gpio.d ./PeripheralDriver/Src/tm_stm32_gpio.o ./PeripheralDriver/Src/tm_stm32_i2c.d ./PeripheralDriver/Src/tm_stm32_i2c.o
 
 .PHONY: clean-PeripheralDriver-2f-Src
 

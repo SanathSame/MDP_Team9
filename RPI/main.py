@@ -40,6 +40,8 @@ class RPI(threading.Thread):
         self.y1 = []
         self.y2 = []
 
+        self.seen_ids = []
+
         '''
         ANDROID (AND):
         "ALG ROBOT XX YY D"  
@@ -115,13 +117,21 @@ class RPI(threading.Thread):
                 #self.centraliseImage()
                 # TODO: check with stm the data to send for no image'''
             if predictions[0] == "IMG":
-                times_to_adjust = 0
-                if int(predictions[1]) == 10:       ## ImageID of bullseye is 10
-                    self.sendToAlgo("STOP")
-                    # TODO: robot recovery from detecting bullseye
-                else:
-                    self.sendToAlgo("NEXT")
-                    self.sendToAndroid("TARGET " + predictions[4] + "," + predictions[1]) # "TARGET ObstacleID, ImageID"
+                # times_to_adjust = 0
+                # if int(predictions[1]) == 10:       ## ImageID of bullseye is 10
+                #     self.sendToAlgo("STOP")
+                #     # TODO: robot recovery from detecting bullseye
+                # else:
+                prediction_id = int(predictions[1])
+
+                if prediction_id in self.seen_ids or prediction_id == 10:
+                    self.sendToAlgo("NOIMAGE")
+                    print("Seen the image already")
+                    continue
+
+                self.seen_ids.append(prediction_id)
+                self.sendToAlgo("NEXT")
+                self.sendToAndroid("TARGET " + predictions[4] + "," + predictions[1]) # "TARGET ObstacleID, ImageID"
                 continue
             '''elif predictions[0] == "ADJUST":
                 #self.commandCounter += 1

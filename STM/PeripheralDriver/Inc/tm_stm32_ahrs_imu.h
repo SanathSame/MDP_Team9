@@ -81,7 +81,7 @@ extern "C" {
 
 #define AHRSIMU_PI              3.141592653f            /*!< PI definition */
 #define AHRSIMU_RAD2DEG(x)      ((x) * 57.2957795f)     /*!< Radians to degrees converter */
-#define AHRSIMU_DEG2RAD(x)      ((x) * 0.0174532925f)   /*!< Radians to degrees converter */
+#define AHRSIMU_DEG2RAD(x)      ((x) * 0.0174532925f)   /*!< Degrees to radians converter */
 
 /**
  * @}

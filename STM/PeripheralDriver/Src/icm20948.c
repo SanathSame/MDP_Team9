@@ -40,7 +40,7 @@ void icm20948_init()
 	icm20948_clock_source(1);
 	icm20948_odr_align_enable();
 	
-	icm20948_spi_slave_enable();
+	//icm20948_spi_slave_enable();
 	
 	icm20948_gyro_low_pass_filter(0);
 	icm20948_accel_low_pass_filter(0);
@@ -51,8 +51,8 @@ void icm20948_init()
 	icm20948_gyro_calibration();
 	icm20948_accel_calibration();
 
-	icm20948_gyro_full_scale_select(_2000dps);
-	icm20948_accel_full_scale_select(_16g);
+	icm20948_gyro_full_scale_select(_250dps);
+	icm20948_accel_full_scale_select(_2g);
 }
 
 void ak09916_init()
@@ -83,7 +83,7 @@ void icm20948_accel_read(axises* data)
 	data->x = (int16_t)(temp[0] << 8 | temp[1]);
 	data->y = (int16_t)(temp[2] << 8 | temp[3]);
 	data->z = (int16_t)(temp[4] << 8 | temp[5]) + accel_scale_factor; 
-	// Add scale factor because calibraiton function offset gravity acceleration.
+	// Add scale factor because calibration function offset gravity acceleration.
 }
 
 bool ak09916_mag_read(axises* data)
@@ -502,7 +502,8 @@ static void write_multiple_icm20948_reg(userbank ub, uint8_t reg, uint8_t* val, 
 
 static uint8_t read_single_ak09916_reg(uint8_t reg)
 {
-	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	//write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, MAG_SLAVE_ADDR);
 	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_REG, reg);
 	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_CTRL, 0x81);
 
@@ -512,7 +513,8 @@ static uint8_t read_single_ak09916_reg(uint8_t reg)
 
 static void write_single_ak09916_reg(uint8_t reg, uint8_t val)
 {
-	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, WRITE | MAG_SLAVE_ADDR);
+	//write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, WRITE | MAG_SLAVE_ADDR);
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, MAG_SLAVE_ADDR);
 	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_REG, reg);
 	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_DO, val);
 	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_CTRL, 0x81);
@@ -520,7 +522,8 @@ static void write_single_ak09916_reg(uint8_t reg, uint8_t val)
 
 static uint8_t* read_multiple_ak09916_reg(uint8_t reg, uint8_t len)
 {	
-	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	//write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, READ | MAG_SLAVE_ADDR);
+	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_ADDR, MAG_SLAVE_ADDR);
 	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_REG, reg);
 	write_single_icm20948_reg(ub_3, B3_I2C_SLV0_CTRL, 0x80 | len);
 

@@ -11,13 +11,13 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
-        self.pcObject = PcComm()
-        self.androidObject = Android()
+        #self.pcObject = PcComm()
+        #self.androidObject = Android()
         self.stm = STM()
 
         # Establish connection with other subsystems
-        self.pcObject.connect()
-        self.androidObject.connect()
+        #self.pcObject.connect()
+        #self.androidObject.connect()
         self.stm.connect()
         print("Connection to devices completed...")
 
@@ -42,9 +42,9 @@ class RPI(threading.Thread):
         receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread", daemon=True)
 
         # Makes Threads start in the background
-        receiveFromImgThread.start()
-        receiveFromAlgoThread.start()
-        receiveFromAndroidThread.start()
+        #receiveFromImgThread.start()
+        #receiveFromAlgoThread.start()
+        #receiveFromAndroidThread.start()
         receiveFromSTMThread.start()
 
         self.hardcode_parking()

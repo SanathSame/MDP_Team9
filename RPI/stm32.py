@@ -6,7 +6,7 @@ class STM():
         self.BAUD_RATE = 115200
         self.SERIAL_PORT = "/dev/ttyUSB0"
         self.service = None
-        self.STM_MSG_LENGTH = 10
+        self.STM_MSG_LENGTH = 11
 
     def connect(self):
         try:
@@ -33,7 +33,7 @@ class STM():
 
     def receiveMsg(self):
         try:
-            msg = self.service.read(8)
+            msg = self.service.read(self.STM_MSG_LENGTH)
             if len(msg) > 0:
                 return msg.decode('utf-8')
         except Exception as e:

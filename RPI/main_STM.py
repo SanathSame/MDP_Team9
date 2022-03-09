@@ -55,7 +55,7 @@ class RPI(threading.Thread):
         receiveFromSTMThread.start()
 
         count = 0
-        while True:
+        '''while True:
             self.sendToSTM("{:<3} RF {:<3}".format(count, 87))
             A = input("hhi")
             count += 1
@@ -71,15 +71,17 @@ class RPI(threading.Thread):
             self.sendToSTM("{:<3} RB {:<3}".format(count, 79))
             count += 1
             time.sleep(2)
-            b = input("hhi")
+            b = input("hhi")'''
 
         #self.sendToSTM(str(0) + "   LF 360")
 
-        '''for i in range(0, 10, 2):
-            self.sendToSTM(str(i) + "   F 10  ")
+        for i in range(0, 10, 2):
+            self.sendToSTM(str(i) + "   F 500 ")
             time.sleep(0.5)
-            self.sendToSTM(str(i+1) + "   B 10  ")
-            time.sleep(0.5)'''
+            a = input("")
+            # self.sendToSTM(str(i+1) + "   B 75  ")
+            # time.sleep(0.5)
+            # b = input("")
         '''self.sendToSTM("{:<3} F {:<4}".format(0, 35))
         time.sleep(0.5)
         #A = input("hihi")
@@ -186,18 +188,19 @@ class RPI(threading.Thread):
     def sendToSTM(self, msgToSTM):
         if (msgToSTM):
             self.stm.sendMsg(msgToSTM)
-            print("Message send to STM is " + msgToSTM)
+            # print("Message send to STM is " + msgToSTM)
         '''while True:
             msgToSTM = input("Enter your command (6 chars): ")
             self.stm.sendMsg(str(msgToSTM))'''
 
     def receiveFromSTM(self):
         # Enclose in while loop
+        counter = 0
         while True:
             stmMsg = self.stm.receiveMsg()
             if stmMsg is not None and ord(stmMsg[0]) != 0:
                 print("Message from STM: " + stmMsg)       #Comment for debug
-
+                # print("\t".join(stmMsg.split(" ")))
                 # if "Done C" in stmMsg:
                 #     self.sendToSTM("0   F 40  ")
                 #     time.sleep(0.5)
@@ -208,12 +211,16 @@ class RPI(threading.Thread):
                 if len(msg) < 6:
                     msg += " " * (6 - len(msg))
                     self.sendToSTM(msg)'''
+                #if stmMsg[:4] == "Done":
 
-                '''y1, y2 = stmMsg[:5], stmMsg[6:11]
-                rpi.y1.append(int(y1))
-                rpi.y2.append(int(y2))
-                rpi.x1.append(self.time)
-                self.time += 0.05'''
+
+
+                y1, y2 = stmMsg[:5], stmMsg[6:11]
+                self.y1.append(int(y1))
+                self.y2.append(int(y2))
+                self.x1.append(self.time)
+                self.time += 0.05
+
 
 
     def snapPic(self):
@@ -253,11 +260,12 @@ class RPI(threading.Thread):
     def closeAll(self):
         #self.pcObject.disconnect()
         #self.androidObject.disconnect()
+
+        print("in closing....")
         with open("test1.csv", 'w') as f:
             f.write(str(rpi.y1)[1:-1] + '\n')
-            f.write(str(rpi.y2)[1:-1])
+            f.write(str(rpi.y2)[1:-1] + '\n')
             f.close()
-        print("in closing....")
 
         self.stm.disconnect()
         #self.camera.close()

@@ -46,7 +46,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
+ ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 
 I2C_HandleTypeDef hi2c1;
@@ -130,6 +130,13 @@ const osThreadAttr_t EncoderTask_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
+/* Definitions for ICMTask */
+osThreadId_t ICMTaskHandle;
+const osThreadAttr_t ICMTask_attributes = {
+  .name = "ICMTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -157,6 +164,7 @@ void led(void *argument);
 void ultra(void *argument);
 void motor(void *argument);
 void encoder(void *argument);
+void icm(void *argument);
 
 /* USER CODE BEGIN PFP */
 float avgVal(uint32_t *val, uint32_t size, float grad, float inter);
@@ -166,9 +174,10 @@ void clearCmds();
 void microDelay(uint32_t us);
 void valShift(uint32_t *val, uint32_t size);
 
+void adjustRobot(uint8_t *cmd);
 void driveRobot(uint8_t *cmd);
 void pid(uint32_t dur);
-void stopRobot();
+void stopRobot(uint8_t *cmd);
 void turnRobot(uint8_t *cmd);
 /* USER CODE END PFP */
 
@@ -178,25 +187,29 @@ float pi, radius;
 float encoderGrad, encoderInt;
 float kdbA, kdfA, kibA, kifA, kpbA, kpfA, kdbB, kdfB, kibB, kifB, kpbB, kpfB;
 float iTermA, iTermB;
-float changeDist, distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
+float adjustDist, changeDist, distA, distB, distBuffer, distOffset, robotDist, tempA, tempB, turnOffset;
 float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
 float irGrad, irInt, ultraGrad, ultraInt;
+float angleThreshold, angleTurned, beta, inclination, startYaw;
 
 int actionCounter, fillCounter;
 int highMotorAPWM, highMotorBPWM, lowMotorAPWM, lowMotorBPWM, maxMotorPWM, motorAVal, motorBVal;
-int encoderAVal, encoderBVal, encoderHTarget, encoderLTarget, encoderTarget;
+int encoderAVal, encoderBVal, encoderTarget;
 int countRequired, errorA, errorB, pidCount, prevEncoderA, prevEncoderB;
-int lbOffset, lfOffset, rbOffset, rfOffset, robotAngle;
+int robotAngle;
+
+TM_AHRSIMU_t imu;
 
 uint8_t cmds[1000][20], cmdState, rxBuffer[20], txBuffer[20];
-uint8_t angleCmd, driveCmd, enablePID, pwmStartChanged, pwmStopChanged, startDriving, startPID;
+uint8_t adjustDir, angleCmd, driveCmd, enablePID, pwmStartChanged, pwmStopChanged, startDriving, startPID;
 uint8_t batteryState[13];
 uint8_t ultraCapture;
 uint8_t profile;
+uint8_t useMag;
 
-uint32_t servoCenter, servoLeft, servoRight, servoVal;
+uint32_t servoCenter, servoFarLeft, servoFarRight, servoLeft, servoRight, servoVal;
 uint32_t batteryCounter, batteryVal[5], irCounter, irVal[5], ultraCounter, ultraVal[5];
-uint32_t batteryDelay, dispatchDelay, encoderDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay, ultraDelay;  // rpiDelay <= encoderDelay
+uint32_t batteryDelay, dispatchDelay, encoderDelay, icmDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay, ultraDelay;  // rpiDelay <= encoderDelay
 uint32_t stoppingDelay, turningDelay;
 /* USER CODE END 0 */
 
@@ -240,20 +253,26 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
-  //icm20948_init();
-  //ak09916_init();
+  icm20948_init();
+  ak09916_init();
 
   pi = 3.1415926536;
   radius = 3.35;
 
+  adjustDist = 2;
   changeDist = 10;
 
   profile = 2;
+  useMag = 1;
 
   irGrad = 1;
   irInt = 0;
   ultraGrad = 0.01715;
   ultraInt = 0;
+
+  angleThreshold = 5;
+  beta = 0.1;
+  inclination = 13 + 19.0 / 60;
 
   maxMotorPWM = 12000;
 
@@ -275,8 +294,10 @@ int main(void)
   ultraCapture = 0;
 
   servoCenter = 74;
-  servoLeft = 50;
-  servoRight = 109;
+  servoFarLeft = 50;
+  servoFarRight = 109;
+  servoLeft = 65;
+  servoRight = 85;
 
   batteryCounter = 0;
   irCounter = 0;
@@ -291,6 +312,7 @@ int main(void)
   batteryDelay = 2000;
   dispatchDelay = 1;
   encoderDelay = 25;
+  icmDelay = 1;
   irDelay = 100;
   ledDelay = 3000;
   motorDelay = 1;
@@ -303,6 +325,7 @@ int main(void)
   turningDelay = 700;
 
   changeProfile();
+  TM_AHRSIMU_Init(&imu, 1000.0 / icmDelay, beta, inclination);
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -355,6 +378,9 @@ int main(void)
   /* creation of EncoderTask */
   EncoderTaskHandle = osThreadNew(encoder, NULL, &EncoderTask_attributes);
 
+  /* creation of ICMTask */
+  ICMTaskHandle = osThreadNew(icm, NULL, &ICMTask_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -391,6 +417,7 @@ void SystemClock_Config(void)
   */
   __HAL_RCC_PWR_CLK_ENABLE();
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -402,6 +429,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -434,6 +462,7 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 1 */
 
   /* USER CODE END ADC1_Init 1 */
+
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   */
   hadc1.Instance = ADC1;
@@ -452,6 +481,7 @@ static void MX_ADC1_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
   sConfig.Channel = ADC_CHANNEL_10;
@@ -484,6 +514,7 @@ static void MX_ADC2_Init(void)
   /* USER CODE BEGIN ADC2_Init 1 */
 
   /* USER CODE END ADC2_Init 1 */
+
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   */
   hadc2.Instance = ADC2;
@@ -502,6 +533,7 @@ static void MX_ADC2_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
   sConfig.Channel = ADC_CHANNEL_14;
@@ -533,7 +565,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.ClockSpeed = 400000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -1067,8 +1099,8 @@ void changeProfile()
 	kifB = 0;
 	kpfB = 0;
 
-	distOffset = 5;
-	turnOffset = 0.5;
+	distOffset = 1;
+	turnOffset = 1;
 
 	lbGrad = 0.406223321414319;
 	lbInt = -1.03827694476358;
@@ -1084,13 +1116,7 @@ void changeProfile()
 	lowMotorAPWM = 3300;
 	lowMotorBPWM = 3500;
 
-	encoderHTarget = 130;
-	encoderLTarget = 50;
-
-	lbOffset = 0;
-	lfOffset = 0;
-	rbOffset = 0;
-	rfOffset = 0;
+	encoderTarget = 130;
 
 	break;
 
@@ -1112,8 +1138,8 @@ void changeProfile()
 	kifB = 0;
 	kpfB = 0;
 
-	distOffset = 5;
-	turnOffset = 0;
+	distOffset = 1;
+	turnOffset = 1;
 
 	lbGrad = 1;
 	lbInt = 0;
@@ -1129,13 +1155,7 @@ void changeProfile()
 	lowMotorAPWM = 3300;
 	lowMotorBPWM = 3500;
 
-	encoderHTarget = 130;
-	encoderLTarget = 50;
-
-	lbOffset = 0;
-	lfOffset = 0;
-	rbOffset = 0;
-	rfOffset = 0;
+	encoderTarget = 130;
 
 	break;
 
@@ -1159,7 +1179,7 @@ void changeProfile()
 	kifB = 8;
 	kpfB = 64;
 
-	distOffset = 0;
+	distOffset = 1;
 	turnOffset = 1;
 
 	lbGrad = 0.477744248433485;
@@ -1176,63 +1196,7 @@ void changeProfile()
 	lowMotorAPWM = 3400;
 	lowMotorBPWM = 3500;
 
-	encoderHTarget = 130;
-	encoderLTarget = 50;
-
-	lbOffset = 0;
-	lfOffset = 0;
-	rbOffset = 0;
-	rfOffset = 0;
-
-	break;
-
-  case 3: //Outside Lab No Delay
-  	encoderGrad = 0.208496572267945;
-  	encoderInt = 1.08776618891631;
-
-  	kdbA = 1;
-  	kibA = 256;
-  	kpbA = 64;
-
-  	kdfA = 1;
-  	kifA = 2;
-  	kpfA = 32;
-
-  	kdbB = 1;
-  	kibB = 16;
-  	kpbB = 32;
-
-  	kdfB = 1;
-  	kifB = 8;
-  	kpfB = 64;
-
-  	distOffset = 0;
-  	turnOffset = 1;
-
-  	lbGrad = 0.477744248433485;
-  	lbInt = 2.02776765331444;
-  	lfGrad = 0.425142145382334;
-  	lfInt = 1.59811982955917;
-  	rbGrad = 0.452958458665014;
-  	rbInt = 3.65536165354082;
-  	rfGrad = 0.381832587414008;
-  	rfInt = 2.05906630142695;
-
-  	highMotorAPWM = 8800;
-  	highMotorBPWM = 9500;
-  	lowMotorAPWM = 3400;
-  	lowMotorBPWM = 3500;
-
-  	encoderHTarget = 130;
-  	encoderLTarget = 50;
-
-  	lbOffset = 0;
-  	lfOffset = 0;
-  	rbOffset = 0;
-  	rfOffset = 0;
-
-  	stoppingDelay = 10;
-  	turningDelay = 10;
+	encoderTarget = 130;
   }
 }
 
@@ -1269,6 +1233,34 @@ void valShift(uint32_t *val, uint32_t size)
 	val[counter] = val[counter + 1];
 }
 
+void adjustRobot(uint8_t *cmd)
+{
+  uint8_t turnDir = cmd[4];
+  uint8_t driveDir = cmd[5];
+
+  driveCmd = adjustDir;
+  robotDist = adjustDist;
+
+  adjustDir = adjustDir == 'F' ? 'B' : 'F';
+
+  if (angleTurned > robotAngle)
+  {
+	if ((turnDir == 'L' && driveDir == 'B') || (turnDir == 'R' && driveDir == 'F'))
+	  servoVal = driveCmd == 'F' ? servoLeft : servoRight;
+	else if ((turnDir == 'L' && driveDir == 'F') || (turnDir == 'R' && driveDir == 'B'))
+      servoVal = driveCmd == 'F' ? servoRight : servoLeft;
+  }
+  else
+  {
+	if ((turnDir == 'L' && driveDir == 'B') || (turnDir == 'R' && driveDir == 'F'))
+	  servoVal = driveCmd == 'F' ? servoRight : servoLeft;
+	else if ((turnDir == 'L' && driveDir == 'F') || (turnDir == 'R' && driveDir == 'B'))
+	  servoVal = driveCmd == 'F' ? servoLeft : servoRight;
+  }
+
+  osDelay(turningDelay);
+}
+
 void driveRobot(uint8_t *cmd)
 {
   if (startDriving == 0)
@@ -1293,7 +1285,6 @@ void driveRobot(uint8_t *cmd)
 	  	iTermB = highMotorBPWM;
 
 	  	pidCount = 0;
-	  	encoderTarget = encoderHTarget;
 	  }
 	}
 	else
@@ -1313,7 +1304,7 @@ void driveRobot(uint8_t *cmd)
 	startDriving = 1;
   }
   else if (distA >= robotDist - distBuffer && distB >= robotDist - distBuffer)
-  	stopRobot();
+  	stopRobot(cmd);
   else if (angleCmd == 0 && pwmStartChanged == 0 && enablePID == 1 && distA >= changeDist - distBuffer && distB >= changeDist - distBuffer)
   {
 	motorAVal = highMotorAPWM;
@@ -1373,7 +1364,7 @@ void pid(uint32_t dur)
   }
 }
 
-void stopRobot()
+void stopRobot(uint8_t *cmd)
 {
   startPID = 0;
 
@@ -1384,13 +1375,21 @@ void stopRobot()
   servoVal = servoCenter;
 
   if (angleCmd != 0)
+  {
     osDelay(turningDelay);
 
+    angleTurned = fabs(imu.Yaw - startYaw);
+    angleCmd = fabs(angleTurned - robotAngle) <= angleThreshold ? 0 : 1;
+
+    if (angleCmd == 1)
+      adjustRobot(cmd);
+  }
+
   startDriving = 0;
-  angleCmd = 0;
   driveCmd = 0;
 
-  cmdState = 2;
+  if (angleCmd == 0)
+    cmdState = 2;
 }
 
 void turnRobot(uint8_t *cmd)
@@ -1401,32 +1400,23 @@ void turnRobot(uint8_t *cmd)
     strncpy(angleStr, (char*)(cmd + 7), 3);
     robotAngle = atoi(angleStr);
 
+    adjustDir = 'F';
     angleCmd = cmd[4];
     driveCmd = cmd[5];
 
     if (angleCmd == 'L' && driveCmd == 'B')
-    {
-      robotAngle += lbOffset;
       robotDist = lbGrad * robotAngle + lbInt;
-    }
     else if (angleCmd == 'L' && driveCmd == 'F')
-    {
-      robotAngle += lfOffset;
 	  robotDist = lfGrad * robotAngle + lfInt;
-    }
     else if (angleCmd == 'R' && driveCmd == 'B')
-    {
-      robotAngle += rbOffset;
   	  robotDist = rbGrad * robotAngle + rbInt;
-    }
     else if (angleCmd == 'R' && driveCmd == 'F')
-    {
-      robotAngle += rfOffset;
 	  robotDist = rfGrad * robotAngle + rfInt;
-    }
 
-    servoVal = angleCmd == 'L' ? servoLeft : servoRight;
+    servoVal = angleCmd == 'L' ? servoFarLeft : servoFarRight;
     osDelay(turningDelay);
+
+    startYaw = imu.Yaw;
   }
   else
 	driveRobot(cmd);
@@ -1444,27 +1434,9 @@ void oled(void *argument)
 {
   /* USER CODE BEGIN 5 */
   uint8_t strBuffer[20];
-
-  //axises accel, gyro, mag;
   /* Infinite loop */
   for(;;)
   {
-	//if (TM_I2C_IsDeviceConnected(&hi2c1, ICM20948_ADDR) == TM_I2C_Result_Ok)
-	//{
-		//icm20948_gyro_read(&gyro);
-		//icm20948_accel_read(&accel);
-		//ak09916_mag_read(&mag);
-
-		/*sprintf((char*)strBuffer, "Gx: %-5d", (int)gyro.x);
-		OLED_ShowString(10, 10, strBuffer);
-
-		sprintf((char*)strBuffer, "Gy: %-5d", (int)gyro.y);
-		OLED_ShowString(10, 20, strBuffer);
-
-		sprintf((char*)strBuffer, "Gz: %-5d", (int)gyro.z);
-		OLED_ShowString(10, 30, strBuffer);*/
-	//}
-
 	sprintf((char*)strBuffer, "%d", (int)profile);
 	OLED_ShowString(0, 0, strBuffer);
 
@@ -1479,7 +1451,7 @@ void oled(void *argument)
 	OLED_ShowString(10, 0, strBuffer);
 
 	//sprintf((char*)strBuffer, "DistA: %-5d", (int)(distA + 0.5));
-    sprintf((char*)strBuffer, "MotorA: %-5d", (int)motorAVal);
+    //sprintf((char*)strBuffer, "MotorA: %-5d", (int)motorAVal);
 	//sprintf((char*)strBuffer, "EncA: %-5d", (int)encoderAVal);
 	//sprintf((char*)strBuffer, "IR: %-5d", (int)(avgVal(irVal, irCounter, irGrad, irInt) + 0.5));
 	//sprintf((char*)strBuffer, "Ultra: %-5d", (int)(avgVal(ultraVal, ultraCounter, ultraGrad, ultraInt) + 0.5));
@@ -1489,6 +1461,7 @@ void oled(void *argument)
 	//sprintf((char*)strBuffer, "0: %-5d", (int)ultraVal[0]);
 	//sprintf((char*)strBuffer, "Angle: %-5d", (int)robotAngle);
 	//sprintf((char*)strBuffer, "CounterA: %-5d", (int)counterA);
+	sprintf((char*)strBuffer, "Yaw: %-5d", (int)(imu.Yaw + 0.5));
 	OLED_ShowString(10, 10, strBuffer);
 
 	//sprintf((char*)strBuffer, "DistB: %-5d", (int)(distB + 0.5));
@@ -1625,10 +1598,10 @@ void servo(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	if (servoVal < servoLeft)
-	  servoVal = servoLeft;
-	else if (servoVal > servoRight)
-	  servoVal = servoRight;
+	if (servoVal < servoFarLeft)
+	  servoVal = servoFarLeft;
+	else if (servoVal > servoFarRight)
+	  servoVal = servoFarRight;
 
 	__HAL_TIM_SetCompare(&htim1, TIM_CHANNEL_4, angleCmd == 0 ? servoCenter : servoVal);
 
@@ -1865,6 +1838,36 @@ void encoder(void *argument)
   /* USER CODE END encoder */
 }
 
+/* USER CODE BEGIN Header_icm */
+/**
+* @brief Function implementing the ICMTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_icm */
+void icm(void *argument)
+{
+  /* USER CODE BEGIN icm */
+  axises accel, gyro, mag;
+  /* Infinite loop */
+  for(;;)
+  {
+	icm20948_accel_read_g(&accel);
+	icm20948_gyro_read_dps(&gyro);
+
+	if (useMag == 1)
+	{
+	  ak09916_mag_read_uT(&mag);
+	  TM_AHRSIMU_UpdateAHRS(&imu, AHRSIMU_DEG2RAD(gyro.x), AHRSIMU_DEG2RAD(gyro.y), AHRSIMU_DEG2RAD(gyro.z), accel.x, accel.y, accel.z, mag.x, mag.y, mag.z);
+	}
+	else
+	  TM_AHRSIMU_UpdateIMU(&imu, AHRSIMU_DEG2RAD(gyro.x), AHRSIMU_DEG2RAD(gyro.y), AHRSIMU_DEG2RAD(gyro.z), accel.x, accel.y, accel.z);
+
+    osDelay(icmDelay);
+  }
+  /* USER CODE END icm */
+}
+
 /**
   * @brief  This function is executed in case of error occurrence.
   * @retval None
@@ -1896,4 +1899,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-

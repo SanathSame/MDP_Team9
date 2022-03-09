@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (9-2020-q2-update)
+# Toolchain: GNU Tools for STM32 (10.3-2021.10)
 ################################################################################
 
 -include ../makefile.init
@@ -48,6 +48,9 @@ BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ART
 EXECUTABLES += \
 MDP.elf \
 
+MAP_FILES += \
+MDP.map \
+
 SIZE_OUTPUT += \
 default.size.stdout \
 
@@ -57,9 +60,6 @@ MDP.list \
 OBJCOPY_HEX += \
 MDP.hex \
 
-OBJCOPY_BIN += \
-MDP.bin \
-
 
 # All Target
 all: main-build
@@ -68,7 +68,7 @@ all: main-build
 main-build: MDP.elf secondary-outputs
 
 # Tool invocations
-MDP.elf: $(OBJS) $(USER_OBJS) C:\Users\Jeff\ Chua\Desktop\Year\ 3\ Sem\ 2\CE3004\ Multidisciplinary\ Design\ Project\MDP_Team9\STM\STM32F407VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+MDP.elf MDP.map: $(OBJS) $(USER_OBJS) C:\Users\Jeff\ Chua\Desktop\Year\ 3\ Sem\ 2\CE3004\ Multidisciplinary\ Design\ Project\MDP_Team9\STM\STM32F407VETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-gcc -o "MDP.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Jeff Chua\Desktop\Year 3 Sem 2\CE3004 Multidisciplinary Design Project\MDP_Team9\STM\STM32F407VETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="MDP.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
@@ -88,17 +88,12 @@ MDP.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-MDP.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "MDP.bin"
-	@echo 'Finished building: $@'
-	@echo ' '
-
 # Other Targets
 clean:
-	-$(RM) MDP.bin MDP.elf MDP.hex MDP.list default.size.stdout
+	-$(RM) MDP.elf MDP.hex MDP.list MDP.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX) $(OBJCOPY_BIN)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'

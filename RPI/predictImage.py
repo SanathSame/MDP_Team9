@@ -111,7 +111,7 @@ def predict(img_path: str, forAdjusting = False):
     if forAdjusting:
         # If image is for adjustment, we append an ADJUSTMENT_PREFIX to separate the images
         image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, ADJUSTMENT_PREFIX, counter)
-    elif len(result) == 0:
+    elif len(result) == 0 or ("bullseye" in predicted_classnames):
         # If image has no predictions, we append a NO_PREDICTION_PREFIX to 
         # separate from images with predictions
         image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, NO_PREDICTION_PREFIX, counter)

@@ -6,7 +6,7 @@ class STM():
         self.BAUD_RATE = 115200
         self.SERIAL_PORT = "/dev/ttyUSB0"
         self.service = None
-        self.STM_MSG_LENGTH = 11
+        self.STM_MSG_LENGTH = 20
 
     def connect(self):
         try:

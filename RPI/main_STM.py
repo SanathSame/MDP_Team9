@@ -297,21 +297,23 @@ class RPI(threading.Thread):
         #self.pcObject.disconnect()
         #self.androidObject.disconnect()
 
-        print("in closing....")
-        with open("test1.csv", 'w') as f:
-            f.write(str(rpi.y1)[1:-1] + '\n')
-            f.write(str(rpi.y2)[1:-1] + '\n')
-            f.close()
+        # print("in closing....")
+        # with open("test1.csv", 'w') as f:
+        #     f.write(str(rpi.y1)[1:-1] + '\n')
+        #     f.write(str(rpi.y2)[1:-1] + '\n')
+        #     f.close()
 
         self.stm.disconnect()
-        #self.camera.close()
+        self.camera.close()
 
 
 if __name__ == "__main__":
     rpi = RPI()
     try:
-        #rpi.camera = PiCamera()
-        #rpi.camera.resolution = (640, 480)
+        rpi.camera = PiCamera()
+        rpi.camera.resolution = (640, 480)
+        rpi.camera.exposure_compensation = 15
+        rpi.snapPic()
         '''ultrasonic = Ultrasonic()
         dist = ultrasonic.distance()
         print("Measured Distance = %.1f cm" % dist)
@@ -340,4 +342,4 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         #rpi.sendToSTM(str(count) + "   C     ")
         rpi.closeAll()
-        GPIO.cleanup()
+        # GPIO.cleanup()

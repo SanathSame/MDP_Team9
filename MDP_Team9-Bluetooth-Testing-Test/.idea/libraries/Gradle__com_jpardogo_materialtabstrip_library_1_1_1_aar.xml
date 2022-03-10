@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.jpardogo.materialtabstrip:library:1.1.1@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/Gradle/caches/transforms-3/6061043ad4f35069c028dc0f88691227/transformed/jetified-library-1.1.1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/Downloads/Gradle/caches/transforms-3/6061043ad4f35069c028dc0f88691227/transformed/jetified-library-1.1.1/res" />
+      <root url="file://$USER_HOME$/Downloads/Gradle/caches/transforms-3/6061043ad4f35069c028dc0f88691227/transformed/jetified-library-1.1.1/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Downloads/Gradle/caches/modules-2/files-2.1/com.jpardogo.materialtabstrip/library/1.1.1/58351d19c96a34078db304280584e720b5cfa9e0/library-1.1.1-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/Gradle/caches/modules-2/files-2.1/com.jpardogo.materialtabstrip/library/1.1.1/dc6ee8fc9fc3ec09304e6c0e161c326f7088e4e9/library-1.1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

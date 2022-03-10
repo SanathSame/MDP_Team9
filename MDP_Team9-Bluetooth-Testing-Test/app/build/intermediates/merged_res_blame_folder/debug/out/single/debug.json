@@ -1,0 +1,218 @@
+[
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_brake.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_brake.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/font_open_sans_light.ttf.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/font/open_sans_light.ttf"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xxxhdpi_ic_logo.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xxxhdpi/ic_logo.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_fragment_bluetooth.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/fragment_bluetooth.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_logo_background.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_logo_background.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_activity_started.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/activity_started.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xxxhdpi_ic_logo_round.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xxxhdpi/ic_logo_round.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_left_pressed.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_left_pressed.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xhdpi_ic_logo.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xhdpi/ic_logo.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xhdpi_ic_logo_foreground.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xhdpi/ic_logo_foreground.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_view_filters_sorters.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/view_filters_sorters.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_brake_states.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_brake_states.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_list_item_available_bluetooth_devices.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/list_item_available_bluetooth_devices.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_dialog_map_config.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/dialog_map_config.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable-xxxhdpi_ic_action_name.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable-xxxhdpi/ic_action_name.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable-hdpi_ic_action_name.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable-hdpi/ic_action_name.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-mdpi_ic_logo_round.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-mdpi/ic_logo_round.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-hdpi_ic_logo_foreground.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-hdpi/ic_logo_foreground.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_left.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_left.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xxxhdpi_ic_logo_foreground.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xxxhdpi/ic_logo_foreground.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xhdpi_ic_logo_round.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xhdpi/ic_logo_round.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-anydpi-v26_ic_logo.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-anydpi-v26/ic_logo.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/font_sf_pro_display_light.otf.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/font/sf_pro_display_light.otf"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xxhdpi_ic_logo_round.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xxhdpi/ic_logo_round.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xxhdpi_ic_logo.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xxhdpi/ic_logo.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable-xxhdpi_rounded_corner.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable-xxhdpi/rounded_corner.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_activity_main.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/activity_main.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-hdpi_ic_logo.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-hdpi/ic_logo.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_fragment_message.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/fragment_message.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_dialog_timer.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/dialog_timer.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-hdpi_ic_logo_round.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-hdpi/ic_logo_round.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_activity_bluetoothconnection.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/activity_bluetoothconnection.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable-mdpi_ic_action_name.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable-mdpi/ic_action_name.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable-xxhdpi_ic_action_name.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable-xxhdpi/ic_action_name.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-anydpi-v26_ic_logo_round.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-anydpi-v26/ic_logo_round.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_right_pressed.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_right_pressed.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_launcher_background.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_device_adapter_view.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/device_adapter_view.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-xxhdpi_ic_logo_foreground.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-xxhdpi/ic_logo_foreground.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_accelerate.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_accelerate.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable-xhdpi_ic_action_name.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable-xhdpi/ic_action_name.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/layout_messagebox.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/layout/messagebox.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_right_states.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_right_states.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_right.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_right.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable-v24_ic_hud_accelerate_pressed.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable-v24/ic_hud_accelerate_pressed.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_bacgkroundtheme.jpg.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/bacgkroundtheme.jpg"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-mdpi_baseline_computer_white_18dp.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-mdpi/baseline_computer_white_18dp.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_brake_pressed.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_brake_pressed.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/font_roboto_thin.ttf.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/font/roboto_thin.ttf"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-mdpi_ic_logo_foreground.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-mdpi/ic_logo_foreground.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_left_states.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_left_states.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-mdpi_ic_logo.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-mdpi/ic_logo.png"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/drawable_ic_hud_accelerator_states.xml.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/drawable/ic_hud_accelerator_states.xml"
+    },
+    {
+        "merged": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/build/intermediates/merged_res/debug/mipmap-hdpi_baseline_computer_white_18dp.png.flat",
+        "source": "/Users/lh/MDP_Team9/MDP_Team9-Bluetooth-Testing-Test/app/src/main/res/mipmap-hdpi/baseline_computer_white_18dp.png"
+    }
+]

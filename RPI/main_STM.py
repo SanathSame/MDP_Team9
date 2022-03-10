@@ -1,3 +1,4 @@
+from dis import dis
 import threading
 import time
 import os
@@ -23,10 +24,11 @@ class RPI(threading.Thread):
         self.stm.connect()
         print("Connecting to other devices...")
 
-        time.sleep(2)
+        time.sleep(1)
 
         self.imgCount = 0
         self.camera = None
+        self.counter = 0
 
         #temp variables
         self.time = 0.05
@@ -44,7 +46,7 @@ class RPI(threading.Thread):
         # Makes Threads run in the background
         #receiveFromImgThread.daemon = True
         #receiveFromAlgoThread.daemon = True
-        receiveFromAndroidThread.daemon = True
+        #receiveFromAndroidThread.daemon = True
         receiveFromSTMThread.daemon = True
 
         #receiveFromImgThread.start()
@@ -53,8 +55,39 @@ class RPI(threading.Thread):
         #self.sendToSTM("F 100 ")            #Hardcoded msg to be sent to STM
         #self.sendToSTM("S     ")
         receiveFromSTMThread.start()
+        ang = 90
+        while (ang > 0):
+            self.sendToSTM("{:<3} RF {:<3}".format(self.counter, ang))
+            self.increase_and_sleep()
+            ang = int(input("New angle for RF: "))
+        ang = 90
+        while (ang > 0):
+            self.sendToSTM("{:<3} LF {:<3}".format(self.counter, ang))
+            self.increase_and_sleep()
+            ang = int(input("New angle for LF: "))
+        ang = 90
+        while (ang > 0):
+            self.sendToSTM("{:<3} RB {:<3}".format(self.counter, ang))
+            self.increase_and_sleep()
+            ang = int(input("New angle for RB: "))
+        ang = 90
+        while (ang > 0):
+            self.sendToSTM("{:<3} RF {:<3}".format(self.counter, ang))
+            self.increase_and_sleep()
+            ang = int(input("New angle for LB: "))
 
-        count = 0
+        a = 1
+        while a > 0:
+            self.sendToSTM("{:<3} F {:<4}".format(self.counter, 100))
+            self.increase_and_sleep()
+            a = input("enter negative number to stop:")
+        a = 1
+        while a > 0:
+            self.sendToSTM("{:<3} B {:<4}".format(self.counter, 100))
+            self.increase_and_sleep()
+            a = input("enter negative number to stop:")
+
+        #count = 0
         '''while True:
             self.sendToSTM("{:<3} RF {:<3}".format(count, 87))
             A = input("hhi")
@@ -75,13 +108,13 @@ class RPI(threading.Thread):
 
         #self.sendToSTM(str(0) + "   LF 360")
 
-        for i in range(0, 10, 2):
-            self.sendToSTM(str(i) + "   F 500 ")
-            time.sleep(0.5)
-            a = input("")
-            # self.sendToSTM(str(i+1) + "   B 75  ")
-            # time.sleep(0.5)
-            # b = input("")
+        # for i in range(0, 10, 2):
+        #     self.sendToSTM(str(i) + "   F 500 ")
+        #     time.sleep(0.5)
+        #     a = input("")
+        #     # self.sendToSTM(str(i+1) + "   B 75  ")
+        #     # time.sleep(0.5)
+        #     # b = input("")
         '''self.sendToSTM("{:<3} F {:<4}".format(0, 35))
         time.sleep(0.5)
         #A = input("hihi")
@@ -104,6 +137,9 @@ class RPI(threading.Thread):
         # self.sendToSTM("6   RF 360")
         # time.sleep(0.05)
         # self.sendToSTM("7   B 900 ")'''
+    def increase_and_sleep(self):
+        self.counter += 1
+        time.sleep(1)
 
     def receiveFromImg(self):
         while True:

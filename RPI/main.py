@@ -124,7 +124,8 @@ class RPI(threading.Thread):
                 # else:
                 prediction_id = int(predictions[1])
 
-                if prediction_id in self.seen_ids or prediction_id == 10:
+                # if prediction_id in self.seen_ids or prediction_id == 10:
+                if prediction_id == 10: # BULLSEYE
                     self.sendToAlgo("NOIMAGE")
                     print("Seen the image already")
                     continue

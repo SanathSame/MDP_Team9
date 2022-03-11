@@ -47,7 +47,10 @@ class Android():
         except Exception as e:
             print("Error in closing bluetooth socket: " + str(e))
 
-    def sendMsg(self, msg):
+    def send_message(self, msg):
+        """
+        Send a command to android to process
+        """
         try:
             # Send message
             self.clientSock.send(msg)
@@ -56,7 +59,7 @@ class Android():
             print(errorMsg)
             self.connect()
 
-    def receiveMsg(self):
+    def read_message(self):
         try:
             message = self.clientSock.recv(self.BUFFER_SIZE).decode('utf-8')
             print("Message received: " + str(message))

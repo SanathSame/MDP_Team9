@@ -6,9 +6,13 @@ class STM():
         self.BAUD_RATE = 115200
         self.SERIAL_PORT = "/dev/ttyUSB0"
         self.service = None
-        self.STM_MSG_LENGTH = 20
+        self.STM_MSG_LENGTH = 19
+        self.commandCount = 0
 
     def connect(self):
+        """
+        Initialise and connect RPi and STM
+        """
         try:
             self.service = serial.Serial(self.SERIAL_PORT, self.BAUD_RATE, parity=serial.PARITY_NONE,
                 stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=5)
@@ -22,27 +26,58 @@ class STM():
             time.sleep(0.5)
             self.connect()
 
-    def sendMsg(self, msg):
+    def send_message(self, command: str):
+        """
+        Sends a command to the STM to execute
+
+        Returns the message STM sends back after executing the command
+
+        Will only stop once `Done` is received from STM
+        Message content will either be `Done <commandNumber>`, or some required sensor value, 
+        based on command
+        """
+        if len(command) == 0:
+            return
+
         try:
-            self.service.write(msg.encode('utf-8'))
+            formatted_command = "{:<3} {:<6}".format(self.commandCount, command)
+            self.service.write(formatted_command.encode('utf-8'))
+            self.commandCount += 1
+
+            messages_to_receive = []
+            while True:
+                message = self.receive_message()
+                if len(message) > 0:
+                    messages_to_receive.append(message)
+
+                    if "Done {}".format(self.commandCount - 1) in message:
+                        break
+
+            return messages_to_receive[0]
         except Exception as e:
             print('Error in sending message to STM: ' + str(e))
             self.connect()
             time.sleep(0.5)
-            self.sendMsg(msg)
+            self.send_command(command)
 
-    def receiveMsg(self):
+    def read_message(self):
+        """
+        Receive message from STM
+        """
         try:
             msg = self.service.read(self.STM_MSG_LENGTH)
-            if len(msg) > 0:
-                return msg.decode('utf-8')
+            return msg.decode('utf-8')
+
         except Exception as e:
             print('Error receiving message from STM: ' + str(e))
             self.connect()
             time.sleep(0.5)
-            self.receiveMsg()
+            self.receive_message()
 
     def disconnect(self):
+        """
+        Disconnect from STM
+        """
         try:
             if self.service:
                 self.service.close()

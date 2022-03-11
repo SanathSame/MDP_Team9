@@ -13,17 +13,17 @@ class RPI(threading.Thread):
         threading.Thread.__init__(self)
 
         # Creating subsystem objects
+        self.time_limit = 359
         self.pcObject = PcComm()
         self.androidObject = Android()
         self.stm = STM()
+        self.startTime = None
 
         # Establish connection with other subsystems
         self.pcObject.connect()
         self.androidObject.connect()
         self.stm.connect()
         print("Connection to devices completed...")
-
-        time.sleep(2)
 
         self.imgCount = 0
         self.camera = None
@@ -72,12 +72,22 @@ class RPI(threading.Thread):
         receiveFromAlgoThread = threading.Thread(target=self.receiveFromAlgo, args=(), name="read_Algo_Thread", daemon=True)
         receiveFromAndroidThread = threading.Thread(target=self.receiveFromAndroid, args=(), name="read_Android_Thread", daemon=True)
         receiveFromSTMThread = threading.Thread(target=self.receiveFromSTM, args=(), name="read_STM_Thread", daemon=True)
+        timerThread = threading.Thread(target=self.timerThread, args=(), name="timerThread", daemon=True)
+
 
         # Makes Threads start in the background
         receiveFromImgThread.start()
         receiveFromAlgoThread.start()
         receiveFromAndroidThread.start()
         receiveFromSTMThread.start()
+        timerThread.start()
+
+    def timerThread(self):
+        while True:
+            if self.startTime is not None and time.time() - self.startTime > self.time_limit: 
+                print("Die alr")
+                self.stm.sendMsg("{:<10}".format("S"))
+                raise Exception("Timer ran out")
 
     def get_command_for_adjustment(self, img_location, adjustment_counter):
         should_move_forward = adjustment_counter % 2 == 0
@@ -94,7 +104,6 @@ class RPI(threading.Thread):
             return "{:<3} {} {:<3}".format(self.commandCounter, direction, angle)
 
     def receiveFromImg(self):
-        times_to_adjust = 0
         while True:
             imgMsg = self.pcObject.receiveMsgFromImg()
 
@@ -182,11 +191,18 @@ class RPI(threading.Thread):
     def receiveFromAndroid(self):
         # Enclose in while loop
         while True:
+            # if self.startTime is not None and (time.time() - self.startTime > 15):
+            #     print("TIMES up")
+
+            #     self.sendToSTM("")
             androidMsg = self.androidObject.receiveMsg()
             if androidMsg:
                 print("Message from android: " + androidMsg)
                 if androidMsg[:3] == "ALG":
                     self.sendToAlgo(androidMsg[4:])
+                    if(androidMsg[4:] == "START_IMG"):
+                        self.startTime = time.time()
+
                 elif androidMsg[:3] == "IMG":
                     self.sendToImg(androidMsg[4:])
 

@@ -183,8 +183,14 @@ def TestMultipleMessages():
 
     print("Data fully received:", data)
 
+def TestWeek9():
+    s = socket.socket()
+    s.connect((IP_ADDRESS, PORT))
+    print("Connected")
+
 if __name__ == "__main__":
-    TestImagePrediction()
+    TestWeek9()
+    # TestImagePrediction()
     #TestMultipleMessages()
     #TestBluetooth()
     #Testtest()

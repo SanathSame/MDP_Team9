@@ -98,7 +98,7 @@ def predict(img_path: str, forAdjusting = False):
             )
 
         cv2.imwrite("RPI/images/a.jpeg", cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        result = ["IMG {} {} {}".format(predicted_id, predicted_classname, predicted_location) for predicted_id, predicted_classname, predicted_location in list(zip(predicted_ids, predicted_classnames, predicted_locations))]
+        result = ["PREDICTION {} {} {}".format(predicted_id, predicted_classname, predicted_location) for predicted_id, predicted_classname, predicted_location in list(zip(predicted_ids, predicted_classnames, predicted_locations))]
     
     # Create PREDICTIONS_DIR if it does not exist
     if not os.path.exists(PREDICTIONS_DIR):

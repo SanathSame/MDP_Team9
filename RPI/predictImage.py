@@ -138,19 +138,20 @@ def get_location_of_center(center_location):
     """
     Returns where the center is located in the image
     0 <= center_location <= 1
-    FAR_LEFT, LEFT, CENTER, RIGHT, FAR_RIGHT
+    Returns a number of 0 - 9
     """
 
-    if center_location <= 0.2:
-        return 0 # "FAR_LEFT"
-    elif center_location <= 0.4:
-        return 1 # "LEFT"
-    elif center_location <= 0.6:
-        return 2 # "CENTER"
-    elif center_location <= 0.8:
-        return 3 # "RIGHT"
-    else:
-        return 4 # "FAR_RIGHT"
+    return int(center_location * 10)
+    # if center_location <= 0.2:
+    #     return 0 # "FAR_LEFT"
+    # elif center_location <= 0.4:
+    #     return 1 # "LEFT"
+    # elif center_location <= 0.6:
+    #     return 2 # "CENTER"
+    # elif center_location <= 0.8:
+    #     return 3 # "RIGHT"
+    # else:
+    #     return 4 # "FAR_RIGHT"
 
 def get_id_of_image(image_class_name):
     """

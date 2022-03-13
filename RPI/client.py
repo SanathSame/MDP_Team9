@@ -20,20 +20,23 @@ class Client(threading.Thread):
                 print(status)
                 break
         
-        # receiveFromRpiThread = threading.Thread(target=self.receive_message_from_rpi, args=(), name="receive_image_thread", daemon=True)
-        # receiveFromRpiThread.start()
+        receiveFromRpiThread = threading.Thread(target=self.receive_message_from_rpi_thread, args=(), name="receive_image_thread", daemon=True)
+        receiveFromRpiThread.start()
 
-    def send_message_to_rpi(self, msg):
+    def send_message_to_rpi(self, msg, wait_for_reply = True):
         if not self.is_connected:
             print("Not connected")
             return
 
         self.s.send(bytes(msg, "utf-8"))
+        sleep(0.1)
         print("Sent msg:", msg)
-        while True:
+        while wait_for_reply:
             msg = self.receive_message_from_rpi()
             if len(msg) > 0:
                 return msg
+
+        return ""
 
     def send_message_to_stm(self, msg):
         """
@@ -89,6 +92,10 @@ class Client(threading.Thread):
 
         return msg
 
+    def receive_message_from_rpi_thread(self):
+        while True:
+            self.receive_message_from_rpi()
+
 
     def receive_image_for_prediction(self):
         # Receive image from picture
@@ -113,17 +120,20 @@ class Client(threading.Thread):
             print("File done")
 
         predictions = predict(SAVE_FILE, save=True)
-
+        sleep(0.1)
         if len(predictions) == 0:
-            self.s.send(bytes("PREDICTION NOIMAGE", "utf-8"))
-        else:
-            self.s.send(bytes(str(predictions[0]), "utf-8"))
+            return self.send_message_to_rpi("PREDICTION NOIMAGE", wait_for_reply=False)
+        
+        self.send_message_to_rpi("PREDICTION NUMBER_OF_PREDICTIONS {}".format(len(predictions)), wait_for_reply=False)
+        for prediction in predictions:
+            self.send_message_to_rpi(prediction, wait_for_reply=False)
 
 if __name__ == "__main__":
     try:
         c = Client()
-
+        c.send_message_to_rpi("WEEK9", wait_for_reply=False)
         while True:
-            c.send_message_to_rpi(input("Enter message to send"))
+            pass
+        #     c.send_message_to_rpi(input("Enter message to send: "))
     except KeyboardInterrupt:
         c.disconnect()

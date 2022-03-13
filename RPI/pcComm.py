@@ -57,7 +57,7 @@ class PcComm():
         """
         try:
             msg = self.client.recv(self.BUFFER_SIZE).decode("utf-8")
-
+            print("Receive command", msg)
             if msg == "READY":
                 return "ok"
 
@@ -72,6 +72,7 @@ class PcComm():
         Send a message to the client
         """
         self.client.send(bytes(msg, "utf-8"))
+        time.sleep(0.1)
 
     def send_image(self):
         """

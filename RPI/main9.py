@@ -1,6 +1,9 @@
 import threading
 import time
 import os
+import math
+
+from numpy import number
 from pcComm import *
 from android import *
 from stm32 import *
@@ -62,8 +65,12 @@ class RPI(threading.Thread):
             elif command == "TAKEPICTURE":
                 msg = self.request_prediction()
                 print("After take picture, we received", msg)
-            if msg == "disconnect": # If client wants to disconnect
+            elif command == "WEEK9":
+                self.execute_week9()
+            elif command == "disconnect": # If client wants to disconnect
                 self.close_all()
+            else:
+                self.pcObject.reply("ok")
 
     def process_stm_commands(self):
         """
@@ -102,14 +109,26 @@ class RPI(threading.Thread):
         except Exception as e:
             print("Error in taking picture..." + str(e))
 
-    def request_prediction(self, image_path = "a.jpeg"):
+    def request_prediction(self):
+        print("Request prediction")
         self.capture_image()
         self.pcObject.send_image()
 
-        while True:
+        predictions = []
+        msg = ""
+        while len(msg) == 0:
             msg = self.pcObject.receive_command()
-            if len(msg) > 0:
-                return msg
+
+        if "NOIMAGE" in msg:
+            return predictions
+
+        number_of_predictions = int(msg.split()[-1])
+
+        for i in range(number_of_predictions):
+            prediction = self.pcObject.receive_command()
+            predictions.append(prediction)
+
+        return predictions
 
     def close_all(self):
         """
@@ -122,6 +141,28 @@ class RPI(threading.Thread):
 
     def execute_week9(self):
         print("Starting week 9 task")
+        distance_from_wall = int(self.stm.send_message("U"))
+
+        while distance_from_wall > 30:
+            print(distance_from_wall)
+            predictions = self.request_prediction()
+            predictions = [p for p in predictions if "bullseye" in p]
+            locations = [int(p.split()[-1]) for p in predictions]
+
+            average_location = sum(locations) / len(locations)
+
+            degrees_to_turn = 30
+            if average_location < 4:
+                # Turn left
+                self.stm.send_message("LF {}".format(degrees_to_turn))
+            elif average_location > 5:
+                # Turn right
+                self.stm.send_message("RF {}".format(degrees_to_turn))
+            else:
+                self.stm.send_message("F 20")
+            distance_from_wall = int(self.stm.send_message("U"))
+
+        print("Done")
 
 
 if __name__ == "__main__":

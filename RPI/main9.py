@@ -56,16 +56,12 @@ class RPI(threading.Thread):
             print("Message received from PC:", msg)
 
             command, message = msg.split()[0], " ".join(msg.split()[1:])
-            if command == "STM":
-                msg = self.stm.execute(message)
-                self.pcObject.reply(msg)
-            elif command == "PC": # If client checks that pc is ready, we reply ok
-                msg = self.pcObject.receive_command(message)
+            if command == "STM": # Client sends to RPI, RPI sends to STM. STM returns a message, we return msg back to client
+                msg = self.stm.send_message(message)
                 self.pcObject.reply(msg)
             elif command == "TAKEPICTURE":
                 msg = self.request_prediction()
                 print("After take picture, we received", msg)
-
             if msg == "disconnect": # If client wants to disconnect
                 self.close_all()
 
@@ -108,7 +104,7 @@ class RPI(threading.Thread):
 
     def request_prediction(self, image_path = "a.jpeg"):
         self.capture_image()
-        self.send_image()
+        self.pcObject.send_image()
 
         while True:
             msg = self.pcObject.receive_command()
@@ -123,9 +119,6 @@ class RPI(threading.Thread):
         self.pcObject.disconnect()
         self.stm.disconnect()
         self.android.disconnect
-
-    def predict_image(self):
-        pass
 
     def execute_week9(self):
         print("Starting week 9 task")

@@ -14,14 +14,14 @@ class Client(threading.Thread):
         self.s.connect((IP_ADDRESS, PORT))
         self.is_connected = True
 
-        receiveFromRpiThread = threading.Thread(target=self.receive_image_for_prediction, args=(), name="receive_image_thread", daemon=True)
-        receiveFromRpiThread.start()
-
         while True: # Only start when everything is ready
             status = self.send_message_to_rpi("PC READY")
             if len(status) > 0:
                 print(status)
                 break
+        
+        # receiveFromRpiThread = threading.Thread(target=self.receive_message_from_rpi, args=(), name="receive_image_thread", daemon=True)
+        # receiveFromRpiThread.start()
 
     def send_message_to_rpi(self, msg):
         if not self.is_connected:
@@ -31,13 +31,9 @@ class Client(threading.Thread):
         self.s.send(bytes(msg, "utf-8"))
         print("Sent msg:", msg)
         while True:
-            reply = self.s.recv(64).decode("utf-8")
-            if len(reply) > 0:
-                break
-            else:
-                self.s.send(bytes(msg, "utf-8"))
-
-        return reply
+            msg = self.receive_message_from_rpi()
+            if len(msg) > 0:
+                return msg
 
     def send_message_to_stm(self, msg):
         """
@@ -81,39 +77,53 @@ class Client(threading.Thread):
         self.send_message_to_rpi("disconnect")
         self.s.close()
 
+    def receive_message_from_rpi(self):
+        msg = self.s.recv(1024).decode('utf-8')
+
+        if len(msg) == 0:
+            return
+        
+        print("Received msg from RPI:", msg)
+        if msg == "RPI RECEIVE_IMAGE":
+            self.receive_image_for_prediction()
+
+        return msg
+
+
     def receive_image_for_prediction(self):
-        while True:
-            # Receive image from picture
-            data = self.s.recv(1024)
-            filesize = int(data.decode('utf-8'))
-            print("Filesize", filesize)
+        # Receive image from picture
+        data = self.s.recv(1024)
+        filesize = int(data.decode('utf-8'))
+        print("Filesize", filesize)
 
-            # Get image from RPI and save locally
-            SAVE_FILE = "RPI/images/to_predict.jpeg"
-            total_data_received = len(data)
-            with open(SAVE_FILE, "wb") as f:
-                while True:
-                    data = self.s.recv(1024)
-                    if not data:
-                        break
+        # Get image from RPI and save locally
+        SAVE_FILE = "RPI/images/to_predict.jpeg"
+        total_data_received = len(data)
+        with open(SAVE_FILE, "wb") as f:
+            while True:
+                data = self.s.recv(1024)
+                if not data:
+                    break
 
-                    f.write(data)
-                    total_data_received += len(data)
-                    
-                    if total_data_received >= filesize:
-                        break
-                print("File done")
+                f.write(data)
+                total_data_received += len(data)
+                
+                if total_data_received >= filesize:
+                    break
+            print("File done")
 
-            predictions = predict(SAVE_FILE)
+        predictions = predict(SAVE_FILE, save=True)
 
-            if len(predictions) == 0:
-                self.s.send(bytes("PREDICTION NOIMAGE", "utf-8"))
-            else:
-                self.s.send(bytes(str(predictions[0]), "utf-8"))
+        if len(predictions) == 0:
+            self.s.send(bytes("PREDICTION NOIMAGE", "utf-8"))
+        else:
+            self.s.send(bytes(str(predictions[0]), "utf-8"))
 
 if __name__ == "__main__":
     try:
         c = Client()
-        print(c.is_connected())
+
+        while True:
+            c.send_message_to_rpi(input("Enter message to send"))
     except KeyboardInterrupt:
         c.disconnect()

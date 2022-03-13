@@ -46,7 +46,7 @@ class STM():
 
             messages_to_receive = []
             while True:
-                message = self.receive_message()
+                message = self.read_message()
                 if len(message) > 0:
                     messages_to_receive.append(message)
 
@@ -58,7 +58,7 @@ class STM():
             print('Error in sending message to STM: ' + str(e))
             self.connect()
             time.sleep(0.5)
-            self.send_command(command)
+            self.send_message(command)
 
     def read_message(self):
         """

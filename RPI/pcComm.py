@@ -83,6 +83,7 @@ class PcComm():
                 self.connect()
                 return False
 
+            self.reply("RPI RECEIVE_IMAGE") # Signal to client that he is going to receive image
             FILE_TO_READ = "a.jpeg"
             filesize = os.path.getsize(FILE_TO_READ)
             self.client.send(bytes(str(filesize), "utf-8"))

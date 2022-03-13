@@ -26,10 +26,10 @@ def read_and_preprocess_img(img_path: str):
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel) # Sharpen image
     return img
 
-def predict(img_path: str, forAdjusting = False):
+def predict(img_path: str, save = False, stitch = False):
     """
     img_path : path to an image file to predict what classes are in the image
-    forAdjusting : determines if image is taken for adjustment purposes and ignored in stitching process
+    save : whether we want to save image or not
 
     Returns a list of strings with the format "IMG <ID> <CLASS>", where 
     - ID is the ID of the class
@@ -97,9 +97,13 @@ def predict(img_path: str, forAdjusting = False):
                 font_thickness
             )
 
-        cv2.imwrite("RPI/images/a.jpeg", cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        if save:
+            cv2.imwrite("RPI/images/a.jpeg", cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         result = ["PREDICTION {} {} {}".format(predicted_id, predicted_classname, predicted_location) for predicted_id, predicted_classname, predicted_location in list(zip(predicted_ids, predicted_classnames, predicted_locations))]
     
+    if not save:
+        return result
+
     # Create PREDICTIONS_DIR if it does not exist
     if not os.path.exists(PREDICTIONS_DIR):
         os.makedirs(PREDICTIONS_DIR)
@@ -107,11 +111,7 @@ def predict(img_path: str, forAdjusting = False):
     # Save image to PREDICTIONS_DIR
     counter = len(os.listdir(PREDICTIONS_DIR))
 
-    # for img in results.imgs:
-    if forAdjusting:
-        # If image is for adjustment, we append an ADJUSTMENT_PREFIX to separate the images
-        image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, ADJUSTMENT_PREFIX, counter)
-    elif len(result) == 0 or (len(predicted_classnames) == 1 and "bullseye" in predicted_classnames):
+    if len(result) == 0:
         # If image has no predictions, we append a NO_PREDICTION_PREFIX to 
         # separate from images with predictions
         image_name = '{}/{}_{}.jpeg'.format(PREDICTIONS_DIR, NO_PREDICTION_PREFIX, counter)
@@ -130,7 +130,8 @@ def predict(img_path: str, forAdjusting = False):
     )]
 
     # Stitch images and save the result
-    stitch_images_and_save(images_to_stitch)
+    if stitch:
+        stitch_images_and_save(images_to_stitch)
     return result
 
 def get_location_of_center(center_location):

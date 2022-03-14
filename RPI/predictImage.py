@@ -26,7 +26,7 @@ def read_and_preprocess_img(img_path: str):
     img = cv2.filter2D(src=img, ddepth=-1, kernel=kernel) # Sharpen image
     return img
 
-def predict(img_path: str, save = False, stitch = False):
+def predict(img_path: str, save = False, stitch = False, return_smallest = False):
     """
     img_path : path to an image file to predict what classes are in the image
     save : whether we want to save image or not
@@ -36,7 +36,7 @@ def predict(img_path: str, save = False, stitch = False):
     - CLASS is the name of the class
     """
     model_confidence = 0.8
-    MIN_MODEL_CONFIDENCE_THRESHOLD = 0.5 # Model confidence should not go below this
+    MIN_MODEL_CONFIDENCE_THRESHOLD = 0.7 # Model confidence should not go below this
     img = read_and_preprocess_img(img_path)
 
     while model_confidence >= MIN_MODEL_CONFIDENCE_THRESHOLD: # Reduce confidence until something is detected
@@ -57,12 +57,14 @@ def predict(img_path: str, save = False, stitch = False):
         df['centerx'] = df[['xmin','xmax']].mean(axis=1)
         df['location'] = df.apply(lambda x: get_location_of_center(x['centerx']), axis=1)
         df['class'] = df.apply(lambda x: get_id_of_image(x['name']), axis=1)
+        df['area'] = df.apply(lambda x: (x['xmax'] - x['xmin']) * (x['ymax'] - x['ymin']), axis = 1)
+        df = df.sort_values(by=['area'])
 
         predicted_ids = df[['class']].values.flatten()
         predicted_classnames = df[['name']].values.flatten()
         predicted_locations = df[['location']].values.flatten()
 
-        for index, row in results.pandas().xyxy[0].iterrows():
+        for index, row in df.iterrows():
             bounding_box_upper_left = (int(row['xmin']), int(row['ymin']))
             bounding_box_lower_right = (int(row['xmax']), int(row['ymax']))
             bounding_box_color = (255, 0, 0)

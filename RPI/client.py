@@ -119,8 +119,8 @@ class Client(threading.Thread):
                     break
             print("File done")
 
-        predictions = predict(SAVE_FILE, save=True)
-        sleep(0.1)
+        predictions = predict(SAVE_FILE, save=False, return_smallest=True)
+        sleep(0.05)
         if len(predictions) == 0:
             return self.send_message_to_rpi("PREDICTION NOIMAGE", wait_for_reply=False)
         

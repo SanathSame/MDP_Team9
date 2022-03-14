@@ -141,29 +141,103 @@ class RPI(threading.Thread):
 
     def execute_week9(self):
         print("Starting week 9 task")
+        # constants
+        TURN_RADIUS = 20
+
+        self.stm.send_message(f"F 10")
+
+        # read ultra value first to determine roughly distance to obstacle
         distance_from_wall = int(self.stm.send_message("U"))
+        target_distance_from_wall = 35
+        print("Distance from wall", distance_from_wall)
 
-        while distance_from_wall > 30:
-            print(distance_from_wall)
-            predictions = self.request_prediction()
-            predictions = [p for p in predictions if "bullseye" in p]
-            locations = [int(p.split()[-1]) for p in predictions]
+        # determine distance to move until we are near wall
+        while distance_from_wall > target_distance_from_wall:
+            # dist_to_wall = distance_from_wall - 40  # ensure we are 40cm away from wall TODO: test 
+            # self.stm.send_message(f"F {dist_to_wall}")
+            distance_to_move = int((distance_from_wall - target_distance_from_wall))
+            self.stm.send_message("F {}".format(distance_to_move))
+            distance_from_wall = int(self.stm.send_message("U"))
 
-            average_location = sum(locations) / len(locations)
+        # turn left - move forward until IR gives large readings (store this as left_dist_moved)
+        self.stm.send_message("LF 90")
+        left_distance_moved = int(self.stm.send_message("F IR"))
 
-            degrees_to_turn = 30
-            if average_location < 4:
-                # Turn left
-                self.stm.send_message("LF {}".format(degrees_to_turn))
-            elif average_location > 5:
-                # Turn right
-                self.stm.send_message("RF {}".format(degrees_to_turn))
+        # navigate around wall: turn right, move forward (TODO: test), turn right again
+        self.stm.send_message("RF 210")
+        self.stm.send_message(f"F 10")
+        # self.stm.send_message("RF 90")
+
+        # move a bit forward to ensure car is beside wall, then use IR to move forward until car is past wall
+        # store distance moved as right_dist_moved
+        # min_dist_along_wall = 50  # TODO: test
+        # self.stm.send_message(f"F {min_dist_along_wall}") 
+        # right_distance_moved = int(self.stm.send_message("F IR")) + min_dist_along_wall
+        right_distance_moved = int(self.stm.send_message("F IR"))
+
+        # navigate around wall: turn right, move forward (TODO: test), turn right again
+        self.stm.send_message("RF 200")
+        # self.stm.send_message(f"F {right_distance_moved}")
+        # self.stm.send_message("RF 90")
+
+        # move forward by right_dist_moved - left_dist_moved - 2*TURN_RADIUS (1 for initial turn left, and 1 more for final turn right towards parking lot)
+        self.stm.send_message(f"F {right_distance_moved - left_distance_moved - 2*TURN_RADIUS}")
+        self.stm.send_message(f"LF 90")
+
+        ### second part ###
+        times_to_adjust = 1
+        previous_direction = "F"
+        average_location = self.get_average_location(previous_direction)
+        degrees_to_turn = 90
+        target_average_location = 4.5
+        average_location_threshold = 0.6
+        decay = 0.3
+
+        while average_location < target_average_location - average_location_threshold or average_location > target_average_location - average_location_threshold:
+            to_turn = int(degrees_to_turn * abs(average_location - target_average_location) / target_average_location * ((1 - decay) ** (times_to_adjust - 1)))
+            print("to turn", to_turn)
+            print("average_location", average_location)
+
+            direction = "F"
+            if average_location < target_average_location:
+                direction = "LF"
+                previous_direction = "L"
+            elif average_location > target_average_location:
+                direction = "RF"
+                previous_direction = "R"
+            
+            if direction == "F":
+                self.stm.send_message("{} {}".format(direction, 20))
             else:
-                self.stm.send_message("F 20")
+                self.stm.send_message("{} {}".format(direction, to_turn))
+            
+            times_to_adjust += 1
+            average_location = self.get_average_location(previous_direction)
+        
+        distance_from_wall = int(self.stm.send_message("U"))
+        target_distance_from_back_of_start_wall = 10
+        while distance_from_wall > target_distance_from_back_of_start_wall:
+            self.stm.send_message("F {}".format(distance_from_wall - target_distance_from_back_of_start_wall))
             distance_from_wall = int(self.stm.send_message("U"))
 
         print("Done")
 
+    def get_average_location(self, previous_direction):
+        predictions = self.request_prediction()
+        predictions = [p for p in predictions if "bullseye" in p]
+        locations = [int(p.split()[-1]) for p in predictions]
+
+        if len(locations) == 0:
+            if previous_direction == "L":
+                average_location = 11
+            elif previous_direction == "R":
+                average_location = -1
+            else:
+                average_location = 4.5
+        else:
+            average_location = sum(locations) / len(locations)
+
+        return average_location
 
 if __name__ == "__main__":
     try:

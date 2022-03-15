@@ -43,16 +43,23 @@ class STM():
             formatted_command = "{:<3} {:<6}".format(self.commandCount, command)
             self.service.write(formatted_command.encode('utf-8'))
             self.commandCount += 1
+            time.sleep(0.1)
 
             messages_to_receive = []
             while True:
                 message = self.read_message()
                 if len(message) > 0:
+                    if message.startswith("I") or message.startswith("E") or message.startswith("R"):
+                        print("EMERGENCY MESSAGE:", message)
+                        continue
+
                     messages_to_receive.append(message)
 
                     if "Done {}".format(self.commandCount - 1) in message:
                         break
-
+                        
+            print("Command sent to STM:", formatted_command.strip())
+            print("Received reply from STM:", [m.strip() for m in messages_to_receive])
             return messages_to_receive[0]
         except Exception as e:
             print('Error in sending message to STM: ' + str(e))
@@ -73,6 +80,13 @@ class STM():
             self.connect()
             time.sleep(0.5)
             self.receive_message()
+
+    def get_ultra_reading(self, number_of_readings = 5):
+        result = 0
+        for i in range(number_of_readings):
+            result += int(self.send_message("U"))
+
+        return result // number_of_readings
 
     def disconnect(self):
         """

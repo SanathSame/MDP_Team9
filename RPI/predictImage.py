@@ -35,8 +35,8 @@ def predict(img_path: str, save = False, stitch = False, return_smallest = False
     - ID is the ID of the class
     - CLASS is the name of the class
     """
-    model_confidence = 0.8
-    MIN_MODEL_CONFIDENCE_THRESHOLD = 0.7 # Model confidence should not go below this
+    model_confidence = 0.6
+    MIN_MODEL_CONFIDENCE_THRESHOLD = 0.6 # Model confidence should not go below this
     img = read_and_preprocess_img(img_path)
 
     while model_confidence >= MIN_MODEL_CONFIDENCE_THRESHOLD: # Reduce confidence until something is detected
@@ -63,6 +63,8 @@ def predict(img_path: str, save = False, stitch = False, return_smallest = False
         predicted_ids = df[['class']].values.flatten()
         predicted_classnames = df[['name']].values.flatten()
         predicted_locations = df[['location']].values.flatten()
+
+        print(df)
 
         for index, row in df.iterrows():
             bounding_box_upper_left = (int(row['xmin']), int(row['ymin']))
@@ -259,4 +261,4 @@ if __name__ == "__main__":
         print(img)
         print(predict("RPI/images/" + img))'''
 
-    print(predict("a.jpeg"))
+    print(predict("RPI/a.jpeg"))

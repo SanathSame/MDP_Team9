@@ -81,16 +81,20 @@ class Client(threading.Thread):
         self.s.close()
 
     def receive_message_from_rpi(self):
-        msg = self.s.recv(1024).decode('utf-8')
+        try:
+            msg = self.s.recv(1024).decode('utf-8')
 
-        if len(msg) == 0:
-            return
-        
-        print("Received msg from RPI:", msg)
-        if msg == "RPI RECEIVE_IMAGE":
-            self.receive_image_for_prediction()
+            if len(msg) == 0:
+                return
+            
+            print("Received msg from RPI:", msg)
+            if msg == "RPI RECEIVE_IMAGE":
+                self.receive_image_for_prediction()
 
-        return msg
+            return msg
+        except Exception as e:
+            print("Receiving message went wrong:", e)
+            return ""
 
     def receive_message_from_rpi_thread(self):
         while True:

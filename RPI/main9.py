@@ -32,6 +32,7 @@ class RPI(threading.Thread):
         self.camera = PiCamera()
         self.camera.resolution = (640, 480)
         self.commandCount = 0
+        self.target_average_location = 4.5
 
         self.startThreads()
 
@@ -144,124 +145,166 @@ class RPI(threading.Thread):
         print("Starting week 9 task")
         # constants
         TURN_RADIUS = 20
+        MIN_OBSTACLE_DISTANCE = 50
+        MAX_OBSTACLE_DISTANCE = 200
+        MIN_STRAIGHT_DISTANCE_MOVE = 5
 
-        self.stm.send_message(f"F 10")
+        # Get out of spawn
+        self.stm.send_message("F 30")
 
-        # read ultra value first to determine roughly distance to obstacle
-        distance_from_wall = int(self.stm.send_message("U"))
-        target_distance_from_wall = 35
-        print("Distance from wall", distance_from_wall)
+        TARGET_DISTANCE = 30
+        while True:
+            distance_from_wall = self.stm.get_ultra_reading()
 
-        # determine distance to move until we are near wall
-        while distance_from_wall > target_distance_from_wall:
-            # dist_to_wall = distance_from_wall - 40  # ensure we are 40cm away from wall TODO: test 
-            # self.stm.send_message(f"F {dist_to_wall}")
-            distance_to_move = int((distance_from_wall - target_distance_from_wall))
-            self.stm.send_message("F {}".format(distance_to_move))
-            distance_from_wall = int(self.stm.send_message("U"))
+            if distance_from_wall < TARGET_DISTANCE:
+                break
 
-        # turn left - move forward until IR gives large readings (store this as left_dist_moved)
-        self.stm.send_message("LF 90")
+            distance_to_move = distance_from_wall - TARGET_DISTANCE
+
+            if distance_to_move < MIN_STRAIGHT_DISTANCE_MOVE:
+                break
+
+            self.stm.send_message(f"F {distance_to_move}")
+
+        if distance_from_wall < TARGET_DISTANCE // 2:
+            self.stm.send_message(f"B {TARGET_DISTANCE - distance_from_wall}")
+
+        # First turn left
+        self.stm.send_message("LF 80")
         left_distance_moved = int(self.stm.send_message("F IR"))
+        print("Left distance moved", left_distance_moved)
+        print(self.stm.get_ultra_reading())
+        # self.stm.send_message("RF 180")
+        self.stm.send_message("RF 90")
+        time.sleep(1)
+        self.stm.send_message("RF 90")
 
-        # navigate around wall: turn right, move forward (TODO: test), turn right again
-        self.stm.send_message("RF 210")
-        self.stm.send_message(f"F 10")
-        # self.stm.send_message("RF 90")
-
-        # move a bit forward to ensure car is beside wall, then use IR to move forward until car is past wall
-        # store distance moved as right_dist_moved
-        # min_dist_along_wall = 50  # TODO: test
-        # self.stm.send_message(f"F {min_dist_along_wall}") 
-        # right_distance_moved = int(self.stm.send_message("F IR")) + min_dist_along_wall
+        # Go along back of obstacle
+        distance_to_move_before_starting = 60
+        self.stm.send_message(f"F {distance_to_move_before_starting}")
         right_distance_moved = int(self.stm.send_message("F IR"))
+        print("Right distnace moved", right_distance_moved)
+        # self.stm.send_message("RF 180")
+        self.stm.send_message("RF 90")
+        time.sleep(1)
+        self.stm.send_message("RF 90")
 
-        # navigate around wall: turn right, move forward (TODO: test), turn right again
-        self.stm.send_message("RF 200")
-        # self.stm.send_message(f"F {right_distance_moved}")
-        # self.stm.send_message("RF 90")
+        remaining_to_move_back = right_distance_moved + distance_to_move_before_starting - left_distance_moved - 2 * TURN_RADIUS
+        print("remaining", remaining_to_move_back)
 
-        # move forward by right_dist_moved - left_dist_moved - 2*TURN_RADIUS (1 for initial turn left, and 1 more for final turn right towards parking lot)
-        self.stm.send_message(f"F {right_distance_moved - left_distance_moved - 2*TURN_RADIUS}")
-        self.stm.send_message(f"LF 90")
+        if remaining_to_move_back > 0:
+            self.stm.send_message(f"F {remaining_to_move_back}")
+        elif remaining_to_move_back < 0:
+            self.stm.send_message(f"B {remaining_to_move_back * -1}")
 
-        ### second part ###
+        self.stm.send_message("LF 80")
+        self.centralise_bot_to_bullseye(10)
+        print("Done")
+
+    def limit_value_between(self, value, min_value, max_value):
+        """
+        Returns value if min_value <= value <= max_value
+        Returns min_value if value < min_value
+        Returns max_value if value > max_value
+        """
+
+        if value < min_value:
+            return min_value
+        if value > max_value:
+            return max_value
+        return value
+
+    def get_average_location(self):
+        predictions = self.request_prediction()
+        print("Getting average location predictions", predictions)
+        # predictions = [p for p in predictions if "bullseye" in p]
+
+        if len(predictions) == 0:
+            return -1
+        # Get only smallest guy
+        locations = [int(p.split()[-1]) for p in predictions]
+        
+        # Return weighted avg
+        if len(locations) == 1:
+            return locations[0]
+        elif len(locations) == 2:
+            return locations[0] * 0.8 + locations[1] * 0.2
+        elif len(locations) == 3:
+            return locations[0] * 0.75 + locations[1] * 0.25 + locations[2] * 0.25
+        else:
+            return sum(locations) / len(locations)
+
+    def centralise_bot_to_bullseye(self, target_distance_from_wall, max_distance = 99999):
+        print("Centralise bot to bullseye")
+
         times_to_adjust = 1
-        previous_direction = "F"
-        average_location = self.get_average_location(previous_direction)
-        distance_from_wall = int(self.stm.send_message("U"))
+        distance_from_wall = self.stm.get_ultra_reading()
         degrees_to_turn = 45
-        target_average_location = 4.5
-        average_location_threshold = 0.3
-        target_distance_from_back_of_start_wall = 10
+        target_average_location = self.target_average_location
+        average_location_threshold = 0.5
+        target_distance_from_back_of_start_wall = target_distance_from_wall
         decay = 0.05
 
-        print("average_location", average_location)
-        print("distance_from_wall", distance_from_wall)
+        while distance_from_wall > target_distance_from_back_of_start_wall and times_to_adjust < 4:
+            distance_from_wall = self.stm.get_ultra_reading()
+            if distance_from_wall < target_distance_from_wall:
+                break
+            average_location = self.get_average_location()
 
-        while distance_from_wall > 30 and times_to_adjust < 4:
+            print("average location", average_location)
+
+            if average_location < 0:
+                self.stm.send_message("F {}".format(distance_from_wall // 2))
+                distance_from_wall = self.stm.get_ultra_reading()
+                continue
+
+            print("Got distance from wall and average location", distance_from_wall, average_location)
+
+            if distance_from_wall < target_distance_from_back_of_start_wall:
+                print("We already close enough to go in")
+                break
+
             to_turn = int(degrees_to_turn * abs(average_location - target_average_location) / target_average_location * ((1 - decay) ** (times_to_adjust - 1)))
             print("to turn", to_turn)
             print("average_location", average_location)
             print("distance_from_wall", distance_from_wall)
 
-            if to_turn < 5 and times_to_adjust > 3:
+            if to_turn < 5 or times_to_adjust > 4:
                 break
 
             if average_location < target_average_location - average_location_threshold:
                 self.stm.send_message("{} {}".format("LF", to_turn))
-                previous_direction = "L"
             elif average_location > target_average_location + average_location_threshold:
                 self.stm.send_message("{} {}".format("RF", to_turn))
-                previous_direction = "R"
 
-            self.stm.send_message("F {}".format((distance_from_wall - target_distance_from_back_of_start_wall) // 2))
-            
-            # if average_location < target_average_location - average_location_threshold:
-            #     self.stm.send_message("{} {}".format("RF", to_turn))
-            #     previous_direction = "L"
-            # elif average_location > target_average_location + average_location_threshold:
-            #     self.stm.send_message("{} {}".format("LF", to_turn))
-            #     previous_direction = "R"
+            distance_from_wall = self.stm.get_ultra_reading()
+            to_move_forward = int((distance_from_wall - target_distance_from_back_of_start_wall) * 0.5)
+            to_move_forward = max_distance if distance_from_wall > max_distance else distance_from_wall
+            self.stm.send_message("F {}".format(to_move_forward // 2))
 
-            
+            if average_location < target_average_location - average_location_threshold:
+                self.stm.send_message("{} {}".format("RF", to_turn // 2))
+            elif average_location > target_average_location + average_location_threshold:
+                self.stm.send_message("{} {}".format("LF", to_turn // 2))
+
+            distance_from_wall = self.stm.get_ultra_reading()
+            to_move_forward = int((distance_from_wall - target_distance_from_back_of_start_wall) * 0.5)
+            self.stm.send_message("F {}".format(to_move_forward // 2))
+
             times_to_adjust += 1
-            distance_from_wall = int(self.stm.send_message("U"))
-            average_location = self.get_average_location(previous_direction)
+            if distance_from_wall < target_distance_from_back_of_start_wall:
+                print("We already close enough to go in")
+                break
         
-        distance_from_wall = int(self.stm.send_message("U"))
+        distance_from_wall = self.stm.get_ultra_reading()
         minimum_distance_to_move = 5
+        target_distance_from_back_of_start_wall = target_distance_from_wall
+
         while distance_from_wall > target_distance_from_back_of_start_wall:
             to_move = distance_from_wall - target_distance_from_back_of_start_wall
             to_move = minimum_distance_to_move if to_move < minimum_distance_to_move else to_move
             self.stm.send_message("F {}".format(to_move))
-            distance_from_wall = int(self.stm.send_message("U"))
-
-        print("Done")
-
-    def get_average_location(self, previous_direction):
-        predictions = self.request_prediction()
-
-        if len(predictions) == 0:
-            return 4.5
-
-        predictions = [p for p in predictions if "bullseye" in p]
-        # Get only smallest guy
-        location = int(predictions[0].split()[-1])
-        return location
-        # locations = [int(p.split()[-1]) for p in predictions]
-
-        # if len(locations) == 0:
-        #     if previous_direction == "L":
-        #         average_location = 11
-        #     elif previous_direction == "R":
-        #         average_location = -1
-        #     else:
-        #         average_location = 4.5
-        # else:
-        #     average_location = sum(locations) / len(locations)
-
-        # return average_location, len(predictions)
+            distance_from_wall = self.stm.get_ultra_reading()
 
 if __name__ == "__main__":
     try:

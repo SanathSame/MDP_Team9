@@ -114,7 +114,6 @@ void Error_Handler(void);
 #define ENABLE_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
 extern I2C_HandleTypeDef hi2c1;
-extern uint8_t profile;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

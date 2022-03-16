@@ -119,6 +119,8 @@ void icm20948_accel_calibration();
 void icm20948_gyro_full_scale_select(gyro_full_scale full_scale);
 void icm20948_accel_full_scale_select(accel_full_scale full_scale);
 
+uint8_t icm20948_ready();
+
 
 /* ICM-20948 Registers */
 #define ICM20948_ADDR                   0xD0

@@ -48,6 +48,8 @@ void calculateAngles(TM_AHRSIMU_t* AHRSIMU) {
     } else if (AHRSIMU->Yaw > 180) {
         AHRSIMU->Yaw = -180.0f - (180.0f - AHRSIMU->Yaw);
     }
+
+    AHRSIMU->Yaw += 180;
 }
 
 void TM_AHRSIMU_Init(TM_AHRSIMU_t* AHRSIMU, float sampleRate, float beta, float inclination) {

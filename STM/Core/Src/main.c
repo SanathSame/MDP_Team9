@@ -182,7 +182,6 @@ void valShift(uint32_t *val, uint8_t size);
 void adjustRobot();
 void driveRobot(uint8_t *cmd);
 void pid(uint32_t dur);
-void reverseRobot(uint8_t *cmd);
 void stopRobot();
 void turnRobot(uint8_t *cmd);
 /* USER CODE END PFP */
@@ -207,7 +206,7 @@ int robotAngle;
 TM_AHRSIMU_t imu;
 
 uint8_t cmds[1000][20], cmdState, rxBuffer[20], txBuffer[20];
-uint8_t angleCmd, driveCmd, enablePID, enablePWMDec, enablePWMInc, eStop, startDriving, startPID;
+uint8_t angleCmd, driveCmd, enablePID, enablePWMDec, enablePWMInc, eStop, irAdjust, startDriving, startPID;
 uint8_t batteryState[13];
 uint8_t profile;
 uint8_t ultraCapture;
@@ -217,7 +216,7 @@ uint8_t batteryCounter, irCounter, ultraCounter, yawCounter;
 uint32_t servoCenter, servoFarLeft, servoFarRight, servoLeft, servoRight, servoVal, timerCounter1, timerCounter2, timerDiff;
 uint32_t batteryVal[5], irVal[100], ultraVal[100];
 uint32_t batteryDelay, dispatchDelay, encoderDelay, icmDelay, irDelay, ledDelay, motorDelay, oledDelay, rpiDelay, servoDelay, ultraDelay;  // rpiDelay <= encoderDelay
-uint32_t adjustDelay, irThresDelay, stoppingDelay, turningDelay;
+uint32_t adjustDelay, irAdjustDelay, irThresDelay, stoppingDelay, turningDelay;
 /* USER CODE END 0 */
 
 /**
@@ -265,8 +264,8 @@ int main(void)
   adjustDist = 5;  //adjustDist > distBuffer + encoderInt, Distance travelled during each adjustment
   changeDist = 10; //Distance travelled to speed up and distance remaining to slow down
 
-  irMaintainThres = 5; //Turn servo if IR is outside of IR target +- irMaintainThres
-  irObsThres = 40; //Distance to obstacle > irObsThres to stop FIR/BIR, irObsThres > IR target + irMaintainThres
+  irMaintainThres = 3; //Turn servo if IR is outside of IR target +- irMaintainThres
+  irObsThres = 40;     //Distance to obstacle > irObsThres to stop FIR/BIR, irObsThres > IR target + irMaintainThres
 
   irMeasured[0] = 1980; //10 cm
   irMeasured[1] = 1300; //20 cm
@@ -302,6 +301,7 @@ int main(void)
   angleCmd = 0;
   driveCmd = 0;
   enablePID = 0;
+  irAdjust = 0;
   startDriving = 0;
   startPID = 0;
 
@@ -353,6 +353,7 @@ int main(void)
   ultraDelay = 1;
 
   adjustDelay = 700;   //Delay for Yaw value to stabilise
+  irAdjustDelay = 2;   //Delay for robot to adjust servo for maintaining IR distance
   irThresDelay = 10;   //Delay for robot to move after IR clears obstacle
   stoppingDelay = 100; //Delay for motor to stop before turning back servo after movement stop
   turningDelay = 500;  //Delay for servo to turn before any other movement
@@ -1379,15 +1380,26 @@ void driveRobot(uint8_t *cmd)
 	  }
 	  else if (ultraDist <= ultraThres + changeDist)
 	  {
-		enablePID = 0;
 		startPID = 0;
 
-		enablePWMInc = 0;
+		enablePWMInc = enablePWMInc != 0 ? 2 : 0;
 
 		motorAVal = lowMotorAPWM;
 		motorBVal = lowMotorBPWM;
 		ultraThres = ultraLThres;
 	  }
+	  else if (ultraDist > ultraThres + changeDist && enablePWMInc == 2)
+		enablePWMInc = 1;
+	}
+
+	timerCounter2 = __HAL_TIM_GET_COUNTER(&htim5);
+	timerDiff = timerCounter2 >= timerCounter1 ? timerCounter2 - timerCounter1 : 4294967295 - timerCounter1 + timerCounter2;
+
+	if (irAdjust == 1 && timerDiff >= 1000 * irAdjustDelay)
+	{
+	  irAdjust = 2;
+	  servoVal = servoCenter;
+	  timerCounter1 = __HAL_TIM_GET_COUNTER(&htim5);
 	}
 
 	if (startDriving == 1 && eStop == 0)
@@ -1410,7 +1422,23 @@ void driveRobot(uint8_t *cmd)
 	  if (startDriving == 1)
 	  {
 	    if (angleCmd == 3)
-	      servoVal = fabs(irDist - irMaintain) <= irMaintainThres ? servoCenter : (irDist > irMaintain ? servoRight : servoLeft);
+	    {
+	      if (irAdjust == 2)
+	      {
+	    	timerCounter2 = __HAL_TIM_GET_COUNTER(&htim5);
+	    	timerDiff = timerCounter2 >= timerCounter1 ? timerCounter2 - timerCounter1 : 4294967295 - timerCounter1 + timerCounter2;
+
+	    	if (timerDiff >= 1000 * irAdjustDelay)
+	    	  irAdjust = 0;
+	      }
+
+	      if (irAdjust == 0)
+	      {
+	        irAdjust = 1;
+	        servoVal = fabs(irDist - irMaintain) <= irMaintainThres ? servoCenter : (irDist > irMaintain ? servoRight : servoLeft);
+	        timerCounter1 = __HAL_TIM_GET_COUNTER(&htim5);
+	      }
+	    }
 
 	    if ((angleCmd == 0 || angleCmd == 3) && enablePWMInc == 1 && distA >= changeDist - distBuffer && distB >= changeDist - distBuffer)
 	    {

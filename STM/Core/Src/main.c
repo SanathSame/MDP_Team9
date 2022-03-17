@@ -192,13 +192,13 @@ float pi, radius;
 float encoderGrad, encoderInt;
 float kdbA, kdfA, kibA, kifA, kpbA, kpfA, kdbB, kdfB, kibB, kifB, kpbB, kpfB;
 float iTermA, iTermB;
-float adjustDist, changeDist, distA, distB, distBuffer, distOffset, eStopDist, robotDist, tempA, tempB, turnOffset;
+float adjustDist, changeDist, distA, distB, distBuffer, distOffset, eStopDist, robotDist, turnOffset;
 float lbGrad, lbInt, lfGrad, lfInt, rbGrad, rbInt, rfGrad, rfInt;
-float irMaintain, irMaintainThres, irMeasured[8], irObsThres, ultraGrad, ultraHThres, ultraLThres, ultraThres;
+float irMaintain, irMaintainThres, irMeasured[8], irObsThres, prevUltraThres, ultraGrad, ultraHThres, ultraLThres, ultraThres;
 float beta, inclination, prevYaw, yawVal[5], yawDiff, yawDir[4], yawThreshold;
 
 int actionCounter, fillCounter;
-int highMotorAPWM, highMotorBPWM, lowMotorAPWM, lowMotorBPWM, maxMotorPWM, motorAVal, motorBVal;
+int highMotorAPWM, highMotorBPWM, lowMotorAPWM, lowMotorBPWM, maxMotorPWM, motorAVal, motorBVal, prevMotorAVal, prevMotorBVal;
 int encoderAVal, encoderBVal, encoderTarget;
 int countRequired, errorA, errorB, pidCount, prevEncoderA, prevEncoderB;
 int robotAngle;
@@ -206,7 +206,7 @@ int robotAngle;
 TM_AHRSIMU_t imu;
 
 uint8_t cmds[1000][20], cmdState, rxBuffer[20], txBuffer[20];
-uint8_t angleCmd, driveCmd, enablePID, enablePWMDec, enablePWMInc, eStop, irAdjust, startDriving, startPID;
+uint8_t angleCmd, driveCmd, enablePID, enablePWMDec, enablePWMInc, eStop, irAdjust, startDriving, startPID, ultraSlow;
 uint8_t batteryState[13];
 uint8_t profile;
 uint8_t ultraCapture;
@@ -1336,16 +1336,15 @@ void driveRobot(uint8_t *cmd)
 	}
 
 	motorAVal = robotDist > distBuffer || angleCmd == 3 ? lowMotorAPWM : 0;
-    motorBVal = robotDist > distBuffer || angleCmd == 3 ? lowMotorBPWM : 0;
+    motorBVal = motorAVal != 0 ? lowMotorBPWM : 0;
     ultraThres = ultraLThres;
 
-	tempA = 0;
-	tempB = 0;
-	distA = robotDist > distBuffer || angleCmd == 3 ? encoderInt : 0;
+	distA = motorAVal != 0 ? encoderInt : 0;
 	distB = distA;
 
 	eStop = 0;
 	eStopDist = 0;
+	ultraSlow = 0;
 	startPID = 0;
 	startDriving = 1;
   }
@@ -1378,28 +1377,35 @@ void driveRobot(uint8_t *cmd)
 
 	    servoVal = servoCenter;
 	  }
-	  else if (ultraDist <= ultraThres + changeDist)
+	  else if (ultraSlow == 0 && ultraDist <= ultraThres + changeDist)
 	  {
-		startPID = 0;
-
+		startPID = startPID != 0 ? 2 : 0;
 		enablePWMInc = enablePWMInc != 0 ? 2 : 0;
+
+		prevMotorAVal = motorAVal;
+		prevMotorBVal = motorBVal;
+		prevUltraThres = ultraThres;
 
 		motorAVal = lowMotorAPWM;
 		motorBVal = lowMotorBPWM;
 		ultraThres = ultraLThres;
+
+		ultraSlow = 1;
 	  }
-	  else if (ultraDist > ultraThres + changeDist && enablePWMInc == 2)
-		enablePWMInc = 1;
-	}
+	  else if (ultraSlow == 1 && ultraDist > ultraThres + changeDist)
+	  {
+		motorAVal = prevMotorAVal;
+		motorBVal = prevMotorBVal;
+		ultraThres = prevUltraThres;
 
-	timerCounter2 = __HAL_TIM_GET_COUNTER(&htim5);
-	timerDiff = timerCounter2 >= timerCounter1 ? timerCounter2 - timerCounter1 : 4294967295 - timerCounter1 + timerCounter2;
+		if (enablePWMInc == 2)
+		  enablePWMInc = 1;
 
-	if (irAdjust == 1 && timerDiff >= 1000 * irAdjustDelay)
-	{
-	  irAdjust = 2;
-	  servoVal = servoCenter;
-	  timerCounter1 = __HAL_TIM_GET_COUNTER(&htim5);
+		if (startPID == 2)
+		  startPID = 1;
+
+		ultraSlow = 0;
+	  }
 	}
 
 	if (startDriving == 1 && eStop == 0)
@@ -1418,51 +1424,57 @@ void driveRobot(uint8_t *cmd)
 	    osDelay(irThresDelay);
 	    stopRobot();
       }
+	}
 
-	  if (startDriving == 1)
+	if (startDriving == 1 && eStop == 0)
+	{
+	  if (angleCmd == 3)
 	  {
-	    if (angleCmd == 3)
+		timerCounter2 = __HAL_TIM_GET_COUNTER(&htim5);
+	    timerDiff = timerCounter2 >= timerCounter1 ? timerCounter2 - timerCounter1 : 4294967295 - timerCounter1 + timerCounter2;
+
+	    if (timerDiff >= 1000 * irAdjustDelay)
 	    {
 	      if (irAdjust == 2)
-	      {
-	    	timerCounter2 = __HAL_TIM_GET_COUNTER(&htim5);
-	    	timerDiff = timerCounter2 >= timerCounter1 ? timerCounter2 - timerCounter1 : 4294967295 - timerCounter1 + timerCounter2;
+	    	irAdjust = 0;
 
-	    	if (timerDiff >= 1000 * irAdjustDelay)
-	    	  irAdjust = 0;
-	      }
-
-	      if (irAdjust == 0)
+	      if (irAdjust == 1)
 	      {
-	        irAdjust = 1;
-	        servoVal = fabs(irDist - irMaintain) <= irMaintainThres ? servoCenter : (irDist > irMaintain ? servoRight : servoLeft);
-	        timerCounter1 = __HAL_TIM_GET_COUNTER(&htim5);
+	    	irAdjust = 2;
+	    	servoVal = servoCenter;
+	    	timerCounter1 = __HAL_TIM_GET_COUNTER(&htim5);
 	      }
 	    }
 
-	    if ((angleCmd == 0 || angleCmd == 3) && enablePWMInc == 1 && distA >= changeDist - distBuffer && distB >= changeDist - distBuffer)
+	    if (irAdjust == 0)
 	    {
-	      motorAVal = highMotorAPWM;
-	  	  motorBVal = highMotorBPWM;
-	  	  ultraThres = ultraHThres;
-
-	  	  if (enablePID == 1)
-	  	    startPID = 1;
-
-	      enablePWMInc = 0;
+	      irAdjust = 1;
+	      servoVal = fabs(irDist - irMaintain) <= irMaintainThres ? servoCenter : (irDist > irMaintain ? servoRight : servoLeft);
+	      timerCounter1 = __HAL_TIM_GET_COUNTER(&htim5);
 	    }
+	  }
 
-	    if (angleCmd == 0 && enablePWMDec == 1 && robotDist - distBuffer - distA <= changeDist && robotDist - distBuffer - distB <= changeDist)
-	    {
-	      enablePID = 0;
-	      startPID = 0;
+	  if ((angleCmd == 0 || angleCmd == 3) && enablePWMInc == 1 && distA >= changeDist - distBuffer && distB >= changeDist - distBuffer)
+	  {
+	    motorAVal = highMotorAPWM;
+	  	motorBVal = highMotorBPWM;
+	  	ultraThres = ultraHThres;
 
-	      motorAVal = lowMotorAPWM;
-	      motorBVal = lowMotorBPWM;
-	      ultraThres = ultraLThres;
+	  	if (enablePID == 1)
+	  	  startPID = 1;
 
-	      enablePWMDec = 0;
-	    }
+	    enablePWMInc = 0;
+	  }
+
+	  if (angleCmd == 0 && enablePWMDec == 1 && robotDist - distBuffer - distA <= changeDist && robotDist - distBuffer - distB <= changeDist)
+	  {
+	    startPID = 0;
+
+	    motorAVal = lowMotorAPWM;
+	    motorBVal = lowMotorBPWM;
+	    ultraThres = ultraLThres;
+
+	    enablePWMDec = 0;
 	  }
 	}
   }
@@ -1746,7 +1758,7 @@ void rpi(void *argument)
 	  {
 		prevEnableAdjust = enableAdjust;
 		enableAdjust = 0;
-		angleCmd = 3;
+		angleCmd = 0;
 
 		stopRobot();
 		clearCmds();
@@ -1779,7 +1791,7 @@ void rpi(void *argument)
       if (cmdType == 'C')
     	clearCmds();
 
-      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C             " : "Done %-3d           ", atoi(strCounter));
+      sprintf((char*)txBuffer, cmdType == 'C' ? "Done C             " :"Done %-3d           ", atoi(strCounter));
       HAL_UART_Transmit(&huart3, txBuffer, 19, 0xFFFF);
     }
 
@@ -2034,9 +2046,6 @@ void encoder(void *argument)
 
 	  if (startDriving == 1)
 	  {
-		tempA += pi * radius * encoderAVal / 165;
-		tempB += pi * radius * encoderBVal / 165;
-
 		distA += encoderGrad * pi * radius * encoderAVal / 165;
 		distB += encoderGrad * pi * radius * encoderBVal / 165;
 	  }

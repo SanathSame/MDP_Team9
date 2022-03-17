@@ -1255,6 +1255,7 @@ void microDelay(uint32_t us)
 {
   uint32_t counter1, counter2, diff;
   counter1 = __HAL_TIM_GET_COUNTER(&htim5);
+
   while (1)
   {
 	counter2 = __HAL_TIM_GET_COUNTER(&htim5);

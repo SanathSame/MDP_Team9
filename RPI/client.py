@@ -33,7 +33,7 @@ class Client(threading.Thread):
         print("Sent msg:", msg)
         while wait_for_reply:
             msg = self.receive_message_from_rpi()
-            if len(msg) > 0:
+            if msg is not None and len(msg) > 0:
                 return msg
 
         return ""
@@ -131,13 +131,15 @@ class Client(threading.Thread):
         self.send_message_to_rpi("PREDICTION NUMBER_OF_PREDICTIONS {}".format(len(predictions)), wait_for_reply=False)
         for prediction in predictions:
             self.send_message_to_rpi(prediction, wait_for_reply=False)
+            sleep(0.05)
 
 if __name__ == "__main__":
     try:
         c = Client()
-        c.send_message_to_rpi("WEEK9", wait_for_reply=False)
+        # c.send_message_to_rpi("WEEK9", wait_for_reply=False)
         while True:
             pass
-        #     c.send_message_to_rpi(input("Enter message to send: "))
+            # c.send_message_to_rpi(input("Enter message to send: "))
+            # STM RF 180, STM LF 90
     except KeyboardInterrupt:
         c.disconnect()

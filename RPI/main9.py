@@ -24,8 +24,16 @@ class RPI(threading.Thread):
         print("STM connected")
         self.pcObject.connect()
         print("PC connected")
-        # self.androidObject.connect()
-        # print("Android connected")
+
+        while True:
+            msg = self.pcObject.receive_command()
+            if msg == "PC READY":
+                print("Pc is ready")
+                self.pcObject.reply("ok")
+                break 
+
+        self.android.connect()
+        print("Android connected")
         print("Connection to devices completed...")
 
         time.sleep(2)
@@ -38,12 +46,12 @@ class RPI(threading.Thread):
 
     def startThreads(self):
         # Threads of objects we want to be continuously listening to
-        receiveFromPcThread = threading.Thread(target=self.process_pc_commands, args=(), name="read_Img_Thread", daemon=True)
-        # receiveFromAndroidThread = threading.Thread(target=self.process_android_commands, args=(), name="read_STM_Thread", daemon=True)
+        # receiveFromPcThread = threading.Thread(target=self.process_pc_commands, args=(), name="read_Img_Thread", daemon=True)
+        receiveFromAndroidThread = threading.Thread(target=self.process_android_commands, args=(), name="read_STM_Thread", daemon=True)
 
         # Makes Threads start in the background
-        receiveFromPcThread.start()
-        # receiveFromAndroidThread.start()
+        # receiveFromPcThread.start()
+        receiveFromAndroidThread.start()
         print("Started threads")
 
     def process_pc_commands(self):
@@ -55,7 +63,7 @@ class RPI(threading.Thread):
         while True:
             msg = self.pcObject.receive_command()
 
-            if len(msg) == 0: # No message received
+            if msg is not None and len(msg) == 0: # No message received
                 return
 
             print("Message received from PC:", msg)
@@ -67,8 +75,9 @@ class RPI(threading.Thread):
             elif command == "TAKEPICTURE":
                 msg = self.request_prediction()
                 print("After take picture, we received", msg)
-            elif command == "WEEK9":
-                self.execute_week9()
+            elif command == "ALG":
+                if message == "START_FASTEST":
+                    self.execute_week9()
             elif command == "disconnect": # If client wants to disconnect
                 self.close_all()
             else:
@@ -91,14 +100,14 @@ class RPI(threading.Thread):
         Continuously listen to android, and process commands from android
         """
         while True:
-            androidMsg = self.androidObject.receiveMsg()
+            androidMsg = self.android.read_message()
 
-            if len(androidMsg) == 0: # No message received
+            if androidMsg is not None and len(androidMsg) == 0: # No message received
                 return
 
             print("Message received from android:", androidMsg)
 
-            if androidMsg == "START":
+            if androidMsg == "ALG START_FASTEST":
                 self.execute_week9()
 
     def capture_image(self, location = "a.jpeg"):
@@ -128,8 +137,10 @@ class RPI(threading.Thread):
 
         for i in range(number_of_predictions):
             prediction = self.pcObject.receive_command()
+            print("Prediction received", prediction)
             predictions.append(prediction)
 
+        print("All predictions received", predictions)
         return predictions
 
     def close_all(self):
@@ -145,9 +156,15 @@ class RPI(threading.Thread):
         print("Starting week 9 task")
         # constants
         TURN_RADIUS = 20
-        MIN_OBSTACLE_DISTANCE = 50
-        MAX_OBSTACLE_DISTANCE = 200
         MIN_STRAIGHT_DISTANCE_MOVE = 5
+
+        # # HWLAB2
+        # LEFT_TURN_90 = "LF 113"
+        # RIGHT_TURN_180 = "RF 213"
+
+        # OUTSIDELAB
+        LEFT_TURN_90 = "LF 88"
+        RIGHT_TURN_180 = "RF 195"
 
         # Get out of spawn
         self.stm.send_message("F 30")
@@ -155,41 +172,64 @@ class RPI(threading.Thread):
         TARGET_DISTANCE = 30
         while True:
             distance_from_wall = self.stm.get_ultra_reading()
+            print("Distance from wall", distance_from_wall)
 
             if distance_from_wall < TARGET_DISTANCE:
+                print("Distance from wall less than target distance")
                 break
 
             distance_to_move = distance_from_wall - TARGET_DISTANCE
+            print("Distance to move", distance_to_move)
 
             if distance_to_move < MIN_STRAIGHT_DISTANCE_MOVE:
+                print("Distnace to move less than min straight distance")
                 break
-
+            
+            print("Send command to them")
             self.stm.send_message(f"F {distance_to_move}")
 
-        if distance_from_wall < TARGET_DISTANCE // 2:
+        print("Should be in front of obstacle")
+        if distance_from_wall < int(TARGET_DISTANCE * 0.8):
+            print("Too close")
             self.stm.send_message(f"B {TARGET_DISTANCE - distance_from_wall}")
 
         # First turn left
-        self.stm.send_message("LF 80")
+        print("Turn left")
+        self.stm.send_message(LEFT_TURN_90)
+
+        # # Try 
+        # TARGET_DISTANCE_FROM_OBSTACLE = 30
+        # distance_from_wall = int(self.stm.send_message("IR"))
+        # distance_from_wall = distance_from_wall if distance_from_wall < TARGET_DISTANCE_FROM_OBSTACLE else TARGET_DISTANCE_FROM_OBSTACLE
+        # print("Distance from wall", distance_from_wall)
+        # left_distance_moved = int(self.stm.send_message("FIR {}".format(distance_from_wall)))
+        # print("Left distance moved", left_distance_moved)
+
+        # Try
         left_distance_moved = int(self.stm.send_message("F IR"))
-        print("Left distance moved", left_distance_moved)
-        print(self.stm.get_ultra_reading())
+        # self.stm.send_message("B 10")
+
         # self.stm.send_message("RF 180")
-        self.stm.send_message("RF 90")
-        time.sleep(1)
-        self.stm.send_message("RF 90")
+        self.stm.send_message(RIGHT_TURN_180)
 
         # Go along back of obstacle
-        distance_to_move_before_starting = 60
+        distance_to_move_before_starting = 10
         self.stm.send_message(f"F {distance_to_move_before_starting}")
-        right_distance_moved = int(self.stm.send_message("F IR"))
-        print("Right distnace moved", right_distance_moved)
-        # self.stm.send_message("RF 180")
-        self.stm.send_message("RF 90")
-        time.sleep(1)
-        self.stm.send_message("RF 90")
 
-        remaining_to_move_back = right_distance_moved + distance_to_move_before_starting - left_distance_moved - 2 * TURN_RADIUS
+        # # Try
+        # distance_from_wall = int(self.stm.send_message("IR"))
+        # distance_from_wall = distance_from_wall if distance_from_wall < TARGET_DISTANCE_FROM_OBSTACLE else TARGET_DISTANCE_FROM_OBSTACLE
+        # right_distance_moved = int(self.stm.send_message("FIR {}".format(distance_from_wall)))
+        # print("Right distnace moved", right_distance_moved)
+        # self.stm.send_message("RF 180")
+
+        # Try
+        right_distance_moved = int(self.stm.send_message("F IR"))
+        print("DISTANCE", left_distance_moved, right_distance_moved)
+
+        self.stm.send_message(RIGHT_TURN_180)
+
+        remaining_to_move_back = int(right_distance_moved + distance_to_move_before_starting - left_distance_moved - 2 * TURN_RADIUS)
         print("remaining", remaining_to_move_back)
 
         if remaining_to_move_back > 0:
@@ -197,8 +237,14 @@ class RPI(threading.Thread):
         elif remaining_to_move_back < 0:
             self.stm.send_message(f"B {remaining_to_move_back * -1}")
 
-        self.stm.send_message("LF 80")
-        self.centralise_bot_to_bullseye(10)
+        self.stm.send_message(LEFT_TURN_90)
+
+        distance_from_spawn = self.stm.get_ultra_reading()
+        STARTING_DISTANCE_BEFORE_CENTRALISATION = 30
+        if distance_from_spawn < STARTING_DISTANCE_BEFORE_CENTRALISATION:
+            self.stm.send_message(f"B {STARTING_DISTANCE_BEFORE_CENTRALISATION - distance_from_spawn}")
+
+        self.centralise_bot_to_bullseye(20)
         print("Done")
 
     def limit_value_between(self, value, min_value, max_value):
@@ -228,9 +274,9 @@ class RPI(threading.Thread):
         if len(locations) == 1:
             return locations[0]
         elif len(locations) == 2:
-            return locations[0] * 0.8 + locations[1] * 0.2
+            return locations[0] * 0.9 + locations[1] * 0.1
         elif len(locations) == 3:
-            return locations[0] * 0.75 + locations[1] * 0.25 + locations[2] * 0.25
+            return locations[0] * 0.8 + locations[1] * 0.1 + locations[2] * 0.1
         else:
             return sum(locations) / len(locations)
 
@@ -241,11 +287,11 @@ class RPI(threading.Thread):
         distance_from_wall = self.stm.get_ultra_reading()
         degrees_to_turn = 45
         target_average_location = self.target_average_location
-        average_location_threshold = 0.5
+        average_location_threshold = 0.3
         target_distance_from_back_of_start_wall = target_distance_from_wall
         decay = 0.05
 
-        while distance_from_wall > target_distance_from_back_of_start_wall and times_to_adjust < 4:
+        while times_to_adjust == 0 or (distance_from_wall > target_distance_from_back_of_start_wall and times_to_adjust < 4):
             distance_from_wall = self.stm.get_ultra_reading()
             if distance_from_wall < target_distance_from_wall:
                 break
@@ -269,7 +315,8 @@ class RPI(threading.Thread):
             print("average_location", average_location)
             print("distance_from_wall", distance_from_wall)
 
-            if to_turn < 5 or times_to_adjust > 4:
+            # We want it to adjust at least 1 time
+            if times_to_adjust > 0 and (to_turn < 5 or times_to_adjust > 4):
                 break
 
             if average_location < target_average_location - average_location_threshold:
@@ -292,6 +339,12 @@ class RPI(threading.Thread):
             self.stm.send_message("F {}".format(to_move_forward // 2))
 
             times_to_adjust += 1
+
+            # distance_from_spawn = self.stm.get_ultra_reading()
+            # STARTING_DISTANCE_BEFORE_CENTRALISATION = 30
+            # if times_to_adjust == 1 and distance_from_spawn < STARTING_DISTANCE_BEFORE_CENTRALISATION:
+            #     self.stm.send_message(f"B {STARTING_DISTANCE_BEFORE_CENTRALISATION - distance_from_spawn}")
+
             if distance_from_wall < target_distance_from_back_of_start_wall:
                 print("We already close enough to go in")
                 break

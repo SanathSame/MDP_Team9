@@ -14,7 +14,7 @@ class PcComm():
         self.isConnected = False
         self.BUFFER_SIZE = 1024
 
-        self.connect()
+        # self.connect()
 
     def connect(self):
         try:
@@ -88,7 +88,7 @@ class PcComm():
             FILE_TO_READ = "a.jpeg"
             filesize = os.path.getsize(FILE_TO_READ)
             self.client.send(bytes(str(filesize), "utf-8"))
-            time.sleep(0.5)
+            time.sleep(0.1)
 
             with open(FILE_TO_READ, "rb") as img_file:
                 img_bytes = img_file.read()

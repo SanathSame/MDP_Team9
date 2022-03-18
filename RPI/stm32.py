@@ -42,21 +42,27 @@ class STM():
         try:
             formatted_command = "{:<3} {:<6}".format(self.commandCount, command)
             self.service.write(formatted_command.encode('utf-8'))
+            print("Write command", formatted_command.strip())
             self.commandCount += 1
-            time.sleep(0.1)
 
             messages_to_receive = []
+
             while True:
                 message = self.read_message()
-                if len(message) > 0:
-                    if message.startswith("I") or message.startswith("E") or message.startswith("R"):
-                        print("EMERGENCY MESSAGE:", message)
-                        continue
 
-                    messages_to_receive.append(message)
+                if len(message) == 0:
+                    continue
+                    
+                if message.startswith("I") or message.startswith("E") or message.startswith("R"):
+                    print("EMERGENCY MESSAGE:", message)
+                    continue
 
-                    if "Done {}".format(self.commandCount - 1) in message:
-                        break
+                messages_to_receive.append(message)
+
+                if "Done {}".format(self.commandCount - 1) in message:
+                    break
+                # self.commandCount += 1
+                
                         
             print("Command sent to STM:", formatted_command.strip())
             print("Received reply from STM:", [m.strip() for m in messages_to_receive])

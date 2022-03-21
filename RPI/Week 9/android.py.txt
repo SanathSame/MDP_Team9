@@ -1,6 +1,5 @@
 import bluetooth
 import os
-import time
 
 class Android():
     def __init__(self):

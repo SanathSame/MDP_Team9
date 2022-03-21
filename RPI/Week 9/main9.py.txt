@@ -1,16 +1,9 @@
 import threading
-import time
-import os
-import math
-from turtle import distance
-
-from numpy import number
 from pcComm import *
 from android import *
 from stm32 import *
 from picamera import PiCamera
 from ultrasonic import *
-import RPi.GPIO as GPIO
 
 class RPI(threading.Thread):
     def __init__(self):
@@ -45,12 +38,7 @@ class RPI(threading.Thread):
         self.startThreads()
 
     def startThreads(self):
-        # Threads of objects we want to be continuously listening to
-        # receiveFromPcThread = threading.Thread(target=self.process_pc_commands, args=(), name="read_Img_Thread", daemon=True)
         receiveFromAndroidThread = threading.Thread(target=self.process_android_commands, args=(), name="read_STM_Thread", daemon=True)
-
-        # Makes Threads start in the background
-        # receiveFromPcThread.start()
         receiveFromAndroidThread.start()
         print("Started threads")
 
@@ -158,11 +146,6 @@ class RPI(threading.Thread):
         TURN_RADIUS = 20
         MIN_STRAIGHT_DISTANCE_MOVE = 5
 
-        # # HWLAB2
-        # LEFT_TURN_90 = "LF 113"
-        # RIGHT_TURN_180 = "RF 213"
-
-        # OUTSIDELAB
         LEFT_TURN_90 = "LF 88"
         RIGHT_TURN_180 = "RF 195"
 
@@ -197,31 +180,14 @@ class RPI(threading.Thread):
         print("Turn left")
         self.stm.send_message(LEFT_TURN_90)
 
-        # # Try 
-        # TARGET_DISTANCE_FROM_OBSTACLE = 30
-        # distance_from_wall = int(self.stm.send_message("IR"))
-        # distance_from_wall = distance_from_wall if distance_from_wall < TARGET_DISTANCE_FROM_OBSTACLE else TARGET_DISTANCE_FROM_OBSTACLE
-        # print("Distance from wall", distance_from_wall)
-        # left_distance_moved = int(self.stm.send_message("FIR {}".format(distance_from_wall)))
-        # print("Left distance moved", left_distance_moved)
 
         # Try
         left_distance_moved = int(self.stm.send_message("F IR"))
-        # self.stm.send_message("B 10")
-
-        # self.stm.send_message("RF 180")
         self.stm.send_message(RIGHT_TURN_180)
 
         # Go along back of obstacle
         distance_to_move_before_starting = 10
         self.stm.send_message(f"F {distance_to_move_before_starting}")
-
-        # # Try
-        # distance_from_wall = int(self.stm.send_message("IR"))
-        # distance_from_wall = distance_from_wall if distance_from_wall < TARGET_DISTANCE_FROM_OBSTACLE else TARGET_DISTANCE_FROM_OBSTACLE
-        # right_distance_moved = int(self.stm.send_message("FIR {}".format(distance_from_wall)))
-        # print("Right distnace moved", right_distance_moved)
-        # self.stm.send_message("RF 180")
 
         # Try
         right_distance_moved = int(self.stm.send_message("F IR"))
@@ -339,11 +305,6 @@ class RPI(threading.Thread):
             self.stm.send_message("F {}".format(to_move_forward // 2))
 
             times_to_adjust += 1
-
-            # distance_from_spawn = self.stm.get_ultra_reading()
-            # STARTING_DISTANCE_BEFORE_CENTRALISATION = 30
-            # if times_to_adjust == 1 and distance_from_spawn < STARTING_DISTANCE_BEFORE_CENTRALISATION:
-            #     self.stm.send_message(f"B {STARTING_DISTANCE_BEFORE_CENTRALISATION - distance_from_spawn}")
 
             if distance_from_wall < target_distance_from_back_of_start_wall:
                 print("We already close enough to go in")

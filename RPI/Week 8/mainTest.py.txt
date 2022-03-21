@@ -1,6 +1,3 @@
-from pcComm import *
-import socket
-import os
 import tqdm
 from android import *
 from stm32 import *
@@ -8,7 +5,7 @@ from pcComm import *
 import bluetooth
 import sys
 from predictImage import predict
-import time
+
 
 BUFFER_SIZE = 1024
 SEPARATOR = "@.@"
@@ -71,33 +68,6 @@ def TestBluetooth():
     print("Message 3: " + str(msg3))
 
     btObj.disconnect()
-
-def Testtest():
-    uuid = "00001101-0000-1000-8000-00805F9B34FB" #"94f39d29-7d6d-437d-973b-fba39e49d4ee"
-    service_matches = bluetooth.find_service(uuid=uuid)
-
-    if len(service_matches) == 0:
-        print("couldn't find the SampleServer service =(")
-        sys.exit(0)
-
-    first_match = service_matches[0]
-    port = first_match["port"]
-    name = first_match["name"]
-    host = first_match["host"]
-
-    print("connecting to \"%s\" on %s" % (name, host))
-
-    # Create the client socket
-    sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-    sock.connect((host, 3))
-
-    print("connected.  type stuff")
-    while True:
-        data = input()
-        if len(data) == 0: break
-        sock.send(data)
-
-    sock.close()
 
 def TestSTM():
     stm = STM()
@@ -183,16 +153,9 @@ def TestMultipleMessages():
 
     print("Data fully received:", data)
 
-def TestWeek9():
-    s = socket.socket()
-    s.connect((IP_ADDRESS, PORT))
-    print("Connected")
-
 if __name__ == "__main__":
-    TestWeek9()
-    # TestImagePrediction()
+    TestImagePrediction()
     #TestMultipleMessages()
     #TestBluetooth()
-    #Testtest()
     #TestSTM()
     #TestTCP()

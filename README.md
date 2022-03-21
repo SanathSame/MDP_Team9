@@ -6,15 +6,27 @@
 pip install -r requirements.txt
 ```
 
-## RPI
-
-Files related to RPI. 
-
-Todo:
-
-- Figure out multi-threading to run image recognition, android and algorithm simultaneously
-
 ## Image Recognition
 
 Files related to detecting images
 
+
+## RPI
+
+Copy all contents from the folder `RPI` to the RPI within `Desktop/week9`
+
+```
+scp -r ~/Desktop/Programming/MDP_Team9/RPI/* pi@192.168.9.9:~/Desktop/week9
+```
+
+In the RPi, run `main9.py`
+
+```
+python main9.py
+```
+
+On the computer, run `RPI/client.py`
+
+```
+python RPI/client.py
+```

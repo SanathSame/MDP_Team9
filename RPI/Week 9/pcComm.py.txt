@@ -1,7 +1,6 @@
 import socket
 import time
 import os
-from constants import *
 
 class PcComm():
     def __init__(self):

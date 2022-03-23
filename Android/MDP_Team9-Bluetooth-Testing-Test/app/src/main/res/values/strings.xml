@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">MDP Team 9 Android</string>
+    <string name="reset">RESET</string>
+    <string name="broadcast"><u>SEND OBSTACLES POSITIONS</u></string>
+    <string name="pause">THIS WILL <b><u>RESET TIMER</u></b>.TAKEN <b>SCREENSHOT</b>?\n(POWER + VOL_DOWN)</string>
+    <string name="bottom_sheet_title">BLUETOOTH</string>
+
+    <string name="tab_connection">Connection</string>
+    <string name="tab_message">Message</string>
+
+    <string name="bluetooth_available_devices">Available devices</string>
+    <string name="bluetooth_scan_btn">Scan</string>
+    <string name="bluetooth_connect_btn">Connect</string>
+    <string name="last_paired_device">Last paired device</string>
+    <string name="mdp_team_9">MDP Team 9</string>
+    <string name="start">Start</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="turnon">Turnon</string>
+    <string name="turnoff">Turnoff</string>
+    <string name="enter_a_input">Enter a input</string>
+    <string name="sent_text">Sent Text:</string>
+    <string name="received_text">Received Text:</string>
+    <string name="receivedtext">Receivedtext</string>
+    <string name="paired_devices">Paired devices</string>
+</resources>

@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mdp.group9.simulator.SimulatorController">
+   <children>
+      <GridPane id="verticalNumbers" fx:id="verticalNumbers" style="-fx-background-color: white;">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+        </rowConstraints>
+         <children>
+            <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="20" />
+            <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="19" GridPane.rowIndex="1" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="18" GridPane.rowIndex="2" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="17" GridPane.rowIndex="3" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="16" GridPane.rowIndex="4" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="15" GridPane.rowIndex="5" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="14" GridPane.rowIndex="6" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="13" GridPane.rowIndex="7" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="12" GridPane.rowIndex="8" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="11" GridPane.rowIndex="9" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="10" GridPane.rowIndex="10" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="9" GridPane.rowIndex="11" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="8" GridPane.rowIndex="12" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="7" GridPane.rowIndex="13" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="6" GridPane.rowIndex="14" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="5" GridPane.rowIndex="15" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="4" GridPane.rowIndex="16" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="3" GridPane.rowIndex="17" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="2" GridPane.rowIndex="18" />
+             <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="1" GridPane.rowIndex="19" />
+         </children>
+      </GridPane>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Pane fx:id="arenaPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" style="-fx-border-color: black;">
+               <children>
+                  <Pane prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="30.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="60.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="90.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="120.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="150.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="180.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="210.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="240.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="270.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="300.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="330.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="360.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="390.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="420.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="450.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="480.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="510.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="540.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="570.0" prefHeight="600.0" prefWidth="30.0">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="60.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="90.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="120.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="150.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="210.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="240.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="270.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="300.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="330.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="360.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="390.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="420.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="450.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="480.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="510.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="540.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="WHITE" height="30.0" layoutY="570.0" stroke="BLACK" strokeType="INSIDE" width="30.0" />
+                     </children>
+                  </Pane>
+                  <Pane fx:id="car" layoutY="510.0" prefHeight="90.0" prefWidth="90.0" rotate="270.0" style="-fx-border-color: black;">
+                     <children>
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="RED" height="90.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="60.0" />
+                        <Rectangle arcHeight="1.0" arcWidth="1.0" fill="#830202" height="90.0" layoutX="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="30.0" />
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+            <GridPane fx:id="horizontalNumbers" style="-fx-background-color: white;">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="1" />
+                  <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="2" GridPane.columnIndex="1" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="3" GridPane.columnIndex="2" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="4" GridPane.columnIndex="3" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="5" GridPane.columnIndex="4" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="6" GridPane.columnIndex="5" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="7" GridPane.columnIndex="6" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="8" GridPane.columnIndex="7" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="9" GridPane.columnIndex="8" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="10" GridPane.columnIndex="9" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="11" GridPane.columnIndex="10" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="12" GridPane.columnIndex="11" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="13" GridPane.columnIndex="12" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="14" GridPane.columnIndex="13" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="15" GridPane.columnIndex="14" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="16" GridPane.columnIndex="15" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="17" GridPane.columnIndex="16" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="18" GridPane.columnIndex="17" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="19" GridPane.columnIndex="18" />
+                   <Label alignment="CENTER" prefHeight="30.0" prefWidth="30.0" text="20" GridPane.columnIndex="19" />
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+      <VBox fx:id="menuBox" prefHeight="400.0" prefWidth="200.0">
+         <children>
+            <Label fx:id="obLabel11" text="Robot Start" />
+            <HBox prefHeight="30.0" prefWidth="130.0">
+               <children>
+                  <TextField fx:id="robotX" alignment="CENTER" text="2" />
+                  <TextField fx:id="robotY" alignment="CENTER" text="2" />
+                  <TextField fx:id="robotDir" alignment="CENTER" text="N" />
+               </children>
+            </HBox>
+            <Label fx:id="obLabel1" text="Obstacle 1">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <HBox prefHeight="30.0" prefWidth="130.0">
+               <children>
+                  <TextField fx:id="obX1" alignment="CENTER" text="3" />
+                  <TextField fx:id="obY1" alignment="CENTER" text="18" />
+                  <TextField fx:id="obDir1" alignment="CENTER" text="S" />
+               </children>
+            </HBox>
+             <Label fx:id="obLabel2" text="Obstacle 2">
+                 <VBox.margin>
+                     <Insets />
+                 </VBox.margin>
+             </Label>
+             <HBox prefHeight="30.0" prefWidth="130.0">
+                 <children>
+                     <TextField fx:id="obX2" alignment="CENTER" text="7" />
+                     <TextField fx:id="obY2" alignment="CENTER" text="14" />
+                     <TextField fx:id="obDir2" alignment="CENTER" text="E" />
+                 </children>
+             </HBox>
+             <Label fx:id="obLabel3" text="Obstacle 3">
+                 <VBox.margin>
+                     <Insets />
+                 </VBox.margin>
+             </Label>
+             <HBox prefHeight="30.0" prefWidth="130.0">
+                 <children>
+                     <TextField fx:id="obX3" alignment="CENTER" text="10" />
+                     <TextField fx:id="obY3" alignment="CENTER" text="11" />
+                     <TextField fx:id="obDir3" alignment="CENTER" text="W" />
+                 </children>
+             </HBox>
+             <Label fx:id="obLabel4" text="Obstacle 4">
+                 <VBox.margin>
+                     <Insets />
+                 </VBox.margin>
+             </Label>
+             <HBox prefHeight="30.0" prefWidth="130.0">
+                 <children>
+                     <TextField fx:id="obX4" alignment="CENTER" text="13" />
+                     <TextField fx:id="obY4" alignment="CENTER" text="16" />
+                     <TextField fx:id="obDir4" alignment="CENTER" text="E" />
+                 </children>
+             </HBox>
+             <Label fx:id="obLabel5" text="Obstacle 5">
+                 <VBox.margin>
+                     <Insets />
+                 </VBox.margin>
+             </Label>
+             <HBox prefHeight="30.0" prefWidth="130.0">
+                 <children>
+                     <TextField fx:id="obX5" alignment="CENTER" text="15" />
+                     <TextField fx:id="obY5" alignment="CENTER" text="8" />
+                     <TextField fx:id="obDir5" alignment="CENTER" text="N" />
+                 </children>
+             </HBox>
+             <Label fx:id="obLabel6" text="Obstacle 6">
+                 <VBox.margin>
+                     <Insets />
+                 </VBox.margin>
+             </Label>
+             <HBox prefHeight="30.0" prefWidth="130.0">
+                 <children>
+                     <TextField fx:id="obX6" alignment="CENTER" />
+                     <TextField fx:id="obY6" alignment="CENTER" />
+                     <TextField fx:id="obDir6" alignment="CENTER" />
+                 </children>
+             </HBox>
+             <Label fx:id="obLabel7" text="Obstacle 7">
+                 <VBox.margin>
+                     <Insets />
+                 </VBox.margin>
+             </Label>
+             <HBox prefHeight="30.0" prefWidth="130.0">
+                 <children>
+                     <TextField fx:id="obX7" alignment="CENTER" />
+                     <TextField fx:id="obY7" alignment="CENTER" />
+                     <TextField fx:id="obDir7" alignment="CENTER" />
+                 </children>
+             </HBox>
+            <Label fx:id="obLabel71" text="Obstacle 8" />
+            <HBox prefHeight="30.0" prefWidth="130.0">
+               <children>
+                  <TextField fx:id="obX8" alignment="CENTER" />
+                  <TextField fx:id="obY8" alignment="CENTER" />
+                  <TextField fx:id="obDir8" alignment="CENTER" />
+               </children>
+            </HBox>
+            <Button fx:id="setArena" mnemonicParsing="false" onMouseClicked="#setArena" prefHeight="37.0" prefWidth="204.0" text="Set Arena">
+               <VBox.margin>
+                  <Insets top="16.0" />
+               </VBox.margin>
+            </Button>
+            <Label text="Use Preset">
+               <VBox.margin>
+                  <Insets top="64.0" />
+               </VBox.margin>
+            </Label>
+            <HBox prefWidth="122.0">
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#prevPreset" prefHeight="26.0" prefWidth="40.0" text="&lt;" />
+                  <Text fx:id="presetText" strokeType="OUTSIDE" strokeWidth="0.0" text="1" textAlignment="CENTER" wrappingWidth="48.86870980262756">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Text>
+                  <Button mnemonicParsing="false" onMouseClicked="#nextPreset" prefWidth="40.0" text="&gt;" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </padding></VBox>
+      <VBox prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Label style="-fx-font-weight: 700;" text="Settings" />
+            <HBox>
+               <children>
+                  <Label prefHeight="22.0" prefWidth="80.0" text="Straight (/cell)" wrapText="true" />
+                  <TextField fx:id="straightLineSpeedField" prefHeight="25.0" prefWidth="63.0" text="20">
+                     <HBox.margin>
+                        <Insets left="16.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label prefHeight="22.0" prefWidth="80.0" text="Rotate" />
+                  <TextField fx:id="rotateSpeedField" prefHeight="25.0" prefWidth="63.0" text="1000">
+                     <HBox.margin>
+                        <Insets left="16.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label prefHeight="22.0" prefWidth="80.0" text="Read Img" />
+                  <TextField fx:id="readImgSpeedField" prefHeight="25.0" prefWidth="63.0" text="500">
+                     <HBox.margin>
+                        <Insets left="16.0" />
+                     </HBox.margin>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label prefHeight="22.0" prefWidth="80.0" text="Safe Turn" />
+                  <CheckBox fx:id="safeTurnCheckBox" mnemonicParsing="false" selected="true">
+                     <HBox.margin>
+                        <Insets left="16.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label prefHeight="22.0" prefWidth="80.0" text="Move on Edge" />
+                  <CheckBox fx:id="moveOnEdgeCheckBox" mnemonicParsing="false">
+                     <HBox.margin>
+                        <Insets left="16.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="8.0" />
+               </VBox.margin>
+            </HBox>
+            <Button fx:id="saveSettingsButton" mnemonicParsing="false" onMouseClicked="#saveSettings" prefHeight="25.0" prefWidth="204.0" text="Save Settings">
+               <VBox.margin>
+                  <Insets top="16.0" />
+               </VBox.margin>
+            </Button>
+            <HBox>
+               <children>
+                  <Button fx:id="startButton" mnemonicParsing="false" onMouseClicked="#startPath" prefHeight="25.0" prefWidth="204.0" text="Start" />
+                  <Button fx:id="pauseButton" mnemonicParsing="false" onMouseClicked="#pausePath" prefHeight="25.0" prefWidth="204.0" text="Pause" />
+               </children>
+               <VBox.margin>
+                  <Insets top="24.0" />
+               </VBox.margin>
+            </HBox>
+            <Text fx:id="timerText" strokeType="OUTSIDE" strokeWidth="0.0" text="00:00:00" textAlignment="CENTER" wrappingWidth="158.97509765625">
+               <font>
+                  <Font size="32.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="24.0" />
+               </VBox.margin>
+            </Text>
+            <Label alignment="CENTER" prefWidth="204.0" text="Time (min)">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Label>
+            <Button mnemonicParsing="false" onMouseClicked="#setPath" prefWidth="204.0" text="setPath">
+               <VBox.margin>
+                  <Insets bottom="16.0" top="16.0" />
+               </VBox.margin>
+            </Button>
+            <HBox>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#prevStep" prefWidth="80.0" text="Previous" />
+                  <Button mnemonicParsing="false" onMouseClicked="#nextStep" prefWidth="80.0" text="Next" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </padding>
+         <HBox.margin>
+            <Insets />
+         </HBox.margin>
+      </VBox>
+   </children>
+   <padding>
+      <Insets top="20.0" />
+   </padding>
+</HBox>

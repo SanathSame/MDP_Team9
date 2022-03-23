@@ -1,0 +1,8 @@
+# someone's arena
+2 2 N
+2 19 E
+9 11 E
+13 2 W
+19 1 N
+19 11 W
+19 20 S

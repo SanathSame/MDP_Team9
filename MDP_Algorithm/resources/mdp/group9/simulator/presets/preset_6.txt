@@ -1,0 +1,7 @@
+# from https://www.youtube.com/watch?v=FxsnL1BZTUs
+2 2 N
+6 9 N
+3 17 S
+12 6 E
+16 16 W
+18 3 W

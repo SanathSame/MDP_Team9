@@ -1,0 +1,7 @@
+# obstacles on same y-level and facing each other
+2 2 E
+8 16 E
+16 16 W
+16 12 S
+7 5 E
+4 16 S

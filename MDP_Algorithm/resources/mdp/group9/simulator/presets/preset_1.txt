@@ -1,0 +1,7 @@
+# original arena
+2 2 N
+3 18 S
+7 14 E
+10 11 W
+13 16 E
+15 8 N
